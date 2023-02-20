@@ -8,7 +8,7 @@ public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
     public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(ICommandHandler<>), new CommandHandlerWrapperFactory());
 
     /// <summary>
-    /// Maybe it coult be just a static method?
+    /// Maybe it should just be a static method?
     /// </summary>
     /// <param name="messageHandlerDescription"></param>
     /// <param name="provider"></param>
