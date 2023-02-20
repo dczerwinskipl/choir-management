@@ -1,20 +1,11 @@
 version: '3.4'
 
 services:
-  choirmanagement.frontend:
-    image: ${DOCKER_REGISTRY-}choirmanagementfrontend
-    build:
-      context: .
-      dockerfile: ChoirManagement.Frontend/Dockerfile
-    ports:
-      - "8080:80"
-      - "8081:80"
-
   choirmanagement.membership.webservice:
     image: ${DOCKER_REGISTRY-}choirmanagementmembershipwebservice
     build:
       context: .
-      dockerfile: ChoirManagement.Membership.WebService/Dockerfile
+      dockerfile: src/ChoirManagement.Membership.WebService/Dockerfile
     ports:
       - "8001:80"
 
@@ -22,7 +13,7 @@ services:
     image: ${DOCKER_REGISTRY-}choirmanagementaccountingwebservice
     build:
       context: .
-      dockerfile: ChoirManagement.Accounting.WebService/Dockerfile
+      dockerfile: src/ChoirManagement.Accounting.WebService/Dockerfile
     ports:
       - "8002:80"
 

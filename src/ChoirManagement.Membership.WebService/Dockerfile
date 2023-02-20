@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj", "ChoirManagement.Membership.WebService/"]
+COPY ["src/ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj", "ChoirManagement.Membership.WebService/"]
 RUN dotnet restore "ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj"
 COPY . .
 WORKDIR "/src/ChoirManagement.Membership.WebService"
