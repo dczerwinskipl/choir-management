@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "choirmanagement.frontend",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "serviceActions": {
+        "choirmanagement.accounting.webservice": "StartDebugging",
+        "choirmanagement.frontend": "StartDebugging",
+        "choirmanagement.membership.webservice": "StartDebugging"
+      }
+    }
+  }
+}
