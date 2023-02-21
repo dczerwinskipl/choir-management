@@ -20,7 +20,7 @@ app.Run();
 
 
 //TODO -- global handler?
-TResult ToResponse<TResult>(Either<Exception, TResult> either)
+TResult ToResponse<TResult>(Try<TResult> either)
 {
     return either.Handle(success => success, exc => throw exc);
 }
@@ -40,9 +40,9 @@ void UseNEvo(IServiceCollection serviceCollection)
 public record HelloWorldCommand(string Message) : Command;
 public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>
 {
-    public Task<Either<Exception, Unit>> HandleAsync(HelloWorldCommand command)
+    public Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
     {
         Console.WriteLine(command.Message);
-        return Either.TaskRight();
+        return Try.TaskSuccess();
     }
 }

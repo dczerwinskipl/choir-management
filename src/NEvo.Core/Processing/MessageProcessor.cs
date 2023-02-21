@@ -22,8 +22,8 @@ public class MessageProcessor : IMessageProcessor
         {
             return (await handlerWrapper.Handle(message))
                             .Handle(
-                                success => Either.Right<IMessageProcessingFailures, TResult>(success.Result),
-                                error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(error))
+                                Either.Right<IMessageProcessingFailures, TResult>,
+                                error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, error)))
                                 );
         }
         catch (Exception exc)
@@ -38,14 +38,14 @@ public class MessageProcessor : IMessageProcessor
     {
         var handlerWrappers = _messageHandlerRegistry.GetHandlers<TMessage, Unit>(message);
         var errors = new List<MessageProcessingFailure>();
-        var result = new List<MessageProcessingSuccess<Unit>>();
+        var result = new List<Unit>();
 
         //todo: pipeline
         foreach (var handlerWrapper in handlerWrappers)
         {
             try
             {
-                (await handlerWrapper.Handle(message)).Handle(result.Add, errors.Add);
+                (await handlerWrapper.Handle(message)).OnFailure(exc => errors.Add(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, exc)));
             }
             catch (Exception exc)
             {

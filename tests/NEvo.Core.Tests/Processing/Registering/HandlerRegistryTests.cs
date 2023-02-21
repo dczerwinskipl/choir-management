@@ -125,7 +125,7 @@ public class HandlerRegistryTests
         // assert
         using (new AssertionScope())
         {
-            result.IsRight.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             dependencyMock.Received().Act();
         }
     }
@@ -146,21 +146,21 @@ public class HandlerRegistryTests
             Dependency = dependency;
         }
 
-        public Task<Either<Exception, Unit>> HandleAsync(CommandA command)
+        public Task<Try<Unit>> HandleAsync(CommandA command)
         {
             Dependency.Act();
-            return Either.TaskRight();
+            return Try.TaskSuccess();
         }
     }
 
 
     public class CommandABHandler : ICommandHandler<CommandA>, ICommandHandler<CommandB>
     {
-        public Task<Either<Exception, Unit>> HandleAsync(CommandA command)
+        public Task<Try<Unit>> HandleAsync(CommandA command)
         {
             throw new NotImplementedException();
         }
-        public Task<Either<Exception, Unit>> HandleAsync(CommandB command)
+        public Task<Try<Unit>> HandleAsync(CommandB command)
         {
             throw new NotImplementedException();
         }

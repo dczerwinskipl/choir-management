@@ -11,5 +11,5 @@ public interface IQueryDispatcher
             failure => throw new AggregateException(failure)
         );
 
-    Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query);
+    Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query);
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NEvo.Core;
 

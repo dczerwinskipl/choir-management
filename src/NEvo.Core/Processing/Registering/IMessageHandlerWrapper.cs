@@ -10,12 +10,12 @@ namespace NEvo.Processing.Registering;
 public interface IMessageHandlerWrapper
 {
     MessageHandlerDescription Description { get; }
-    Task<Either<MessageProcessingFailure, MessageProcessingSuccess<object>>> Handle(IMessage message);
+    Task<Try<object>> Handle(IMessage message);
 }
 
 public interface IMessageHandlerWrapper<TResult> : IMessageHandlerWrapper
 {
-    Task<Either<MessageProcessingFailure, MessageProcessingSuccess<TResult>>> Handle(IMessage<TResult> message);
+    Task<Try<TResult>> Handle(IMessage<TResult> message);
 }
 
 public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TResult>
@@ -24,13 +24,13 @@ public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TRes
     public MessageHandlerDescription Description => _originalWrapper.Description;
 
     internal GenericMessageHandlerWrapper(IMessageHandlerWrapper originalWrapper) => _originalWrapper = originalWrapper;
-    public async Task<Either<MessageProcessingFailure, MessageProcessingSuccess<TResult>>> Handle(IMessage<TResult> message) => 
+    public async Task<Try<TResult>> Handle(IMessage<TResult> message) =>
         (await _originalWrapper.Handle(message)).Handle(
-            success => Either.Right<MessageProcessingFailure, MessageProcessingSuccess<TResult>>(new MessageProcessingSuccess<TResult>(success.HandlerType, (TResult)success.Result)),
-            Either.Left<MessageProcessingFailure, MessageProcessingSuccess<TResult>>
+            success => Try.Success((TResult)success),
+            Try.Failure<TResult>
             );
 
-    public Task<Either<MessageProcessingFailure, MessageProcessingSuccess<object>>> Handle(IMessage message) => _originalWrapper.Handle(message);
+    public Task<Try<object>> Handle(IMessage message) => _originalWrapper.Handle(message);
 }
 
 public static class MessageHandlerWrapperExtensions

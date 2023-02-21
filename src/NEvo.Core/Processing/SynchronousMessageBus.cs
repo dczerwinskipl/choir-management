@@ -18,24 +18,21 @@ public class SynchronousMessageBus : IMessageBus
         _messageProcessor = Check.Null(messageProcessor);
     }
 
-    public async Task<Either<Exception, Unit>> DispatchAsync(Command command) => 
+    public async Task<Try<Unit>> DispatchAsync(Command command) => 
         (await _messageProcessor.ProcessAsync<Command, Unit>(command))
         .Handle(
-            _ => Either.Right(), 
-            failure => Either.Left(new AggregateException(failure.Select(s => s.Exception)))
+            _ => Try.Success(), 
+            failure => Try.Failure(new AggregateException(failure.Select(s => s.Exception)))
          );
 
-    public async Task<Either<Exception, Unit>> PublishAsync(Event @event) => 
+    public async Task PublishAsync(Event @event) =>
         (await _messageProcessor.ProcessAsync<Event, Unit>(@event))
-        .Handle(
-            _ => Either.Right(),
-            failure => Either.Left(new AggregateException(failure.Select(s => s.Exception)))
-         );
+        .OnFailure(failures => throw new AggregateException(failures.Select(s => s.Exception)));
 
-    public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) => 
+    public async Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query) => 
         (await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query))
         .Handle(
-            result => Either.Right(result),
-            failure => Either.Left<TResult>(new AggregateException(failure.Select(s => s.Exception)))
+            result => Try.Success(result),
+            failure => Try.Failure<TResult>(new AggregateException(failure.Select(s => s.Exception)))
          );
 }

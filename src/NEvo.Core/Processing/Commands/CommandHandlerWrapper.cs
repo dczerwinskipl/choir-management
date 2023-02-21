@@ -20,7 +20,7 @@ public class CommandHandlerWrapper<THandler, TMessage> : IMessageHandlerWrapper
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Either<MessageProcessingFailure, MessageProcessingSuccess<object>>> Handle(IMessage message)
+    public async Task<Try<object>> Handle(IMessage message)
     {
         try
         {
@@ -31,14 +31,14 @@ public class CommandHandlerWrapper<THandler, TMessage> : IMessageHandlerWrapper
 
             return
                 result.Handle(
-                    result => Either.Right<MessageProcessingFailure, MessageProcessingSuccess<object>>(new MessageProcessingSuccess<object>(Description.HandlerType, result)),
-                    exception => Either.Left<MessageProcessingFailure, MessageProcessingSuccess<object>>(new MessageProcessingFailure(Description.HandlerType, exception))
+                    result => Try.Success<object>(result),
+                    Try.Failure<object>
                 );
                 
         } 
         catch(Exception exception)
         {
-            return Either.Left<MessageProcessingFailure, MessageProcessingSuccess<object>>(new MessageProcessingFailure(Description.HandlerType, exception));
+            return Try.Failure<object>(exception);
         }
         
     }
