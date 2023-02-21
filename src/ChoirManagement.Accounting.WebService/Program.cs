@@ -21,9 +21,9 @@ var app = builder.Build();
 
 app.MapGet("/", () => $"Hello World from instance {instanceId}");
 
-app.MapGet("/HelloWorld", async ([FromServices] IMessageBus messageBus) => ToResponse(
+app.MapGet("/HelloWorld/{message}", async ([FromServices] IMessageBus messageBus, [FromRoute] string message) => ToResponse(
     await Try
-            .OfAsync(async () => await messageBus.DispatchAsync(new HelloWorldCommand($"Say hello!")))
+            .OfAsync(async () => await messageBus.DispatchAsync(new HelloWorldCommand(message)))
             .ThenAsync(async () => await messageBus.DispatchAsync(new HelloWorldQuery()))
     ));
 
@@ -71,7 +71,11 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
     public async Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
     {
         await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.CreatedAt.ToString())));
-        return Try.Failure(new Exception("Some error"));
+
+        if (command.Message?.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
+            return Try.Failure(new Exception("Don't say hi!"));
+
+        return Try.Success();
     }
 
     public Task HandleAsync(HelloWorldEvent @event)
