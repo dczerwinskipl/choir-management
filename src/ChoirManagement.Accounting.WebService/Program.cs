@@ -72,7 +72,7 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
     {
         await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.CreatedAt.ToString())));
 
-        if (command.Message?.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
+        if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
             return Try.Failure(new Exception("Don't say hi!"));
 
         return Try.Success();
