@@ -10,7 +10,7 @@ namespace NEvo.Processing.Registering;
 public interface IMessageHandlerWrapper
 {
     MessageHandlerDescription Description { get; }
-    Task<Try<object>> Handle(IMessage message);
+    Task<Try<object?>> Handle(IMessage message);
 }
 
 public interface IMessageHandlerWrapper<TResult> : IMessageHandlerWrapper

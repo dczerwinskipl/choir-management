@@ -1,11 +1,11 @@
 ﻿using NEvo.Core;
 using NEvo.Processing.Registering;
 
-namespace NEvo.Processing.Commands;
+namespace NEvo.Processing.Events;
 
-public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
+public class EventHandlerWrapperFactory : IMessageHandlerWrapperFactory
 {
-    public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(ICommandHandler<>), new CommandHandlerWrapperFactory());
+    public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(IEventHandler<>), new EventHandlerWrapperFactory());
 
     /// <summary>
     /// Maybe it should just be a static method?
@@ -15,7 +15,7 @@ public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
     /// <returns></returns>
     public IMessageHandlerWrapper Create(MessageHandlerDescription messageHandlerDescription, IServiceProvider provider)
     {
-        var type = typeof(CommandHandlerWrapper<,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageType);
+        var type = typeof(EventHandlerWrapper<,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageType);
         var wrapper = Activator.CreateInstance(type, new object[] { messageHandlerDescription, provider });
         return Check.Null(wrapper as IMessageHandlerWrapper);
     }

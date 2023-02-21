@@ -26,7 +26,7 @@ public class SynchronousMessageBus : IMessageBus
          );
 
     public async Task PublishAsync(Event @event) =>
-        (await _messageProcessor.ProcessAsync<Event, Unit>(@event))
+        (await _messageProcessor.ProcessAsync(@event))
         .OnFailure(failures => throw new AggregateException(failures.Select(s => s.Exception)));
 
     public async Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query) => 

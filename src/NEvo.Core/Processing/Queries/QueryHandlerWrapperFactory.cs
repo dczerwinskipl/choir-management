@@ -1,11 +1,11 @@
 ﻿using NEvo.Core;
 using NEvo.Processing.Registering;
 
-namespace NEvo.Processing.Commands;
+namespace NEvo.Processing.Queries;
 
-public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
+public class QueryHandlerWrapperFactory : IMessageHandlerWrapperFactory
 {
-    public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(ICommandHandler<>), new CommandHandlerWrapperFactory());
+    public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(IQueryHandler<,>), new QueryHandlerWrapperFactory());
 
     /// <summary>
     /// Maybe it should just be a static method?
@@ -15,7 +15,7 @@ public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
     /// <returns></returns>
     public IMessageHandlerWrapper Create(MessageHandlerDescription messageHandlerDescription, IServiceProvider provider)
     {
-        var type = typeof(CommandHandlerWrapper<,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageType);
+        var type = typeof(QueryHandlerWrapper<,,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageType, messageHandlerDescription.InterfaceType.GetGenericArguments()[1]);
         var wrapper = Activator.CreateInstance(type, new object[] { messageHandlerDescription, provider });
         return Check.Null(wrapper as IMessageHandlerWrapper);
     }

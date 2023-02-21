@@ -2,9 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using NEvo.Core;
 using NEvo.Messaging;
 using NEvo.Messaging.Commands;
+using NEvo.Messaging.Events;
+using NEvo.Messaging.Queries;
 using NEvo.Processing;
 using NEvo.Processing.Commands;
+using NEvo.Processing.Events;
+using NEvo.Processing.Queries;
 using NEvo.Processing.Registering;
+using NEvo.ValueObjects;
+using System.Globalization;
 
 var instanceId = Guid.NewGuid();
 var builder = WebApplication.CreateBuilder(args);
@@ -12,23 +18,26 @@ UseNEvo(builder.Services);
 
 var app = builder.Build();
 
+
 app.MapGet("/", () => $"Hello World from instance {instanceId}");
-app.MapGet("/HelloWorld", async ([FromServices]IMessageBus messageBus) => ToResponse(await messageBus.DispatchAsync(new HelloWorldCommand($"Say hello!"))));
+
+app.MapGet("/HelloWorld", async ([FromServices] IMessageBus messageBus) => ToResponse(
+    await Try
+            .OfAsync(async () => await messageBus.DispatchAsync(new HelloWorldCommand($"Say hello!")))
+            .ThenAsync(async () => await messageBus.DispatchAsync(new HelloWorldQuery()))
+    ));
 
 app.Run();
 
 
-
-//TODO -- global handler?
-TResult ToResponse<TResult>(Try<TResult> either)
-{
-    return either.Handle(success => success, exc => throw exc);
-}
-
 void UseNEvo(IServiceCollection serviceCollection)
 {
     serviceCollection.AddSingleton<IMessageHandlerRegistry, MessageHandlerRegistry>(sp => {
-        var registry = new MessageHandlerRegistry(sp, CommandHandlerWrapperFactory.MessageHandlerOptions);
+        var registry = new MessageHandlerRegistry(sp, 
+            CommandHandlerWrapperFactory.MessageHandlerOptions,
+            EventHandlerWrapperFactory.MessageHandlerOptions,
+            QueryHandlerWrapperFactory.MessageHandlerOptions
+        );
         registry.Register<HelloWorldHandler>();
         return registry;
     });
@@ -37,12 +46,42 @@ void UseNEvo(IServiceCollection serviceCollection)
     serviceCollection.AddSingleton<IMessageBus, SynchronousMessageBus>();
 }
 
-public record HelloWorldCommand(string Message) : Command;
-public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>
+//TODO -- global filter insted of throw
+TResult ToResponse<TResult>(Try<TResult> either)
 {
-    public Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
+    return either.Handle(success => success, exc => throw exc);
+}
+
+
+public record HelloWorldCommand(string Message) : Command;
+
+public record HelloWorldEvent(string Message, SourceId SourceId) : Event(SourceId);
+public record HelloWorldQuery() : Query<string>;
+
+
+public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandler<HelloWorldEvent>, IQueryHandler<HelloWorldQuery, string>
+{
+    public IMessageBus _messageBus;
+
+    public HelloWorldHandler(IMessageBus messageBus)
     {
-        Console.WriteLine(command.Message);
-        return Try.TaskSuccess();
+        _messageBus = messageBus;
+    }
+
+    public async Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
+    {
+        await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.CreatedAt.ToString())));
+        return Try.Failure(new Exception("Some error"));
+    }
+
+    public Task HandleAsync(HelloWorldEvent @event)
+    {
+        Console.WriteLine(@event.Message);
+        return Task.CompletedTask;
+    }
+
+    public async Task<string> HandleAsync(HelloWorldQuery query)
+    {
+        return "Hello my friendo!";
     }
 }

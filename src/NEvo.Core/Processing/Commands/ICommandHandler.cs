@@ -3,7 +3,7 @@ using NEvo.Messaging.Commands;
 
 namespace NEvo.Processing.Commands;
 
-public interface ICommandHandler<TCommand> where TCommand : Command
+public interface ICommandHandler<in TCommand> where TCommand : Command
 {
     Task<Try<Unit>> HandleAsync(TCommand command);
 }

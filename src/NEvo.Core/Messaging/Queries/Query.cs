@@ -1,6 +1,6 @@
 ﻿namespace NEvo.Messaging.Queries;
 
-public abstract class Query<TResult> : IMessage<TResult>
+public abstract record Query<TResult> : IMessage<TResult>
 {
     public static MessageType MessageType => MessageType.Query;
 

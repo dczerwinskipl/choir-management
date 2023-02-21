@@ -4,10 +4,10 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace NEvo.Core;
 
-public struct Try<TRight>
+public struct Try<TResult>
 {
     private readonly Exception? _exception;
-    private readonly TRight? _result;
+    private readonly TResult? _result;
 
     /// <summary>
     /// Returns true if result is success
@@ -26,7 +26,7 @@ public struct Try<TRight>
         IsFailure = true;
     }
 
-    internal Try(TRight result)
+    internal Try(TResult result)
     {
         _result = result;
         _exception = default;
@@ -51,7 +51,7 @@ public struct Try<TRight>
     /// <summary>
     /// Returns value if result is success
     /// </summary>
-    public TRight Result
+    public TResult Result
     {
         get
         {
@@ -66,13 +66,18 @@ public struct Try<TRight>
     /// <summary>
     /// Map success or failure to new output
     /// </summary>
-    public TResult Handle<TResult>(Func<TRight, TResult> onSucces, Func<Exception, TResult> onFailure)
+    public TOther Handle<TOther>(Func<TResult, TOther> onSucces, Func<Exception, TOther> onFailure)
         => IsSuccess ? onSucces(Result) : onFailure(Exception);
+
+    public Task<TOther> HandleAsync<TOther>(Func<TResult, Task<TOther>> onSucces, Func<Exception, Task<TOther>> onFailure)
+        => IsSuccess ? onSucces(Result) : onFailure(Exception);
+
+    public Try<TOther> Cast<TOther>()  => Handle(success => Try.Success((TOther)(object)success), Try.Failure<TOther>);
 
     /// <summary>
     /// Execute action when fail
     /// </summary>
-    public Try<TRight> OnFailure(Action<Exception> onFailure)
+    public Try<TResult> OnFailure(Action<Exception> onFailure)
     {
         if (IsFailure)
         {
@@ -84,7 +89,7 @@ public struct Try<TRight>
     /// <summary>
     /// Execute action when success
     /// </summary>
-    public Try<TRight> OnSuccess(Action<TRight> onSuccess)
+    public Try<TResult> OnSuccess(Action<TResult> onSuccess)
     {
         if (IsSuccess)
         {
@@ -93,8 +98,11 @@ public struct Try<TRight>
         return this;
     }
 
-    public static implicit operator Either<Exception, TRight>(Try<TRight> @try) => @try.Handle(success => new Either<Exception, TRight>(success), exception => new Either<Exception, TRight>(exception));
-    public static explicit operator Try<TRight>(Either<Exception, TRight> either) => either.Handle(success => new Try<TRight>(success), exception => new Try<TRight>(exception));
+    public Task<Try<TOther>> ThenAsync<TOther>(Func<Task<Try<TOther>>> onSuccess) => HandleAsync(_ => Try.OfAsync(onSuccess), Try.TaskFailure<TOther>);
+    public Task<Try<TOther>> ThenAsync<TOther>(Func<Task<TOther>> onSuccess) => HandleAsync(_ => Try.OfAsync(onSuccess), Try.TaskFailure<TOther>);
+
+    public static implicit operator Either<Exception, TResult>(Try<TResult> @try) => @try.Handle(success => new Either<Exception, TResult>(success), exception => new Either<Exception, TResult>(exception));
+    public static explicit operator Try<TResult>(Either<Exception, TResult> either) => either.Handle(success => new Try<TResult>(success), exception => new Try<TResult>(exception));
 }
 
 
@@ -122,6 +130,9 @@ public static class Try
 
     public static Try<Unit> Failure(Exception exc) => new(exc);
     public static Try<Unit> Success() => new(Unit.Value);
+
+    public static Task<Try<TResult>> TaskFailure<TResult>(Exception exc) => Task.FromResult(Failure<TResult>(exc));
+    public static Task<Try<TResult>> TaskSuccess<TResult>(TResult result) => Task.FromResult(Success(result));
     public static Task<Try<Unit>> TaskFailure(Exception exc) => Task.FromResult(Failure(exc));
     public static Task<Try<Unit>> TaskSuccess() => Task.FromResult(Success());
 
@@ -174,6 +185,17 @@ public static class Try
             return Failure(exc);
         }
     }
+    public static async Task<Try<TResult>> OfAsync<TResult>(Func<Task<Try<TResult>>> action)
+    {
+        try
+        {
+            return await action();
+        }
+        catch (Exception exc)
+        {
+            return Failure<TResult>(exc);
+        }
+    }
 
     public static async Task<Try<TResult>> OfAsync<TResult>(Func<Task<TResult>> action)
     {
@@ -198,4 +220,10 @@ public static class Try
             return Failure<TResult>(exc);
         }
     }
+
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<Task<Try<TOther>>> onSuccess) =>
+       await (await @try).ThenAsync(onSuccess);
+
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<Task<TOther>> onSuccess) =>
+        await (await @try).ThenAsync(onSuccess);
 }

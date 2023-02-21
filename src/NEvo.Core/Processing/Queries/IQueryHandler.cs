@@ -11,4 +11,3 @@ public interface IQueryStreamHandler<TQuery, TResult> where TQuery : Query<TResu
 {
     IAsyncEnumerable<TResult> HandleAsync(TQuery query);
 }
-
