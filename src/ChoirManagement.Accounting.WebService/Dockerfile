@@ -6,7 +6,7 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-COPY . .
+COPY . /
 RUN dotnet restore ChoirManagement.sln
 
 WORKDIR "/src/ChoirManagement.Accounting.WebService"

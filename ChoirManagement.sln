@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.WebService", ".\src\ChoirManagement.Membership.WebService\ChoirManagement.Membership.WebService.csproj", "{38A7C3AC-9F13-4954-80FC-A7965515D0B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.WebService", "src\ChoirManagement.Membership.WebService\ChoirManagement.Membership.WebService.csproj", "{38A7C3AC-9F13-4954-80FC-A7965515D0B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{A2A56A7A-3248-44EF-8BBD-3608B8F9A171}"
 EndProject
@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Membership", "Membership", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounting", "Accounting", "{57BC9D64-4484-4A20-B5E0-89B6224766C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Accounting.WebService", ".\src\ChoirManagement.Accounting.WebService\ChoirManagement.Accounting.WebService.csproj", "{F3E082D3-554B-437B-887A-E8E3C813DD11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Accounting.WebService", "src\ChoirManagement.Accounting.WebService\ChoirManagement.Accounting.WebService.csproj", "{F3E082D3-554B-437B-887A-E8E3C813DD11}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}"
 EndProject
@@ -19,9 +19,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{C7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8AE43915-9F1D-474F-ADD0-2D30998053D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core", ".\src\NEvo.Core\NEvo.Core.csproj", "{12AA0807-19C7-4CA1-9300-056B693ECBFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core", "src\NEvo.Core\NEvo.Core.csproj", "{12AA0807-19C7-4CA1-9300-056B693ECBFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.Core.Tests", ".\tests\NEvo.Core.Tests\NEvo.Core.Tests.csproj", "{9B3FD740-4096-497C-93FE-4FF130481FBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core.Tests", "tests\NEvo.Core.Tests\NEvo.Core.Tests.csproj", "{9B3FD740-4096-497C-93FE-4FF130481FBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{8BFF3319-E8D7-4095-A512-716D8F1C09D9}"
+	ProjectSection(SolutionItems) = preProject
+		kubernetes\deployment.yml = kubernetes\deployment.yml
+		kubernetes\service.yml = kubernetes\service.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{533C0B4B-D31E-42EE-B921-64511EA0FD50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzurePipelines", "AzurePipelines", "{FEC86CC3-0C05-4612-80AF-B010797A12EF}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +73,8 @@ Global
 		{F3E082D3-554B-437B-887A-E8E3C813DD11} = {57BC9D64-4484-4A20-B5E0-89B6224766C7}
 		{12AA0807-19C7-4CA1-9300-056B693ECBFB} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 		{9B3FD740-4096-497C-93FE-4FF130481FBA} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
+		{8BFF3319-E8D7-4095-A512-716D8F1C09D9} = {533C0B4B-D31E-42EE-B921-64511EA0FD50}
+		{FEC86CC3-0C05-4612-80AF-B010797A12EF} = {533C0B4B-D31E-42EE-B921-64511EA0FD50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}
