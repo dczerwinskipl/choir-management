@@ -1,9 +1,10 @@
-﻿using NEvo.Messaging;
+﻿using NEvo.Core;
+using NEvo.Messaging;
 using NEvo.Messaging.Commands;
 using NEvo.Messaging.Events;
 using NEvo.Messaging.Queries;
 
-namespace NEvo.Core.Processing;
+namespace NEvo.Processing;
 
 /// <summary>
 /// Message bus that use internal infrastructure to process messages in synchronous way
@@ -17,17 +18,24 @@ public class SynchronousMessageBus : IMessageBus
         _messageProcessor = Check.Null(messageProcessor);
     }
 
-    public async Task DispatchAsync(Command command) => (await _messageProcessor.ProcessAsync(command))
-                                                            .OnFailure(failures => throw ThrowProcessingException(failures));
+    public async Task<Either<Exception, Unit>> DispatchAsync(Command command) => 
+        (await _messageProcessor.ProcessAsync<Command, Unit>(command))
+        .Handle(
+            _ => Either.Right(), 
+            failure => Either.Left(new AggregateException(failure.Select(s => s.Exception)))
+         );
 
-    public async Task PublishAsync(Event @event) => (await _messageProcessor.ProcessAsync(@event))
-                                                            .OnFailure(failures => throw ThrowProcessingException(failures));
+    public async Task<Either<Exception, Unit>> PublishAsync(Event @event) => 
+        (await _messageProcessor.ProcessAsync<Event, Unit>(@event))
+        .Handle(
+            _ => Either.Right(),
+            failure => Either.Left(new AggregateException(failure.Select(s => s.Exception)))
+         );
 
-    public async Task<TResult> DispatchAsync<TResult>(Query<TResult> query) => (await _messageProcessor.ProcessAsync(query))
-                                                                                    .Handle(
-                                                                                        result => ((IMessageProcessingResult<TResult>)result).Result,
-                                                                                        failures => { throw ThrowProcessingException(failures); }
-                                                                                    );
-    private static Exception ThrowProcessingException(IMessageProcessingFailures processingFailures) => new AggregateException(processingFailures.Select(f => f.Exception));  //TODO: add custom exception
-
+    public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) => 
+        (await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query))
+        .Handle(
+            result => Either.Right(result),
+            failure => Either.Left<TResult>(new AggregateException(failure.Select(s => s.Exception)))
+         );
 }

@@ -1,7 +1,8 @@
-﻿using NEvo.Processing.Commands;
+﻿using NEvo.Core;
+using NEvo.Processing.Commands;
 using NEvo.Processing.Registering;
 
-namespace NEvo.Core.Processing.Commands;
+namespace NEvo.Processing.Commands;
 
 public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
 {
@@ -15,7 +16,7 @@ public class CommandHandlerWrapperFactory : IMessageHandlerWrapperFactory
     /// <returns></returns>
     public IMessageHandlerWrapper Create(MessageHandlerDescription messageHandlerDescription, IServiceProvider provider)
     {
-        var type = typeof(CommandHandlerWrapper<,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageClass);
+        var type = typeof(CommandHandlerWrapper<,>).MakeGenericType(messageHandlerDescription.HandlerType, messageHandlerDescription.MessageType);
         var wrapper = Activator.CreateInstance(type, new object[] { messageHandlerDescription, provider });
         return Check.Null(wrapper as IMessageHandlerWrapper);
     }

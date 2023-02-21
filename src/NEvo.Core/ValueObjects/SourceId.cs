@@ -1,6 +1,6 @@
-﻿using NEvo.ValueObjects;
+﻿using NEvo.Core;
 
-namespace NEvo.Core.ValueObjects;
+namespace NEvo.ValueObjects;
 
 /// <summary>
 /// Type that represents abstract source as value object

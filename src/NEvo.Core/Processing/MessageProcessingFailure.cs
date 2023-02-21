@@ -1,4 +1,4 @@
-﻿namespace NEvo.Core.Processing;
+﻿namespace NEvo.Processing;
 
 public record MessageProcessingFailure(Type HandlerType, Exception Exception);
 public record MessageProcessingSuccess(Type HandlerType);

@@ -16,7 +16,7 @@ public class MessageEnvelope
     }
 }
 
-public class MessageEnvelope<TMessage> where TMessage : Message
+public class MessageEnvelope<TMessage> where TMessage : IMessage
 {
     public Guid Id { get; set; }
     public TMessage Payload { get; set; }

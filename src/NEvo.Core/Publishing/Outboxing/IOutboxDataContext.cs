@@ -1,4 +1,4 @@
-﻿namespace NEvo.Core.Publishing.Outboxing
+﻿namespace NEvo.Publishing.Outboxing
 {
     public interface IOutboxDataContext
     {

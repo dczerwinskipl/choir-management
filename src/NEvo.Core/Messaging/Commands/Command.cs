@@ -1,6 +1,9 @@
-﻿namespace NEvo.Messaging.Commands;
+﻿using NEvo.Core;
 
-public abstract class Command : Message 
+namespace NEvo.Messaging.Commands;
+
+public abstract record Command : IMessage<Unit>
 {
-    public override sealed MessageType MessageType => MessageType.Command;
+    public static MessageType MessageType => MessageType.Command;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

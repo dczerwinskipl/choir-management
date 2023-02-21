@@ -1,6 +1,8 @@
 ﻿namespace NEvo.Messaging.Queries;
 
-public abstract class Query<TResult> : Message, IMessage<TResult>
+public abstract class Query<TResult> : IMessage<TResult>
 {
-    public override sealed MessageType MessageType => MessageType.Query;
+    public static MessageType MessageType => MessageType.Query;
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }
