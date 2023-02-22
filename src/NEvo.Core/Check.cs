@@ -5,7 +5,7 @@ namespace NEvo.Core;
 /// <summary>
 /// Helper methods to simplify param checking
 /// </summary>
-internal class Check
+public class Check
 {
     /// <summary>
     /// Returns value provided as first argument or throw exception if value is null

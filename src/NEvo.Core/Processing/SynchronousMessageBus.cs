@@ -22,7 +22,7 @@ public class SynchronousMessageBus : IMessageBus
         (await _messageProcessor.ProcessAsync<Command, Unit>(command))
         .Handle(
             _ => Try.Success(), 
-            failure => Try.Failure(new AggregateException(failure.Select(s => s.Exception)))
+            failure => Try.Failure(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 
     public async Task PublishAsync(Event @event) =>
@@ -33,6 +33,6 @@ public class SynchronousMessageBus : IMessageBus
         (await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query))
         .Handle(
             result => Try.Success(result),
-            failure => Try.Failure<TResult>(new AggregateException(failure.Select(s => s.Exception)))
+            failure => Try.Failure<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 }

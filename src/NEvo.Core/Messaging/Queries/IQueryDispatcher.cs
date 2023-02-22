@@ -8,7 +8,7 @@ public interface IQueryDispatcher
         DispatchAsync(query).ConfigureAwait(false).GetAwaiter().GetResult()
         .Handle(
             result => result,
-            failure => throw new AggregateException(failure)
+            failure => throw failure
         );
 
     Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query);
