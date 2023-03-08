@@ -1,9 +1,7 @@
-﻿using NEvo.Messaging.Queries;
-
-namespace NEvo.Messaging.Events;
+﻿namespace NEvo.Messaging.Events;
 
 public interface IEventPublisher
 {
-    void Publish(Event @event) => PublishAsync(@event).ConfigureAwait(false).GetAwaiter().GetResult();
-    Task PublishAsync(Event @event);
+    void Publish<TEvent>(TEvent @event) where TEvent : Event => PublishAsync(@event).ConfigureAwait(false).GetAwaiter().GetResult();
+    Task PublishAsync<TEvent>(TEvent @event) where TEvent : Event;
 }

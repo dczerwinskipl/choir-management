@@ -1,7 +1,7 @@
 ﻿using NEvo.Messaging;
 using NEvo.Messaging.Events;
 
-namespace NEvo.Core.Publishing.Outboxing;
+namespace NEvo.Publishing.Outboxing;
 
 public interface IEventOutbox
 {

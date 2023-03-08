@@ -1,6 +1,7 @@
-﻿using NEvo.ValueObjects;
+﻿using NEvo.Core;
+using Newtonsoft.Json;
 
-namespace NEvo.Core.ValueObjects;
+namespace NEvo.ValueObjects;
 
 /// <summary>
 /// Type that represents abstract source as value object
@@ -14,12 +15,13 @@ public class SourceId : ValueObject
     /// <summary>
     /// Identifier of object
     /// </summary>
-    public string Id { get; }    
+    public string Id { get; }
 
-    private SourceId(string id, string type)
+    [JsonConstructor]
+    private SourceId(string type, string id)
     {
-        Id = Check.NullOrEmpty(id);
         Type = Check.NullOrEmpty(type);
+        Id = Check.NullOrEmpty(id);
     }
 
     /// <summary>
@@ -28,13 +30,15 @@ public class SourceId : ValueObject
     /// <param name="id">source identifier</param>
     /// <param name="type">source type</param>
     /// <returns>New SourceId instance</returns>
-    public static SourceId New(string id, string type) => new SourceId(id, type);
+    public static SourceId New(string type, string id) => new SourceId(type, id);
 
     /// <summary>
     /// Create a copy of current SourceId
     /// </summary>
     /// <returns>New SourceId instance</returns>
     public SourceId Copy() => new SourceId(Id, Type);
+
+    public override string ToString() => $"({Type},{Id})";
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

@@ -1,17 +1,18 @@
 ﻿using NEvo.Core;
-using NEvo.Core.ValueObjects;
+using NEvo.ValueObjects;
 
 namespace NEvo.Messaging.Events;
 
-public abstract class Event : Message 
+public abstract record Event : IMessage<Unit>
 {
-    public override sealed MessageType MessageType => MessageType.Event;
+    public static MessageType MessageType => MessageType.Event;
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public SourceId? Source { get; }
 
-    protected Event() { }
     protected Event(SourceId source)
     {
-        Source = Check.Null(source);
+        Source = source; // Check.Null(source); deserialization problem?
     }
 }

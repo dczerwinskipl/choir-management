@@ -9,11 +9,10 @@ public enum MessageType
 
 public interface IMessage
 {
-    MessageType MessageType { get;}
-    DateTime CreatedAt { get; }
+    public static abstract MessageType MessageType { get; }
 }
 
 public interface IMessage<out TResposne> : IMessage
 {
-
+    DateTime CreatedAt { get; }
 }

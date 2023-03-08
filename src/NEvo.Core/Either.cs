@@ -37,5 +37,37 @@ public static class Either
     /// <typeparam name="TRight">Type returned when success</typeparam>
     /// <param name="right">Result of success execution</param>
     /// <returns>New Either  instance that represents success</returns>
-    public static Either<Exception, TRight> Left<TRight>(TRight right) => new(right);
+    public static Either<Exception, TRight> Right<TRight>(TRight right) => new(right);
+
+    /// <summary>
+    /// Simplified version to create reponse for failure execution of void methods. Left type is always Exception
+    /// </summary>
+    /// <typeparam name="TRight">Type returned when success</typeparam>
+    /// <param name="exc">Exception</param>
+    /// <returns>New Either  instance that represents failure</returns>
+    public static Either<Exception, Unit> Left(Exception exc) => new(exc);
+
+    /// <summary>
+    /// Simplified version to create reponse for success execution of void methods. Left type is always Exception
+    /// </summary>
+    /// <typeparam name="TRight">Type returned when success</typeparam>
+    /// <param name="right">Result of success execution</param>
+    /// <returns>New Either  instance that represents success</returns>
+    public static Either<Exception, Unit> Right() => new(Unit.Value);
+
+    /// <summary>
+    /// Simplified version to create reponse for failure execution of void methods. Left type is always Exception
+    /// </summary>
+    /// <typeparam name="TRight">Type returned when success</typeparam>
+    /// <param name="exc">Exception</param>
+    /// <returns>New Either  instance that represents failure</returns>
+    public static Task<Either<Exception, Unit>> TaskLeft(Exception exc) => Task.FromResult(new Either<Exception, Unit>(exc));
+
+    /// <summary>
+    /// Simplified version to create reponse for success execution of void methods. Left type is always Exception
+    /// </summary>
+    /// <typeparam name="TRight">Type returned when success</typeparam>
+    /// <param name="right">Result of success execution</param>
+    /// <returns>New Either  instance that represents success</returns>
+    public static Task<Either<Exception, Unit>> TaskRight() => Task.FromResult(new Either<Exception, Unit>(Unit.Value));
 }

@@ -5,7 +5,7 @@ namespace NEvo.Core;
 /// <summary>
 /// Helper methods to simplify param checking
 /// </summary>
-internal class Check
+public class Check
 {
     /// <summary>
     /// Returns value provided as first argument or throw exception if value is null
@@ -29,7 +29,7 @@ internal class Check
     /// <param name="paramName">Optional, parameter name for exception</param>
     /// <returns>Provided value</returns>
     /// <exception cref="ArgumentNullException">Throws when provided value is null or empty</exception>
-    public static string NullOrEmpty(string value, string? message = null, [CallerArgumentExpression("value")] string? paramName = null)
+    public static string NullOrEmpty(string? value, string? message = null, [CallerArgumentExpression("value")] string? paramName = null)
     {
         return !string.IsNullOrEmpty(value) ? value : throw new ArgumentNullException(paramName, message);
     }

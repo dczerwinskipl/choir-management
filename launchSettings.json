@@ -8,7 +8,6 @@
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "choirmanagement.accounting.webservice": "StartDebugging",
-        "choirmanagement.frontend": "StartDebugging",
         "choirmanagement.membership.webservice": "StartDebugging"
       }
     }

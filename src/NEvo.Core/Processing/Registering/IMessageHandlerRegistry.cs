@@ -1,12 +1,11 @@
 ﻿using NEvo.Messaging;
+using System.ComponentModel;
 
 namespace NEvo.Processing.Registering;
 
 public interface IMessageHandlerRegistry
 {
     void Register<THandler>();
-    IMessageHandlerWrapper GetHandler(IMessage message);
-    IEnumerable<IMessageHandlerWrapper> GetHandlers(IMessage message);
-    IMessageHandlerWrapper<TResult> GetHandler<TResult>(IMessage<TResult> message);
-    IEnumerable<IMessageHandlerWrapper<TResult>> GetHandlers<TResult>(IMessage<TResult> message);
+    IMessageHandlerWrapper GetHandler<TMessage, TResult>(TMessage message) where TMessage : IMessage<TResult>;
+    IEnumerable<IMessageHandlerWrapper<TResult>> GetHandlers<TMessage, TResult>(TMessage message) where TMessage : IMessage<TResult>;
 }

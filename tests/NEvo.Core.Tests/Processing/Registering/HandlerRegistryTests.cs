@@ -1,19 +1,19 @@
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using NEvo.Core.Processing.Commands;
-using NEvo.Messaging.Commands;
 using NEvo.Processing.Commands;
+using NEvo.Messaging.Commands;
 using NEvo.Processing.Registering;
+using NEvo.Core;
 
-namespace NEvo.Core.Tests.Processing.Registering;
+namespace NEvo.Tests.Processing.Registering;
 
 public class HandlerRegistryTests
 {
-    public HandlerRegistry CreateHandlerRegistry() 
+    public MessageHandlerRegistry CreateHandlerRegistry() 
     {
         var serviceProvider = Substitute.For<IServiceProvider>();
-        return new HandlerRegistry(serviceProvider, CommandHandlerWrapperFactory.MessageHandlerOptions);
+        return new MessageHandlerRegistry(serviceProvider, CommandHandlerWrapperFactory.MessageHandlerOptions);
     }
 
     #region UnitTests
@@ -45,7 +45,7 @@ public class HandlerRegistryTests
         // arrange
         var handlerRegistry = CreateHandlerRegistry();
         // act
-        var act = () => handlerRegistry.GetHandlers(new CommandA());
+        var act = () => handlerRegistry.GetHandlers<Command, Unit>(new CommandA());
 
         // assert
         act.Should().Throw<HandlerNotFoundException>();
@@ -59,7 +59,7 @@ public class HandlerRegistryTests
         handlerRegistry.Register<CommandAHandler>();
 
         // act
-        var handlerDescriptions = handlerRegistry.GetHandlers(new CommandA());
+        var handlerDescriptions = handlerRegistry.GetHandlers<Command, Unit>(new CommandA());
 
         // assert
         handlerDescriptions.Should()
@@ -74,14 +74,14 @@ public class HandlerRegistryTests
         handlerRegistry.Register<CommandAHandler>();
 
         // act
-        var handlerWrapper = handlerRegistry.GetHandler(new CommandA());
+        var handlerWrapper = handlerRegistry.GetHandler<Command, Unit>(new CommandA());
 
         // assert
         using (new AssertionScope())
         {
             handlerWrapper.Description.HandlerType.Should().Be(typeof(CommandAHandler));
             handlerWrapper.Description.InterfaceType.Should().Be(typeof(ICommandHandler<CommandA>));
-            handlerWrapper.Description.MessageClass.Should().Be(typeof(CommandA));
+            handlerWrapper.Description.MessageType.Should().Be(typeof(CommandA));
             handlerWrapper.Description.Method.Should().Match(method => method.Name == nameof(CommandAHandler.HandleAsync) && method.DeclaringType == typeof(CommandAHandler));
         }
     }
@@ -113,11 +113,11 @@ public class HandlerRegistryTests
         serviceCollection.AddSingleton(dependencyMock); //cant access directly implementation created inside wrapper, so we will check additional dependency
         var serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var handlerRegistry = new HandlerRegistry(serviceProvider, CommandHandlerWrapperFactory.MessageHandlerOptions);
+        var handlerRegistry = new MessageHandlerRegistry(serviceProvider, CommandHandlerWrapperFactory.MessageHandlerOptions);
         handlerRegistry.Register<CommandAHandler>();
 
         var message = new CommandA();
-        var handler = handlerRegistry.GetHandler(message);
+        var handler = handlerRegistry.GetHandler<Command, Unit>(message);
 
         // act
         var result = await handler.Handle(message);
@@ -125,15 +125,15 @@ public class HandlerRegistryTests
         // assert
         using (new AssertionScope())
         {
-            result.IsRight.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             dependencyMock.Received().Act();
         }
     }
     #endregion
 
     #region Test implementations
-    public class CommandA : Command { }
-    public class CommandB : Command { }
+    public record CommandA : Command { }
+    public record CommandB : Command { }
 
     public class CommandAHandler : ICommandHandler<CommandA>
     {
@@ -146,21 +146,21 @@ public class HandlerRegistryTests
             Dependency = dependency;
         }
 
-        public Task HandleAsync(CommandA command)
+        public Task<Try<Unit>> HandleAsync(CommandA command)
         {
             Dependency.Act();
-            return Task.CompletedTask;
+            return Try.TaskSuccess();
         }
     }
 
 
     public class CommandABHandler : ICommandHandler<CommandA>, ICommandHandler<CommandB>
     {
-        public Task HandleAsync(CommandA command)
+        public Task<Try<Unit>> HandleAsync(CommandA command)
         {
             throw new NotImplementedException();
         }
-        public Task HandleAsync(CommandB command)
+        public Task<Try<Unit>> HandleAsync(CommandB command)
         {
             throw new NotImplementedException();
         }

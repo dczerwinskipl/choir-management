@@ -1,4 +1,4 @@
-﻿namespace NEvo.Core.Processing;
+﻿namespace NEvo.Processing;
 
 public interface IMessageProcessingResult
 {

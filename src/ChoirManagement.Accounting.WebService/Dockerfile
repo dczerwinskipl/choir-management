@@ -7,10 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/ChoirManagement.Accounting.WebService", "ChoirManagement.Accounting.WebService"]
-RUN dotnet restore "ChoirManagement.Accounting.WebService/ChoirManagement.Accounting.WebService.csproj"
+COPY ["src/ChoirManagement.Accounting.WebService/ChoirManagement.Accounting.WebService.csproj", "src/ChoirManagement.Accounting.WebService/"]
+COPY ["src/NEvo.Core/NEvo.Core.csproj", "src/NEvo.Core/"]
+RUN dotnet restore "src/ChoirManagement.Accounting.WebService/ChoirManagement.Accounting.WebService.csproj"
 COPY . .
-WORKDIR "/src/ChoirManagement.Accounting.WebService"
+WORKDIR "/src/src/ChoirManagement.Accounting.WebService"
 RUN dotnet build "ChoirManagement.Accounting.WebService.csproj" -c Release -o /app/build
 
 FROM build AS publish

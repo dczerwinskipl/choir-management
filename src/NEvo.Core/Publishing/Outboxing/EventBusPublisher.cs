@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NEvo.Core.Publishing.Outboxing
+namespace NEvo.Publishing.Outboxing
 {
     internal class EventBusPublisher
     {

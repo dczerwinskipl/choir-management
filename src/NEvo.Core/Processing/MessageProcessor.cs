@@ -1,7 +1,8 @@
-﻿using NEvo.Messaging;
+﻿using NEvo.Core;
+using NEvo.Messaging;
 using NEvo.Processing.Registering;
 
-namespace NEvo.Core.Processing;
+namespace NEvo.Processing;
 
 public class MessageProcessor : IMessageProcessor
 {
@@ -11,9 +12,9 @@ public class MessageProcessor : IMessageProcessor
         _messageHandlerRegistry = Check.Null(messageHandlerRegistry);
     }
 
-    public async Task<Either<IMessageProcessingFailures, TResult>> ProcessAsync<TResult>(IMessage<TResult> message)
+    public async Task<Either<IMessageProcessingFailures, TResult>> ProcessAsync<TMessage, TResult>(TMessage message) where TMessage : IMessage<TResult>
     {
-        var handlerDescriptions = _messageHandlerRegistry.GetHandlers(message);
+        var handlerDescriptions = _messageHandlerRegistry.GetHandlers<TMessage, TResult>(message);
         //todo: pipeline
         var handlerWrapper = handlerDescriptions.Single();
 
@@ -21,8 +22,8 @@ public class MessageProcessor : IMessageProcessor
         {
             return (await handlerWrapper.Handle(message))
                             .Handle(
-                                success => Either.Right<IMessageProcessingFailures, TResult>(success.Result),
-                                error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(error))
+                                Either.Right<IMessageProcessingFailures, TResult>,
+                                error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, error)))
                                 );
         }
         catch (Exception exc)
@@ -33,18 +34,18 @@ public class MessageProcessor : IMessageProcessor
         }
     }
 
-    public async Task<Either<IMessageProcessingFailures, Void>> ProcessAsync(IMessage message)
+    public async Task<Either<IMessageProcessingFailures, Unit>> ProcessAsync<TMessage>(TMessage message) where TMessage : IMessage<Unit>
     {
-        var handlerWrappers = _messageHandlerRegistry.GetHandlers(message);
+        var handlerWrappers = _messageHandlerRegistry.GetHandlers<TMessage, Unit>(message);
         var errors = new List<MessageProcessingFailure>();
-        var result = new List<MessageProcessingSuccess>();
+        var result = new List<Unit>();
 
         //todo: pipeline
         foreach (var handlerWrapper in handlerWrappers)
         {
             try
             {
-                (await handlerWrapper.Handle(message)).Handle(result.Add, errors.Add);
+                (await handlerWrapper.Handle(message)).OnFailure(exc => errors.Add(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, exc)));
             }
             catch (Exception exc)
             {
@@ -53,7 +54,7 @@ public class MessageProcessor : IMessageProcessor
         }
 
         return errors.Any() ?
-            Either.Left<IMessageProcessingFailures, Void>(new MessageProcessingFailures(errors)) :
-            Either.Right<IMessageProcessingFailures, Void>(Void.Instance);
+            Either.Left<IMessageProcessingFailures, Unit>(new MessageProcessingFailures(errors)) :
+            Either.Right<IMessageProcessingFailures, Unit>(Unit.Value);
     }
 }
