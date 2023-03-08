@@ -19,7 +19,7 @@ public class CommandHandlerWrapper<THandler, TMessage> : IMessageHandlerWrapper
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Try<object>> Handle(IMessage message)
+    public async Task<Try<object?>> Handle(IMessage message)
     {
         return await Try.OfAsync(async () =>
         {
@@ -28,7 +28,7 @@ public class CommandHandlerWrapper<THandler, TMessage> : IMessageHandlerWrapper
             var handler = ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
             var result = await handler.HandleAsync(Check.Null(message as TMessage));
 
-            return result.Cast<object>();
+            return result.Cast<object?>();
         });
         
     }

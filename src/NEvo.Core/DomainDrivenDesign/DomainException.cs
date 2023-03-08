@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NEvo.Core.DomainDrivenDesign
+namespace NEvo.DomainDrivenDesign
 {
     public abstract class DomainException : Exception
     {

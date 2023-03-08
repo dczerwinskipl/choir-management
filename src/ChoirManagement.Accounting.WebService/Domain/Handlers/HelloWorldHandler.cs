@@ -19,18 +19,20 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
 
     public async Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
     {
-        await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.CreatedAt.ToString())));
-
+        await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.Message)));
+        
         if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
             return Try.Failure(new ValidationException("Don't say hi!"));
 
         return Try.Success();
     }
 
-    public Task HandleAsync(HelloWorldEvent @event)
+    public async Task HandleAsync(HelloWorldEvent @event)
     {
-        Console.WriteLine(@event.Message);
-        return Task.CompletedTask;
+        Console.WriteLine($"Start");
+        await Task.Delay(2000);
+        Console.WriteLine($"{@event.Message}");
+        Console.WriteLine($"Stop");
     }
 
     public async Task<string> HandleAsync(HelloWorldQuery query)

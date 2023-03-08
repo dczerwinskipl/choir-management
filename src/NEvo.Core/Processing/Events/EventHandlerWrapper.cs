@@ -19,13 +19,13 @@ public class EventHandlerWrapper<THandler, TMessage> : IMessageHandlerWrapper
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Try<object>> Handle(IMessage message)
+    public async Task<Try<object?>> Handle(IMessage message)
     {
         return (await Try.OfAsync(async () => 
         { 
             using var scope = _serviceProvider.CreateScope();
             var handler = ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
             await handler.HandleAsync(Check.Null(message as TMessage));
-        })).Cast<object>();
+        })).Cast<object?>();
     }
 }

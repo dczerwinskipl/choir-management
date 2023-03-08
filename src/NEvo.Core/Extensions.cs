@@ -1,24 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NEvo.Core.DomainDrivenDesign;
-using NEvo.Messaging;
+﻿using NEvo.DomainDrivenDesign;
 using NEvo.Processing.Registering;
-using NEvo.Processing;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Reflection;
-using NEvo.Processing.Commands;
-using NEvo.Processing.Events;
-using NEvo.Processing.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 /* all of that should be in NEvo MVC integration project */
 namespace NEvo.Core;
 
 public static class IntegrationExtensions
 {
-    public static void UseNEvo(this WebApplication application, params (string Prefix, Action<RouteGroupBuilder> ConfigureRouteGroup)[] routeGroups)
+    public static WebApplication UseNEvoRoute(this WebApplication application, params (string Prefix, Action<RouteGroupBuilder> ConfigureRouteGroup)[] routeGroups)
     {
         foreach(var (prefix, configureRouteGroup) in routeGroups)
         {
@@ -26,28 +21,14 @@ public static class IntegrationExtensions
             group.AddEndpointFilter<TryEndpointFilter>();
             configureRouteGroup(group);
         }
+        return application;
     }
 
-    public static void AddNEvo(this WebApplicationBuilder builder, Action<MessageHandlerRegistry>? configureHandlers = null)
+    public static WebApplication UseNEvoCqrs(this WebApplication application, Action<IMessageHandlerRegistry>? configureHandlers = null)
     {
-        AddNEvo(builder.Services, configureHandlers);
-    }
-
-    public static void AddNEvo(this IServiceCollection serviceCollection, Action<MessageHandlerRegistry>? configureHandlers = null)
-    {
-        serviceCollection.AddSingleton<IMessageHandlerRegistry, MessageHandlerRegistry>(sp =>
-        {
-            var registry = new MessageHandlerRegistry(sp,
-                CommandHandlerWrapperFactory.MessageHandlerOptions,
-                EventHandlerWrapperFactory.MessageHandlerOptions,
-                QueryHandlerWrapperFactory.MessageHandlerOptions
-            );
-            configureHandlers?.Invoke(registry);
-            return registry;
-        });
-
-        serviceCollection.AddSingleton<IMessageProcessor, MessageProcessor>();
-        serviceCollection.AddSingleton<IMessageBus, SynchronousMessageBus>();
+        var registry = application.Services.GetRequiredService<IMessageHandlerRegistry>();
+        configureHandlers?.Invoke(registry);
+        return application;
     }
 }
 

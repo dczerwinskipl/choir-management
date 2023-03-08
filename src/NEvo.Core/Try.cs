@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace NEvo.Core;
+﻿namespace NEvo.Core;
 
 public struct Try<TResult>
 {

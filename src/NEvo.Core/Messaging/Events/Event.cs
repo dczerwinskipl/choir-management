@@ -13,6 +13,6 @@ public abstract record Event : IMessage<Unit>
 
     protected Event(SourceId source)
     {
-        Source = Check.Null(source);
+        Source = source; // Check.Null(source); deserialization problem?
     }
 }

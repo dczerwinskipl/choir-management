@@ -1,20 +1,30 @@
 using ChoirManagement.Accounting.WebService;
 using NEvo.Core;
-
-var instanceId = Guid.NewGuid();
+using NEvo.Messaging;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables()
+                     .SetBasePath(Directory.GetCurrentDirectory())
+                     .AddJsonFile("appsettings.json")
+                     .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+
+builder.Services.AddNEvo(nEvo => nEvo
+                                    .AddCqrs<ExternalMessageBus>()
+                                    .AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                    .AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
+                        );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.AddNEvo(AccountingModuleConfiguration.Handlers); /* todo: modify API, should add handlers in app UseNEvo*/
 
 var app = builder.Build();
-app.UseNEvo(
+app.UseNEvoCqrs(AccountingModuleConfiguration.Handlers);
+app.UseNEvoRoute(
     ("/api/settlements", AccountingModuleConfiguration.SettlementsRoutes)
     //("/api/payments", AccountingModuleConfiguration.PaymentsRoutes)
 );
 
-//TODO: only on developer Environment, but i have to modify pipelines
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
