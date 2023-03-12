@@ -6,10 +6,10 @@ public interface IQueryDispatcher
 {
     TResult Dispatch<TResult>(Query<TResult> query) =>
         DispatchAsync(query).ConfigureAwait(false).GetAwaiter().GetResult()
-        .Handle(
+        .Map(
             result => result,
             failure => throw failure
         );
 
-    Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query);
+    Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query);
 }

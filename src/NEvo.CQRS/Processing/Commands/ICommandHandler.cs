@@ -5,5 +5,5 @@ namespace NEvo.Processing.Commands;
 
 public interface ICommandHandler<in TCommand> where TCommand : Command
 {
-    Task<Try<Unit>> HandleAsync(TCommand command);
+    Task<Either<Exception, Unit>> HandleAsync(TCommand command);
 }

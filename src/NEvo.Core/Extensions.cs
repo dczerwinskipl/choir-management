@@ -32,17 +32,17 @@ public class TryEndpointFilter : IEndpointFilter
             return result;
 
         var type = result.GetType();
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Try<>))
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Either<,>))
         {
-            var resultType = type.GetGenericArguments()[0];
+            var resultType = type.GetGenericArguments()[1];
             return _invokeGeneric.MakeGenericMethod(resultType).Invoke(this, new[] { result, context });
         }
 
         return result;
     }
 
-    private object? MapTryResult<TTryResult>(Try<TTryResult> rawResponse, EndpointFilterInvocationContext context) =>
-        rawResponse.Handle<object?>(
+    private object? MapTryResult<TTryResult>(Either<Exception, TTryResult> rawResponse, EndpointFilterInvocationContext context) =>
+        rawResponse.Map<object?>(
             success => success,
             exception =>
             {

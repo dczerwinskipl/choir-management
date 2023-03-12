@@ -120,7 +120,7 @@ public class SagaHandlerWrapper<THandler, TEvent, TSagaData> : IMessageHandlerWr
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Try<object?>> Handle(IMessage message)
+    public async Task<Either<Exception, object?>> Handle(IMessage message)
     {
         return (await Try.OfAsync(async () =>
         {

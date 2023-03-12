@@ -19,7 +19,7 @@ public class QueryHandlerWrapper<THandler, TMessage, TResult> : IMessageHandlerW
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Try<object?>> Handle(IMessage message)
+    public async Task<Either<Exception, object?>> Handle(IMessage message)
     {
         return await Try.OfAsync<object?>(async () =>
         {

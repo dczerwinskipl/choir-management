@@ -19,5 +19,5 @@ public struct Null
 
 public class NotFoundException : Exception
 {
-
+    public NotFoundException(object id) { }
 }

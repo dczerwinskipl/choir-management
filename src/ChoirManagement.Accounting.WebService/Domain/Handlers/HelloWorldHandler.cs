@@ -17,14 +17,14 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
         _messageBus = messageBus;
     }
 
-    public async Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
+    public async Task<Either<Exception, Unit>> HandleAsync(HelloWorldCommand command)
     {
         await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, ObjectId.New(nameof(HelloWorldCommand), command.Message)));
         
         if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
-            return Try.Failure(new ValidationException("Don't say hi!"));
+            return Either.Left(new ValidationException("Don't say hi!"));
 
-        return Try.Success();
+        return Either.Right();
     }
 
     public async Task HandleAsync(HelloWorldEvent @event)

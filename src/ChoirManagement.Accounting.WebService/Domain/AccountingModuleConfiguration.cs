@@ -16,7 +16,7 @@ public static class AccountingModuleConfiguration
 
     public static void SettlementsRoutes(RouteGroupBuilder builder)
     {
-        builder.MapGet("", async () => { Console.WriteLine("Test"); return Try.Success("Hello world"); })
+        builder.MapGet("", async () => { Console.WriteLine("Test"); return Either.Right("Hello world"); })
                .Produces(200, typeof(string))
                .Produces(400, typeof(Unit))
                .Produces(500, typeof(Unit));

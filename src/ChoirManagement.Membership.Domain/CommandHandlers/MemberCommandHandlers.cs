@@ -18,26 +18,28 @@ public class MemberCommandHandlers :
     }
 
 
-    public async Task<Try<Unit>> HandleAsync(RegisterMember command)
+    public async Task<Either<Exception, Unit>> HandleAsync(RegisterMember command)
         => await Try
-                    .OfAsync(async () => await _repository.GetAsync(command.MemberId))
+                    .OfAsync(async () => await _repository.GetAsync(command.MemberId), notFound => new NotFoundException(command.MemberId))
                     // i tutaj lepszy byłby właśnie either/Optional, etc. ale spróbujemy z Try
-                    .HandleAsync(
-                        memberFound => Try.TaskSuccess(),
-                        async memberNotFound => await Try
-                                        .Of(() => Member.NewMember(command.MemberRegistrationForm, command.MemberId))
-                                        .ThenAsync(_repository.SaveAsync)
+                    .MapAsync(
+                        memberFound => Either.TaskRight(),
+                        memberNotFound => Try
+                                            .Of(() => Member.NewMember(command.MemberRegistrationForm, command.MemberId))
+                                            .ThenAsync(_repository.SaveAsync)
+                                            .ToUnit()
                     );
 
-    public async Task<Try<Unit>> HandleAsync(AnonimizeMember command)
+    public async Task<Either<Exception, Unit>> HandleAsync(AnonimizeMember command)
         => await Try
-                    .OfAsync(async () => await _repository.GetAsync(command.MemberId))
-                    .ThenAsync(member => member.Anonimize().Map(_ => member))
+                    .OfAsync(async () => await _repository.GetAsync(command.MemberId), notFound => new NotFoundException(command.MemberId))
+                    .Then(member => member.Anonimize())
                     .ThenAsync(_repository.SaveAsync)
-                    .Catch(exception => exception switch
+                    .ToUnit()
+                    .Handle(exception => exception switch
                     {
-                        MemberAlreadyAnonymisedException => Try.Success(),
-                        _ => Try.Failure(exception)
+                        MemberAlreadyAnonymisedException => Either.Right(),
+                        _ => Either.Left(exception)
                     });
 
 }
