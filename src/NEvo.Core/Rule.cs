@@ -1,6 +1,6 @@
 ﻿namespace NEvo.Core;
 
-public class RuleBuilder<TResult>
+public class RuleBuilder
 {
     private readonly Dictionary<string, (Func<bool> Predicate, Func<string, Exception> ExceptionFactory)> _rules = new Dictionary<string, (Func<bool> predicate, Func<string, Exception> exceptionFactory)>();
     private readonly Func<string, Exception> _defaultExceptionFactory;
@@ -10,13 +10,13 @@ public class RuleBuilder<TResult>
         _defaultExceptionFactory = defaultExceptionFactory;
     }
 
-    public RuleBuilder<TResult> Rule(string ruleName, Func<bool> predicate, Func<string, Exception>? exceptionFactory = null)
+    public RuleBuilder Rule(string ruleName, Func<bool> predicate, Func<string, Exception>? exceptionFactory = null)
     {
         _rules.Add(ruleName, (predicate, exceptionFactory ?? _defaultExceptionFactory));
         return this;
     }
 
-    public Try<TResult> OnSuccess(Func<TResult> func)
+    public Either<Exception, TResult> OnSuccess<TResult>(Func<TResult> func)
     {
         var rules = _rules.Select(kv => {
                 try {
@@ -29,12 +29,12 @@ public class RuleBuilder<TResult>
             .OfType<Exception>()
             .ToList();
 
-        return rules.Any() ? 
-            Try.Failure<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) : 
+        return rules.Any() ?
+            Either.Left<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) : 
             Try.Of(func);
     }
 
-    public Try<Unit> OnSuccess(Action action)
+    public Either<Exception, Unit> OnSuccess(Action action)
     {
         var rules = _rules.Select(kv => {
             try
@@ -50,7 +50,7 @@ public class RuleBuilder<TResult>
             .ToList();
 
         return rules.Any() ?
-            Try.Failure(rules.Count > 1 ? new AggregateException(rules) : rules.First()) :
+            Either.Left(rules.Count > 1 ? new AggregateException(rules) : rules.First()) :
             Try.Of(action);
     }
 }

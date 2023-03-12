@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace NEvo.Core;
+﻿namespace NEvo.Core;
 
 /// <summary>
 /// Class that represents alternative results of execution.
@@ -70,22 +67,14 @@ public struct Either<TLeft, TRight>
     /// <summary>
     /// Map success or failure to new output
     /// </summary>
-    public TResult Handle<TResult>(Func<TRight, TResult> onSucces, Func<TLeft, TResult> onFailure)
+    public TResult Map<TResult>(Func<TRight, TResult> onSucces, Func<TLeft, TResult> onFailure)
         => IsRight ? onSucces(Right) : onFailure(Left);
 
     /// <summary>
-    /// Execute action when success or failure
+    /// Map success or failure to new output
     /// </summary>
-    public Either<TLeft, TRight> Handle(Action<TRight> onSucces, Action<TLeft> onFailure)
-    { 
-        if (IsRight) { 
-            onSucces(Right); 
-        } 
-        else { 
-            onFailure(Left); 
-        }
-        return this;
-    }
+    public async Task<TResult> MapAsync<TResult>(Func<TRight, Task<TResult>> onSucces, Func<TLeft, Task<TResult>> onFailure)
+        => await (IsRight ? onSucces(Right) : onFailure(Left));
 
     /// <summary>
     /// Execute action when fail
@@ -110,4 +99,10 @@ public struct Either<TLeft, TRight>
         }
         return this;
     }
+
+    public Either<TLeft, TRight> Cast<TRight>() => Map(success => Either.Right<TLeft, TRight>((TRight)(object)success), Either.Left<TLeft, TRight>);
+
+    public Either<TLeft, TRight> Handle(Func<TLeft, Either<TLeft, TRight>> onFailure) => Map(Either.Right<TLeft, TRight>, onFailure);
+
+    public TRight Handle(Func<TLeft, TRight> onFailure) => Map(success => success, onFailure);
 }

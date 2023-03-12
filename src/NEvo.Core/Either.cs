@@ -63,6 +63,10 @@ public static class Either
     /// <returns>New Either  instance that represents failure</returns>
     public static Task<Either<Exception, Unit>> TaskLeft(Exception exc) => Task.FromResult(new Either<Exception, Unit>(exc));
 
+    public static Task<Either<Exception, TRight>> TaskLeft<TRight>(Exception exc) => Task.FromResult(new Either<Exception, TRight>(exc));
+
+    public static Task<Either<TLeft, TRight>> TaskLeft<TLeft, TRight>(TLeft error) => Task.FromResult(new Either<TLeft, TRight>(error));
+
     /// <summary>
     /// Simplified version to create reponse for success execution of void methods. Left type is always Exception
     /// </summary>
@@ -70,4 +74,8 @@ public static class Either
     /// <param name="right">Result of success execution</param>
     /// <returns>New Either  instance that represents success</returns>
     public static Task<Either<Exception, Unit>> TaskRight() => Task.FromResult(new Either<Exception, Unit>(Unit.Value));
+
+    public static Task<Either<Exception, TRight>> TaskRight<TRight>(TRight result) => Task.FromResult(new Either<Exception, TRight>(result));
+
+    public static Task<Either<TLeft, TRight>> TaskRight<TLeft, TRight>(TRight result) => Task.FromResult(new Either<TLeft, TRight>(result));
 }

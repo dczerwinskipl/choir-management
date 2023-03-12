@@ -21,7 +21,7 @@ public class MessageProcessor : IMessageProcessor
         try
         {
             return (await handlerWrapper.Handle(message))
-                            .Handle(
+                            .Map(
                                 Either.Right<IMessageProcessingFailures, TResult>,
                                 error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, error)))
                                 );

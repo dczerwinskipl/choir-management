@@ -20,13 +20,11 @@ public abstract class AggregateRoot<TAggregateRoot, TKey> where TAggregateRoot :
 
     }
 
-    public static RuleBuilder<TResult> Rule<TResult>(string ruleName, Func<bool> predicate, Func<string, Exception>? exceptionFactory = null)
+    public static RuleBuilder Rule(string ruleName, Func<bool> predicate, Func<string, Exception>? exceptionFactory = null)
     {
-        var ruleBuilder = new RuleBuilder<TResult>(ruleName => new DomainRuleValidationException(ruleName));
+        var ruleBuilder = new RuleBuilder(ruleName => new DomainRuleValidationException(ruleName));
         return ruleBuilder.Rule(ruleName, predicate, exceptionFactory);
     }
-
-    public RuleBuilder<Unit> Rule(string ruleName, Func<bool> predicate, Func<string, Exception>? exceptionFactory = null) => Rule<Unit>(ruleName, predicate, exceptionFactory); 
 }
 
 public abstract class SnapshotAggregateRoot<TAggregateRoot, TKey> : AggregateRoot<TAggregateRoot, TKey> where TAggregateRoot : SnapshotAggregateRoot<TAggregateRoot, TKey>

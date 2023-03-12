@@ -5,9 +5,9 @@ using NEvo.Core;
 namespace ChoirManagement.Membership.Domain.Repositories
 {
     public interface IMemberRepository
-    { 
-        Try<Member> Get(MemberId memberId);
-        Task<Try<Member>> GetAsync(MemberId memberId);
+    {
+        Either<Null, Member> Get(MemberId memberId);
+        Task<Either<Null, Member>> GetAsync(MemberId memberId);
         void Save(Member member);
         Task SaveAsync(Member member);
     }

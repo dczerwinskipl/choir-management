@@ -10,12 +10,12 @@ namespace NEvo.Processing.Registering;
 public interface IMessageHandlerWrapper
 {
     MessageHandlerDescription Description { get; }
-    Task<Try<object?>> Handle(IMessage message);
+    Task<Either<Exception, object?>> Handle(IMessage message);
 }
 
 public interface IMessageHandlerWrapper<TResult> : IMessageHandlerWrapper
 {
-    Task<Try<TResult?>> Handle(IMessage<TResult> message);
+    Task<Either<Exception, TResult?>> Handle(IMessage<TResult> message);
 }
 
 public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TResult>
@@ -24,13 +24,13 @@ public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TRes
     public MessageHandlerDescription Description => _originalWrapper.Description;
 
     internal GenericMessageHandlerWrapper(IMessageHandlerWrapper originalWrapper) => _originalWrapper = originalWrapper;
-    public async Task<Try<TResult?>> Handle(IMessage<TResult> message) =>
-        (await _originalWrapper.Handle(message)).Handle(
-            success => Try.Success((TResult?)success),
-            Try.Failure<TResult?>
+    public async Task<Either<Exception, TResult?>> Handle(IMessage<TResult> message) =>
+        await _originalWrapper.Handle(message).Map(
+            success => Either.Right((TResult?)success),
+            Either.Left<TResult?>
             );
 
-    public Task<Try<object?>> Handle(IMessage message) => _originalWrapper.Handle(message);
+    public Task<Either<Exception, object?>> Handle(IMessage message) => _originalWrapper.Handle(message);
 }
 
 public static class MessageHandlerWrapperExtensions

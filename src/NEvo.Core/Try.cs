@@ -1,158 +1,29 @@
-﻿namespace NEvo.Core;
+﻿using Microsoft.AspNetCore.Http;
+using static System.Net.Mime.MediaTypeNames;
 
-public struct Try<TResult>
-{
-    private readonly Exception? _exception;
-    private readonly TResult? _result;
-
-    /// <summary>
-    /// Returns true if result is success
-    /// </summary>
-    public readonly bool IsFailure;
-
-    /// <summary>
-    /// Returns true if result is failure
-    /// </summary>
-    public bool IsSuccess => !IsFailure;
-
-    internal Try(Exception exc)
-    {
-        _exception = exc;
-        _result = default;
-        IsFailure = true;
-    }
-
-    internal Try(TResult result)
-    {
-        _result = result;
-        _exception = default;
-        IsFailure = false;
-    }
-
-    /// <summary>
-    /// Returns value if result is failure
-    /// </summary>
-    public Exception Exception
-    {
-        get
-        {
-            if (!IsFailure)
-                throw new InvalidOperationException("Not in the left state");
-#pragma warning disable CS8603 // Possible null reference return.
-            return _exception;
-#pragma warning restore CS8603 // Possible null reference return.
-        }
-    }
-
-    /// <summary>
-    /// Returns value if result is success
-    /// </summary>
-    public TResult Result
-    {
-        get
-        {
-            if (!IsSuccess)
-                throw new InvalidOperationException("Not in the right state");
-#pragma warning disable CS8603 // Possible null reference return.
-            return _result;
-#pragma warning restore CS8603 // Possible null reference return.
-        }
-    }
-
-    /// <summary>
-    /// Map success or failure to new output
-    /// </summary>
-    public TOther Handle<TOther>(Func<TResult, TOther> onSucces, Func<Exception, TOther> onFailure)
-        => IsSuccess ? onSucces(Result) : onFailure(Exception);
-
-    public Try<TOther> Map<TOther>(Func<TResult, TOther> onSucces)
-       => IsSuccess ? Try.Success(onSucces(Result)) : Try.Failure<TOther>(Exception);
-
-
-    public Task<TOther> HandleAsync<TOther>(Func<TResult, Task<TOther>> onSucces, Func<Exception, Task<TOther>> onFailure)
-        => IsSuccess ? onSucces(Result) : onFailure(Exception);
-
-    public Task<TOther> HandleAsync<TOther>(Func<TResult, TOther> onSucces, Func<Exception, TOther> onFailure)
-        => IsSuccess ? Task.FromResult(onSucces(Result)) : Task.FromResult(onFailure(Exception));
-
-    public Try<TOther> Cast<TOther>() => Handle(success => Try.Success((TOther)(object)success), Try.Failure<TOther>);
-
-    /// <summary>
-    /// Execute action when fail
-    /// </summary>
-    public Try<TResult> OnFailure(Action<Exception> onFailure)
-    {
-        if (IsFailure)
-        {
-            onFailure(Exception);
-        }
-        return this;
-    }
-
-    /// <summary>
-    /// Execute action when success
-    /// </summary>
-    public Try<TResult> OnSuccess(Action<TResult> onSuccess)
-    {
-        if (IsSuccess)
-        {
-            onSuccess(Result);
-        }
-        return this;
-    }
-    public Task<Try<Unit>> ThenAsync(Func<TResult, Task> onSuccess) => HandleAsync(result => Try.OfAsync(async () => { await onSuccess(result); return Unit.Value; }), Try.TaskFailure<Unit>);
-    public Task<Try<TOther>> ThenAsync<TOther>(Func<TResult, Task<Try<TOther>>> onSuccess) => HandleAsync(result => Try.OfAsync(() => onSuccess(result)), Try.TaskFailure<TOther>);
-    public Task<Try<TOther>> ThenAsync<TOther>(Func<TResult, Task<TOther>> onSuccess) => HandleAsync(result => Try.OfAsync(() => onSuccess(result)), Try.TaskFailure<TOther>);
-   
-    public static implicit operator Either<Exception, TResult>(Try<TResult> @try) => @try.Handle(success => new Either<Exception, TResult>(success), exception => new Either<Exception, TResult>(exception));
-    public static explicit operator Try<TResult>(Either<Exception, TResult> either) => either.Handle(success => new Try<TResult>(success), exception => new Try<TResult>(exception));
-}
-
+namespace NEvo.Core;
 
 /// <summary>
 /// Helper to create Try class instnace
 /// </summary>
 public static class Try
 {
-    /// <summary>
-    /// Create reponse for failure execution
-    /// </summary>
-    /// <typeparam name="TRight">Type returned when success</typeparam>
-    /// <param name="exception">Exception</param>
-    /// <returns>New Try instance that represents failure</returns>
-    public static Try<TRight> Failure<TRight>(Exception exception) => new(exception);
+    public static Either<Exception, Unit> ToUnit<TRight>(this Either<Exception, TRight> either) => either.Map(_ => Either.Right(), Either.Left);
 
-    /// <summary>
-    /// Create response for success execution
-    /// </summary>
-    /// <typeparam name="TRight">Type returned when success</typeparam>
-    /// <param name="right">Result of success execution</param>
-    /// <returns>New Try instance that represents success</returns>
-    public static Try<TRight> Success<TRight>(TRight right) => new(right);
-
-
-    public static Try<Unit> Failure(Exception exc) => new(exc);
-    public static Try<Unit> Success() => new(Unit.Value);
-
-    public static Task<Try<TResult>> TaskFailure<TResult>(Exception exc) => Task.FromResult(Failure<TResult>(exc));
-    public static Task<Try<TResult>> TaskSuccess<TResult>(TResult result) => Task.FromResult(Success(result));
-    public static Task<Try<Unit>> TaskFailure(Exception exc) => Task.FromResult(Failure(exc));
-    public static Task<Try<Unit>> TaskSuccess() => Task.FromResult(Success());
-
-    public static Try<Unit> Of(Action action)
+    public static Either<Exception, Unit> Of(Action action)
     {
         try
         {
             action();
-            return Success();
+            return Either.Right();
         }
         catch (Exception exc)
         {
-            return Failure(exc);
+            return Either.Left(exc);
         }
     }
 
-    public static Try<TResult> Of<TResult>(Func<Try<TResult>> action)
+    public static Either<Exception, TResult> Of<TResult>(Func<Either<Exception, TResult>> action)
     {
         try
         {
@@ -160,47 +31,35 @@ public static class Try
         }
         catch (Exception exc)
         {
-            return Failure<TResult>(exc);
+            return Either.Left<TResult>(exc);
         }
     }
 
-    public static Try<TResult> Of<TResult>(Func<TResult> action)
+    public static Either<Exception, TResult> Of<TResult>(Func<TResult> action)
     {
         try
         {
-            return Success(action());
+            return Either.Right(action());
         }
         catch (Exception exc)
         {
-            return Failure<TResult>(exc);
+            return Either.Left<TResult>(exc);
         }
     }
 
-    public static Try<TRight> Of<TRight>(Func<Either<Exception, TRight>> action)
-    {
-        try
-        {
-            return (Try<TRight>)action();
-        }
-        catch (Exception exc)
-        {
-            return Failure<TRight>(exc);
-        }
-    }
-
-    public static async Task<Try<Unit>> OfAsync(Func<Task> action)
+    public static async Task<Either<Exception, Unit>> OfAsync(Func<Task> action)
     {
         try
         {
             await action();
-            return Success();
+            return Either.Right();
         }
         catch (Exception exc)
         {
-            return Failure(exc);
+            return Either.Left(exc);
         }
     }
-    public static async Task<Try<TResult>> OfAsync<TResult>(Func<Task<Try<TResult>>> action)
+    public static async Task<Either<Exception, TResult>> OfAsync<TResult>(Func<Task<Either<Exception, TResult>>> action)
     {
         try
         {
@@ -208,55 +67,137 @@ public static class Try
         }
         catch (Exception exc)
         {
-            return Failure<TResult>(exc);
+            return Either.Left<TResult>(exc);
         }
     }
 
-    public static async Task<Try<TResult>> OfAsync<TResult>(Func<Task<TResult>> action)
+    public static async Task<Either<Exception, TRight>> OfAsync<TLeft, TRight>(Func<Task<Either<TLeft, TRight>>> action, Func<TLeft, Exception> errorHandler)
     {
         try
         {
-            return Success(await action());
+            return await action().Map(Either.Right<Exception, TRight>, error => Either.Left<TRight>(errorHandler(error)));
         }
         catch (Exception exc)
         {
-            return Failure<TResult>(exc);
+            return Either.Left<Exception, TRight>(exc);
         }
     }
 
-    public static async Task<Try<TResult>> OfAsync<TResult>(Func<Task<Either<Exception, TResult>>> action)
+    public static async Task<Either<Exception, TResult>> OfAsync<TResult>(Func<Task<TResult>> action)
     {
         try
         {
-            return (Try<TResult>)await action();
+            return Either.Right(await action());
         }
         catch (Exception exc)
         {
-            return Failure<TResult>(exc);
+            return Either.Left<TResult>(exc);
         }
     }
 
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<TOther>> onSuccess) =>
-        await (await @try).ThenAsync(result => onSuccess(result));
+    public static Either<TLeft, TRight> Then<TLeft, TRight>(this Either<TLeft, TRight> either, Action<TRight> action, Func<Exception, TLeft> errorHandler)
+    {
+        if(either.IsRight)
+        {
+            return Of(() => action(either.Right)).Map(s => Either.Right<TLeft, TRight>(either.Right), exc => Either.Left<TLeft, TRight>(errorHandler(exc)));
+        }
 
-    public static async Task<Try<Unit>> ThenAsync<TResult>(this Task<Try<TResult>> @try, Func<TResult, Task> onSuccess) =>
-    await (await @try).ThenAsync(async result => { await onSuccess(result); return Success(); });
+        return either;
+    }
 
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, TOther> onSuccess) =>
-        await (await @try).ThenAsync(result => Task.FromResult(onSuccess(result)));
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Try<TOther>> onSuccess) =>
-        await (await @try).ThenAsync(result => Task.FromResult(onSuccess(result)));
+    public static Either<Exception, TRight> Then<TRight>(this Either<Exception, TRight> either, Action<TRight> action)
+    {
+        if (either.IsRight)
+        {
+            return Of(() => action(either.Right)).Map(s => Either.Right(either.Right), Either.Left<TRight>);
+        }
+
+        return either;
+    }
+
+    public static Either<Exception, Unit> Then(this Either<Exception, Unit> either, Action action)
+    {
+        if (either.IsRight)
+        {
+            return Of(action);
+        }
+
+        return either;
+    }
 
 
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<Try<TOther>>> onSuccess) =>
-       await (await @try).ThenAsync(onSuccess);
+    public static async Task<Either<TLeft, TRight>> ThenAsync<TLeft, TRight>(this Either<TLeft, TRight> either, Func<TRight, Task> action, Func<Exception, TLeft> errorHandler)
+    {
+        if (either.IsRight)
+        {
+            return await OfAsync(() => action(either.Right)).Map(s => Either.Right<TLeft, TRight>(either.Right), exc => Either.Left<TLeft, TRight>(errorHandler(exc)));
+        }
 
-    public static async Task<Try<TResult>> Catch<TResult>(this Task<Try<TResult>> @try, Func<Exception, Try<TResult>> onFailure) =>
-        await (await @try).HandleAsync(success => Success(success), onFailure);
+        return either;
+    }
 
-    public static async Task<Try<TOther>> HandleAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Try<TOther>> onSuccess, Func<Exception, Try<TOther>> onFailure) =>
-        await (await @try).HandleAsync(onSuccess, onFailure);
+    public static async Task<Either<Exception, TRight>> ThenAsync<TRight>(this Either<Exception, TRight> either, Func<TRight, Task> action)
+    {
+        if (either.IsRight)
+        {
+            return await OfAsync(() => action(either.Right)).Map(s => Either.Right(either.Right), Either.Left<TRight>);
+        }
 
-    public static async Task<Try<TOther>> HandleAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<Try<TOther>>> onSuccess, Func<Exception, Task<Try<TOther>>> onFailure) =>
-        await (await @try).HandleAsync(onSuccess, onFailure);
+        return either;
+    }
+
+    public static async Task<Either<Exception, Unit>> ThenAsync(this Either<Exception, Unit> either, Func<Task> action)
+    {
+        if (either.IsRight)
+        {
+            return await OfAsync(action);
+        }
+
+        return either;
+    }
+
+    /*
+    public static async Task<Either<Exception, TOther>> ThenAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Task<TOther>> onSuccess) =>
+        await (await @Either).ThenAsync(result => onSuccess(result));
+
+    public static async Task<Either<Exception, Unit>> ThenAsync<TResult>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Task> onSuccess) =>
+    await (await @Either).ThenAsync(async result => { await onSuccess(result); return Success(); });
+
+    public static async Task<Either<Exception, TOther>> ThenAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, TOther> onSuccess) =>
+        await (await @Either).ThenAsync(result => Task.FromResult(onSuccess(result)));
+    public static async Task<Either<Exception, TOther>> ThenAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Either<Exception, TOther>> onSuccess) =>
+        await (await @Either).ThenAsync(result => Task.FromResult(onSuccess(result)));
+
+
+    public static async Task<Either<Exception, TOther>> ThenAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Task<Either<Exception, TOther>>> onSuccess) =>
+       await (await @Either).ThenAsync(onSuccess);
+
+    public static async Task<Either<Exception, TResult>> Catch<TResult>(this Task<Either<Exception, TResult>> @Either, Func<Exception, Either<Exception, TResult>> onFailure) =>
+        await (await @Either).HandleAsync(success => Success(success), onFailure);
+
+    public static async Task<Either<Exception, TOther>> HandleAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Either<Exception, TOther>> onSuccess, Func<Exception, Either<Exception, TOther>> onFailure) =>
+        await (await @Either).HandleAsync(onSuccess, onFailure);
+
+    public static async Task<Either<Exception, TOther>> HandleAsync<TResult, TOther>(this Task<Either<Exception, TResult>> @Either, Func<TResult, Task<Either<Exception, TOther>>> onSuccess, Func<Exception, Task<Either<Exception, TOther>>> onFailure) =>
+        await (await @Either).HandleAsync(onSuccess, onFailure);*/
+}
+
+public static class EitherAsyncExtensions
+{
+    public static async Task<Either<Exception, Unit>> ToUnit<TRight>(this Task<Either<Exception, TRight>> either) => (await either).ToUnit();
+
+    public static async Task<TResult> Map<TResult, TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, TResult> onSucces, Func<TLeft, TResult> onFailure) => (await either).Map(onSucces, onFailure);
+    public static async Task<TResult> MapAsync<TResult, TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task<TResult>> onSucces, Func<TLeft, Task<TResult>> onFailure) => await (await either).Map(onSucces, onFailure);
+    
+    public static async Task<Either<TLeft, TRight>> Handle<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TLeft, Either<TLeft, TRight>> onFailure) => (await either).Map(Either.Right<TLeft, TRight>, onFailure);
+    public static async Task<TRight> Handle<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TLeft, TRight> onFailure) => (await either).Map(success => success, onFailure);
+
+    public static async Task<Either<TLeft, TRight>> Then<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Action<TRight> action, Func<Exception, TLeft> errorHandler) => (await either).Then(action, errorHandler);
+    public static async Task<Either<Exception, TRight>> Then<TRight>(this Task<Either<Exception, TRight>> either, Action<TRight> action) => (await either).Then(action);
+    public static async Task<Either<Exception, Unit>> Then(this Task<Either<Exception, Unit>> either, Action action) => (await either).Then(action);
+
+
+    public static async Task<Either<TLeft, TRight>> ThenAsync<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task> action, Func<Exception, TLeft> errorHandler) => await (await either).ThenAsync(action, errorHandler);
+    public static async Task<Either<Exception, TRight>> ThenAsync<TRight>(this Task<Either<Exception, TRight>> either, Func<TRight, Task> action) => await (await either).ThenAsync(action);
+    public static async Task<Either<Exception, Unit>> ThenAsync(this Task<Either<Exception, Unit>> either, Func<Task> action) => await (await either).ThenAsync(action);
 }

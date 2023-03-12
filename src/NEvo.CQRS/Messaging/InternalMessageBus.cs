@@ -19,22 +19,22 @@ public class InternalMessageBus : IMessageBus
         _messageProcessor = Check.Null(messageProcessor);
     }
 
-    public async Task<Try<Unit>> DispatchAsync(Command command) =>
-        (await _messageProcessor.ProcessAsync<Command, Unit>(command))
-        .Handle(
-            _ => Try.Success(),
-            failure => Try.Failure(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+    public async Task<Either<Exception, Unit>> DispatchAsync(Command command) =>
+        await _messageProcessor.ProcessAsync<Command, Unit>(command)
+        .Map(
+            Either.Right,
+            failure => Either.Left(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 
     public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : Event =>
         (await _messageProcessor.ProcessAsync(@event))
         .OnFailure(failures => throw new AggregateException(failures.Select(s => s.Exception)));
 
-    public async Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
-        (await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query))
-        .Handle(
-            result => Try.Success(result),
-            failure => Try.Failure<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+    public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
+        await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query)
+        .Map(
+            Either.Right,
+            failure => Either.Left<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 }
 
@@ -50,11 +50,11 @@ public class ExternalMessageBus : IMessageBus
         _messageBus = messageBus;
     }
 
-    public async Task<Try<Unit>> DispatchAsync(Command command) =>
-        (await _messageProcessor.ProcessAsync<Command, Unit>(command))
-        .Handle(
-            _ => Try.Success(),
-            failure => Try.Failure(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+    public async Task<Either<Exception, Unit>> DispatchAsync(Command command) =>
+        await _messageProcessor.ProcessAsync<Command, Unit>(command)
+        .Map(
+            Either.Right,
+            failure => Either.Left(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 
     public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : Event
@@ -64,10 +64,10 @@ public class ExternalMessageBus : IMessageBus
         await _messageBus.PublishAsync(new MessageEnvelope<TEvent>(Guid.NewGuid(), @event, $"{@event.GetType().FullName}, {@event.GetType().Assembly.GetName().Name}" /* todo: another service for messageType */), @event.Source?.ToString() ?? string.Empty);
     }
 
-    public async Task<Try<TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
-        (await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query))
-        .Handle(
-            result => Try.Success(result),
-            failure => Try.Failure<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+    public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
+        await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query)
+        .Map(
+            Either.Right,
+            failure => Either.Left<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 }

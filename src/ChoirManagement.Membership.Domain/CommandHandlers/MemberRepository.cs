@@ -17,15 +17,15 @@ public class MemberRepository : IMemberRepository
     {
         _context = context;
     }
-    public Try<Member> Get(MemberId memberId)
+    public Either<Null, Member> Get(MemberId memberId)
     {
         return GetAsync(memberId).GetAwaiter().GetResult();
     }
 
-    public async Task<Try<Member>> GetAsync(MemberId memberId)
+    public async Task<Either<Null, Member>> GetAsync(MemberId memberId)
     {
         var member = await _context.Members.FindAsync(memberId);
-        return member is not null ? Try.Success(member) : Try.Failure<Member>(new Exception("Member not found"));
+        return member is not null ? Either.Right<Null, Member>(member) : Either.Left<Null, Member>(Null.Value);
     }
 
     public void Save(Member member)
