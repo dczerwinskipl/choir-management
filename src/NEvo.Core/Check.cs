@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace NEvo.Core;
 
@@ -46,6 +47,36 @@ public class Check
     public static TValue Default<TValue>(TValue value, string? message = null, [CallerArgumentExpression("value")] string? paramName = null) where TValue : struct
     {
         return !EqualityComparer<TValue>.Default.Equals(value, default) ? value : throw new ArgumentNullException(paramName, message);
+    }
+
+    public static void Annotations<TObject>(TObject obj)
+    {
+        var validationContext = new ValidationContext(obj);
+        var validationResults = new List<ValidationResult>();
+        Validator.TryValidateObject(obj, validationContext, validationResults);
+
+        if (validationResults.Any())
+        {
+            if (validationResults.Count > 1)
+                throw new AggregateException(validationResults.Select(r => new ArgumentException(r.ErrorMessage)));
+            else
+                throw new ArgumentException(validationResults.First().ErrorMessage);
+        }
+    }
+
+    public static TValue Annotations<TObject, TValue>(TObject obj, string targetName, TValue value, [CallerArgumentExpression("value")] string? paramName = null)
+    {
+        var validationContext = new ValidationContext(obj);
+        validationContext.MemberName = targetName;
+        validationContext.DisplayName = targetName;
+        validationContext.Items.Add(targetName, value);
+        var validationResults = new List<ValidationResult>();
+        Validator.TryValidateProperty(value, validationContext, validationResults);
+
+        return validationResults.Any() ?
+            validationResults.Count > 1 ? throw new AggregateException(validationResults.Select(r => new ArgumentException(r.ErrorMessage, paramName)))
+                                        : throw new ArgumentException(validationResults.First().ErrorMessage, paramName)
+            : value;
     }
 }
 

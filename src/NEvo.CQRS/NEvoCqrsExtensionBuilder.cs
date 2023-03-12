@@ -8,9 +8,20 @@ using NEvo.Messaging.Commands;
 using NEvo.Messaging.Events;
 using NEvo.Messaging.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace NEvo.Core;
 
+public static class IntegrationExtensions
+{
+    public static WebApplication UseNEvoCqrs(this WebApplication application, Action<IMessageHandlerRegistry>? configureHandlers = null)
+    {
+        var registry = application.Services.GetRequiredService<IMessageHandlerRegistry>();
+        configureHandlers?.Invoke(registry);
+        return application;
+    }
+}
 
 /// <summary>
 /// Public interface to configure additional options of CQRS

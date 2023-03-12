@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
     <ProjectReference Include="..\NEvo.CQRS\NEvo.CQRS.csproj" />
   </ItemGroup>
 

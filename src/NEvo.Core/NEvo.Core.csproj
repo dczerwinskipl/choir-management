@@ -5,19 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Publishing\Azure\**" />
-    <EmbeddedResource Remove="Publishing\Azure\**" />
-    <None Remove="Publishing\Azure\**" />
-  </ItemGroup>
   
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Processing\Pipelining\" />
   </ItemGroup>
 
   <ItemGroup>

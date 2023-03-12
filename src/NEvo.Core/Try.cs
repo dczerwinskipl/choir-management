@@ -65,10 +65,17 @@ public struct Try<TResult>
     public TOther Handle<TOther>(Func<TResult, TOther> onSucces, Func<Exception, TOther> onFailure)
         => IsSuccess ? onSucces(Result) : onFailure(Exception);
 
+    public Try<TOther> Map<TOther>(Func<TResult, TOther> onSucces)
+       => IsSuccess ? Try.Success(onSucces(Result)) : Try.Failure<TOther>(Exception);
+
+
     public Task<TOther> HandleAsync<TOther>(Func<TResult, Task<TOther>> onSucces, Func<Exception, Task<TOther>> onFailure)
         => IsSuccess ? onSucces(Result) : onFailure(Exception);
 
-    public Try<TOther> Cast<TOther>()  => Handle(success => Try.Success((TOther)(object)success), Try.Failure<TOther>);
+    public Task<TOther> HandleAsync<TOther>(Func<TResult, TOther> onSucces, Func<Exception, TOther> onFailure)
+        => IsSuccess ? Task.FromResult(onSucces(Result)) : Task.FromResult(onFailure(Exception));
+
+    public Try<TOther> Cast<TOther>() => Handle(success => Try.Success((TOther)(object)success), Try.Failure<TOther>);
 
     /// <summary>
     /// Execute action when fail
@@ -93,10 +100,10 @@ public struct Try<TResult>
         }
         return this;
     }
-
-    public Task<Try<TOther>> ThenAsync<TOther>(Func<Task<Try<TOther>>> onSuccess) => HandleAsync(_ => Try.OfAsync(onSuccess), Try.TaskFailure<TOther>);
-    public Task<Try<TOther>> ThenAsync<TOther>(Func<Task<TOther>> onSuccess) => HandleAsync(_ => Try.OfAsync(onSuccess), Try.TaskFailure<TOther>);
-
+    public Task<Try<Unit>> ThenAsync(Func<TResult, Task> onSuccess) => HandleAsync(result => Try.OfAsync(async () => { await onSuccess(result); return Unit.Value; }), Try.TaskFailure<Unit>);
+    public Task<Try<TOther>> ThenAsync<TOther>(Func<TResult, Task<Try<TOther>>> onSuccess) => HandleAsync(result => Try.OfAsync(() => onSuccess(result)), Try.TaskFailure<TOther>);
+    public Task<Try<TOther>> ThenAsync<TOther>(Func<TResult, Task<TOther>> onSuccess) => HandleAsync(result => Try.OfAsync(() => onSuccess(result)), Try.TaskFailure<TOther>);
+   
     public static implicit operator Either<Exception, TResult>(Try<TResult> @try) => @try.Handle(success => new Either<Exception, TResult>(success), exception => new Either<Exception, TResult>(exception));
     public static explicit operator Try<TResult>(Either<Exception, TResult> either) => either.Handle(success => new Try<TResult>(success), exception => new Try<TResult>(exception));
 }
@@ -138,10 +145,22 @@ public static class Try
         {
             action();
             return Success();
-        } 
-        catch(Exception exc)
+        }
+        catch (Exception exc)
         {
             return Failure(exc);
+        }
+    }
+
+    public static Try<TResult> Of<TResult>(Func<Try<TResult>> action)
+    {
+        try
+        {
+            return action();
+        }
+        catch (Exception exc)
+        {
+            return Failure<TResult>(exc);
         }
     }
 
@@ -217,9 +236,27 @@ public static class Try
         }
     }
 
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<Task<Try<TOther>>> onSuccess) =>
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<TOther>> onSuccess) =>
+        await (await @try).ThenAsync(result => onSuccess(result));
+
+    public static async Task<Try<Unit>> ThenAsync<TResult>(this Task<Try<TResult>> @try, Func<TResult, Task> onSuccess) =>
+    await (await @try).ThenAsync(async result => { await onSuccess(result); return Success(); });
+
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, TOther> onSuccess) =>
+        await (await @try).ThenAsync(result => Task.FromResult(onSuccess(result)));
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Try<TOther>> onSuccess) =>
+        await (await @try).ThenAsync(result => Task.FromResult(onSuccess(result)));
+
+
+    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<Try<TOther>>> onSuccess) =>
        await (await @try).ThenAsync(onSuccess);
 
-    public static async Task<Try<TOther>> ThenAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<Task<TOther>> onSuccess) =>
-        await (await @try).ThenAsync(onSuccess);
+    public static async Task<Try<TResult>> Catch<TResult>(this Task<Try<TResult>> @try, Func<Exception, Try<TResult>> onFailure) =>
+        await (await @try).HandleAsync(success => Success(success), onFailure);
+
+    public static async Task<Try<TOther>> HandleAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Try<TOther>> onSuccess, Func<Exception, Try<TOther>> onFailure) =>
+        await (await @try).HandleAsync(onSuccess, onFailure);
+
+    public static async Task<Try<TOther>> HandleAsync<TResult, TOther>(this Task<Try<TResult>> @try, Func<TResult, Task<Try<TOther>>> onSuccess, Func<Exception, Task<Try<TOther>>> onFailure) =>
+        await (await @try).HandleAsync(onSuccess, onFailure);
 }

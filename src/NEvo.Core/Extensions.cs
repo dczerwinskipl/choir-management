@@ -1,12 +1,9 @@
-﻿using NEvo.DomainDrivenDesign;
-using NEvo.Processing.Registering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 
 /* all of that should be in NEvo MVC integration project */
 namespace NEvo.Core;
@@ -21,13 +18,6 @@ public static class IntegrationExtensions
             group.AddEndpointFilter<TryEndpointFilter>();
             configureRouteGroup(group);
         }
-        return application;
-    }
-
-    public static WebApplication UseNEvoCqrs(this WebApplication application, Action<IMessageHandlerRegistry>? configureHandlers = null)
-    {
-        var registry = application.Services.GetRequiredService<IMessageHandlerRegistry>();
-        configureHandlers?.Invoke(registry);
         return application;
     }
 }
@@ -68,7 +58,7 @@ public class TryEndpointFilter : IEndpointFilter
     //todo: extension of this method, mapping exception type to HTTP Codes, now its only to show basic contept
     public int ToHttpCode(Exception exception) => exception switch
     {
-        DomainException or ValidationException => (int)HttpStatusCode.BadRequest,
+        ArgumentException or ValidationException => (int)HttpStatusCode.BadRequest,
         _ => (int)HttpStatusCode.InternalServerError,
     };
 }

@@ -9,3 +9,15 @@ public struct Unit
     public static ref readonly Unit Value => ref _value;
     public static Task<Unit> Task => System.Threading.Tasks.Task.FromResult(_value);
 }
+
+public struct Null
+{
+    private static readonly Null _value = new();
+    public static ref readonly Null Value => ref _value;
+    public static Task<Null> Task => System.Threading.Tasks.Task.FromResult(_value);
+}
+
+public class NotFoundException : Exception
+{
+
+}

@@ -24,7 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NEvo.Azure\NEvo.Azure.csproj" />
     <ProjectReference Include="..\..\src\NEvo.Core\NEvo.Core.csproj" />
+    <ProjectReference Include="..\..\src\NEvo.CQRS\NEvo.CQRS.csproj" />
+    <ProjectReference Include="..\..\src\NEvo.Sagas\NEvo.Sagas.csproj" />
+    <ProjectReference Include="..\..\src\NEvo.ValueObjects\NEvo.ValueObjects.csproj" />
   </ItemGroup>
 
 </Project>

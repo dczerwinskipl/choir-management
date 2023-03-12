@@ -1,7 +1,9 @@
 ﻿namespace NEvo.ValueObjects;
 
 /// <summary>
-/// Base class for ValueObjects
+/// Base class for ValueObjects.
+/// 
+/// For better results, use records.
 /// </summary>
 public abstract class ValueObject
 {

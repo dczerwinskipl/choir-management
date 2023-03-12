@@ -9,9 +9,9 @@ public abstract record Event : IMessage<Unit>
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public SourceId? Source { get; }
+    public ObjectId? Source { get; set; }
 
-    protected Event(SourceId source)
+    protected Event(ObjectId source)
     {
         Source = source; // Check.Null(source); deserialization problem?
     }
