@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Processing\Pipelining\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
+    <ProjectReference Include="..\NEvo.ValueObjects\NEvo.ValueObjects.csproj" />
+  </ItemGroup>
+
 </Project>

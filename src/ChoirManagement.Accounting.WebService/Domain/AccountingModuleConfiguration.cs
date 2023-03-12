@@ -23,7 +23,7 @@ public static class AccountingModuleConfiguration
 
         builder.MapGet("/{message}", async ([FromServices] IMessageBus messageBus, [FromRoute] string message) => await Try
                         .OfAsync(async () => await messageBus.DispatchAsync(new HelloWorldCommand(message)))
-                        .ThenAsync(async () => await messageBus.DispatchAsync(new HelloWorldQuery())))
+                        .ThenAsync(async (_) => await messageBus.DispatchAsync(new HelloWorldQuery())))
                 /* todo: should be handled by middleware when using Try return type*/
                .Produces(200, typeof(string))
                .Produces(400, typeof(Unit) /* Validation result output */)

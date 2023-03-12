@@ -6,7 +6,7 @@ namespace NEvo.ValueObjects;
 /// <summary>
 /// Type that represents abstract source as value object
 /// </summary>
-public class SourceId : ValueObject
+public class ObjectId : ValueObject
 {
     /// <summary>
     /// Type of object
@@ -18,7 +18,7 @@ public class SourceId : ValueObject
     public string Id { get; }
 
     [JsonConstructor]
-    private SourceId(string type, string id)
+    private ObjectId(string type, string id)
     {
         Type = Check.NullOrEmpty(type);
         Id = Check.NullOrEmpty(id);
@@ -30,13 +30,13 @@ public class SourceId : ValueObject
     /// <param name="id">source identifier</param>
     /// <param name="type">source type</param>
     /// <returns>New SourceId instance</returns>
-    public static SourceId New(string type, string id) => new SourceId(type, id);
+    public static ObjectId New(string type, string id) => new ObjectId(type, id);
 
     /// <summary>
     /// Create a copy of current SourceId
     /// </summary>
     /// <returns>New SourceId instance</returns>
-    public SourceId Copy() => new SourceId(Id, Type);
+    public ObjectId Copy() => new ObjectId(Id, Type);
 
     public override string ToString() => $"({Type},{Id})";
 

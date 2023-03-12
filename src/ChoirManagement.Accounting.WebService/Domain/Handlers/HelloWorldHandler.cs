@@ -19,7 +19,7 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
 
     public async Task<Try<Unit>> HandleAsync(HelloWorldCommand command)
     {
-        await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, SourceId.New(nameof(HelloWorldCommand), command.Message)));
+        await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, ObjectId.New(nameof(HelloWorldCommand), command.Message)));
         
         if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
             return Try.Failure(new ValidationException("Don't say hi!"));
