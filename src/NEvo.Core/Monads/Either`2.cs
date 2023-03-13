@@ -1,11 +1,14 @@
-﻿namespace NEvo.Core;
+﻿using NEvo.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace NEvo.Monads;
 
 /// <summary>
 /// Class that represents alternative results of execution.
 /// </summary>
 /// <typeparam name="TLeft">Type returned when failed</typeparam>
 /// <typeparam name="TRight">Type returned when success</typeparam>
-public struct Either<TLeft, TRight>
+public readonly struct Either<TLeft, TRight>
 {
     private readonly TLeft? _left;
     private readonly TRight? _right;
@@ -105,4 +108,6 @@ public struct Either<TLeft, TRight>
     public Either<TLeft, TRight> Handle(Func<TLeft, Either<TLeft, TRight>> onFailure) => Map(Either.Right<TLeft, TRight>, onFailure);
 
     public TRight Handle(Func<TLeft, TRight> onFailure) => Map(success => success, onFailure);
+
+    public static implicit operator Either<TLeft, Unit>(Either<TLeft, TRight> either) => either.Map(success => Either.Right<TLeft, Unit>(Unit.Value), Either.Left<TLeft, Unit>);
 }

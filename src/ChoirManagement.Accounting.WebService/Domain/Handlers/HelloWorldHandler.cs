@@ -1,5 +1,6 @@
 ﻿using ChoirManagement.Accounting.Messages;
 using NEvo.Core;
+using NEvo.Monads;
 using NEvo.Messaging;
 using NEvo.Processing.Commands;
 using NEvo.Processing.Events;
@@ -22,9 +23,9 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
         await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, ObjectId.New(nameof(HelloWorldCommand), command.Message)));
         
         if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
-            return Either.Left(new ValidationException("Don't say hi!"));
+            return Either.Failure(new ValidationException("Don't say hi!"));
 
-        return Either.Right();
+        return Either.Success();
     }
 
     public async Task HandleAsync(HelloWorldEvent @event)

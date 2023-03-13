@@ -3,6 +3,7 @@ using ChoirManagement.Membership.Domain.Database;
 using ChoirManagement.Membership.Domain.Repositories;
 using ChoirManagement.Membership.Public.ValueObjects;
 using NEvo.Core;
+using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain.CommandHandlers;
 
@@ -17,16 +18,9 @@ public class MemberRepository : IMemberRepository
     {
         _context = context;
     }
-    public Either<Null, Member> Get(MemberId memberId)
-    {
-        return GetAsync(memberId).GetAwaiter().GetResult();
-    }
+    public Maybe<Member> Get(MemberId memberId) => GetAsync(memberId).GetAwaiter().GetResult();
 
-    public async Task<Either<Null, Member>> GetAsync(MemberId memberId)
-    {
-        var member = await _context.Members.FindAsync(memberId);
-        return member is not null ? Either.Right<Null, Member>(member) : Either.Left<Null, Member>(Null.Value);
-    }
+    public async Task<Maybe<Member>> GetAsync(MemberId memberId) => await _context.Members.FindAsync(memberId);
 
     public void Save(Member member)
     {

@@ -2,6 +2,7 @@
 using ChoirManagement.Accounting.Messages;
 using Microsoft.AspNetCore.Mvc;
 using NEvo.Core;
+using NEvo.Monads;
 using NEvo.Messaging;
 using NEvo.Processing.Registering;
 
@@ -16,7 +17,7 @@ public static class AccountingModuleConfiguration
 
     public static void SettlementsRoutes(RouteGroupBuilder builder)
     {
-        builder.MapGet("", async () => { Console.WriteLine("Test"); return Either.Right("Hello world"); })
+        builder.MapGet("", async () => { Console.WriteLine("Test"); return Either.Success("Hello world"); })
                .Produces(200, typeof(string))
                .Produces(400, typeof(Unit))
                .Produces(500, typeof(Unit));

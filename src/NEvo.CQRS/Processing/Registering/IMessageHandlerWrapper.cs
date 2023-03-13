@@ -1,4 +1,4 @@
-﻿using NEvo.Core;
+﻿using NEvo.Monads;
 using NEvo.Messaging;
 
 namespace NEvo.Processing.Registering;
@@ -26,8 +26,8 @@ public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TRes
     internal GenericMessageHandlerWrapper(IMessageHandlerWrapper originalWrapper) => _originalWrapper = originalWrapper;
     public async Task<Either<Exception, TResult?>> Handle(IMessage<TResult> message) =>
         await _originalWrapper.Handle(message).Map(
-            success => Either.Right((TResult?)success),
-            Either.Left<TResult?>
+            success => Either.Success((TResult?)success),
+            Either.Failure<TResult?>
             );
 
     public Task<Either<Exception, object?>> Handle(IMessage message) => _originalWrapper.Handle(message);

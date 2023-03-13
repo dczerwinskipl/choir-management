@@ -4,6 +4,7 @@ using NEvo.Core;
 using ChoirManagement.Membership.Public.ValueObjects;
 using ChoirManagement.Membership.Public.Messages.Events;
 using NEvo.ValueObjects.PersonalData;
+using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain.Aggregates;
 
@@ -30,15 +31,15 @@ public class Member : SnapshotAggregateRoot<Member, MemberId>
     /// Anonimize personal data of member
     /// </summary>
     /// <returns></returns>
-    public Either<Exception, Unit> Anonimize() =>
-        Rule("The member cannot be already anonymised", () => !IsAnonymised, (name) => new MemberAlreadyAnonymisedException()).
-        //Rule("The member must not have an active membership", () => !HasActiveMembership()).
-        OnSuccess(() =>
-        {
-            PersonalData = PersonalData.Anonimize();
-            IsAnonymised = true;
-            Publish(new MemberPersonalDataChanged(Id, PersonalData with { }));
-        });
+    public Either<Exception, Unit> Anonimize() 
+            => Rule("The member cannot be already anonymised", () => !IsAnonymised, (name) => new MemberAlreadyAnonymisedException())
+                //.Rule("The member must not have an active membership", () => !HasActiveMembership())
+                .OnSuccess(() =>
+                {
+                    PersonalData = PersonalData.Anonimize();
+                    IsAnonymised = true;
+                    Publish(new MemberPersonalDataChanged(Id, PersonalData with { }));
+                });
 
     /// <summary>
     /// Add new member
@@ -46,9 +47,9 @@ public class Member : SnapshotAggregateRoot<Member, MemberId>
     /// <param name="registrationForm"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public static Either<Exception, Member> NewMember(MemberRegistrationForm registrationForm, MemberId? id = null) =>
-        Rule("Date of birth must be consistent with PESEL", () => registrationForm.PESEL.GetBirthDate() == registrationForm.BirthDate)
-        .Rule("Date of birth must be after 1900", () => registrationForm.BirthDate > new DateOnly(1990, 1, 1))
-        .OnSuccess(() => new Member(id ?? MemberId.New(), registrationForm));
+    public static Either<Exception, Member> NewMember(MemberRegistrationForm registrationForm, MemberId? id = null) 
+        => Rule("Date of birth must be consistent with PESEL", () => registrationForm.PESEL.GetBirthDate() == registrationForm.BirthDate)
+            .Rule("Date of birth must be after 1900", () => registrationForm.BirthDate > new DateOnly(1990, 1, 1))
+            .OnSuccess(() => new Member(id ?? MemberId.New(), registrationForm));
 
 }

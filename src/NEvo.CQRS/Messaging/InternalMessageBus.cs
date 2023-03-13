@@ -1,4 +1,5 @@
 ﻿using NEvo.Core;
+using NEvo.Monads;
 using NEvo.Messaging.Commands;
 using NEvo.Messaging.Events;
 using NEvo.Messaging.Queries;
@@ -22,8 +23,8 @@ public class InternalMessageBus : IMessageBus
     public async Task<Either<Exception, Unit>> DispatchAsync(Command command) =>
         await _messageProcessor.ProcessAsync<Command, Unit>(command)
         .Map(
-            Either.Right,
-            failure => Either.Left(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+            Either.Success,
+            failure => Either.Failure(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 
     public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : Event =>
@@ -33,8 +34,8 @@ public class InternalMessageBus : IMessageBus
     public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
         await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query)
         .Map(
-            Either.Right,
-            failure => Either.Left<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+            Either.Success,
+            failure => Either.Failure<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 }
 
@@ -53,8 +54,8 @@ public class ExternalMessageBus : IMessageBus
     public async Task<Either<Exception, Unit>> DispatchAsync(Command command) =>
         await _messageProcessor.ProcessAsync<Command, Unit>(command)
         .Map(
-            Either.Right,
-            failure => Either.Left(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+            Either.Success,
+            failure => Either.Failure(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 
     public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : Event
@@ -67,7 +68,7 @@ public class ExternalMessageBus : IMessageBus
     public async Task<Either<Exception, TResult>> DispatchAsync<TResult>(Query<TResult> query) =>
         await _messageProcessor.ProcessAsync<Query<TResult>, TResult>(query)
         .Map(
-            Either.Right,
-            failure => Either.Left<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
+            Either.Success,
+            failure => Either.Failure<TResult>(failure.Count() > 1 ? new AggregateException(failure.Select(s => s.Exception)) : failure.Single().Exception)
          );
 }

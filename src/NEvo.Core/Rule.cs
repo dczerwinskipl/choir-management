@@ -1,4 +1,6 @@
-﻿namespace NEvo.Core;
+﻿using NEvo.Monads;
+
+namespace NEvo.Core;
 
 public class RuleBuilder
 {
@@ -30,7 +32,7 @@ public class RuleBuilder
             .ToList();
 
         return rules.Any() ?
-            Either.Left<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) : 
+            Either.Failure<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) : 
             Try.Of(func);
     }
 
@@ -50,7 +52,7 @@ public class RuleBuilder
             .ToList();
 
         return rules.Any() ?
-            Either.Left(rules.Count > 1 ? new AggregateException(rules) : rules.First()) :
+            Either.Failure(rules.Count > 1 ? new AggregateException(rules) : rules.First()) :
             Try.Of(action);
     }
 }
