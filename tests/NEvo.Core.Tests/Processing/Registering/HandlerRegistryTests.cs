@@ -5,6 +5,7 @@ using NEvo.Processing.Commands;
 using NEvo.Messaging.Commands;
 using NEvo.Processing.Registering;
 using NEvo.Core;
+using NEvo.Monads;
 
 namespace NEvo.Tests.Processing.Registering;
 
@@ -149,7 +150,7 @@ public class HandlerRegistryTests
         public Task<Either<Exception, Unit>> HandleAsync(CommandA command)
         {
             Dependency.Act();
-            return Either.TaskRight();
+            return Either.TaskSuccess();
         }
     }
 

@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using NEvo.Monads;
 
 /* all of that should be in NEvo MVC integration project */
 namespace NEvo.Core;
