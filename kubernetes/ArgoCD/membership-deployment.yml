@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: choirmanagement-membership 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: choirmanagement-membership 
+  template:
+    metadata:
+      labels:
+        app: choirmanagement-membership 
+    spec:
+      containers:
+        - name: choirmanagement-membership 
+          image: localhost:5000/choir.management.membership:latest
+          ports:
+          - containerPort: 8002
