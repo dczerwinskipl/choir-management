@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: choirmanagement-accounting 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: choirmanagement-accounting 
+  template:
+    metadata:
+      labels:
+        app: choirmanagement-accounting 
+    spec:
+      containers:
+        - name: choirmanagement-accounting 
+          image: localhost:80/choirmanagement.accounting:latest
+          ports:
+          - containerPort: 80

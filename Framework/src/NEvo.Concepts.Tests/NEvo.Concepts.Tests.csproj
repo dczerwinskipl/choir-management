@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NEvo.Azure\NEvo.Azure.csproj" />
+    <ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
+    <ProjectReference Include="..\NEvo.CQRS\NEvo.CQRS.csproj" />
+    <ProjectReference Include="..\NEvo.DomainDrivenDesign\NEvo.DomainDrivenDesign.csproj" />
+    <ProjectReference Include="..\NEvo.Sagas\NEvo.Sagas.csproj" />
+    <ProjectReference Include="..\NEvo.ValueObjects\NEvo.ValueObjects.csproj" />
+  </ItemGroup>
+
+</Project>
