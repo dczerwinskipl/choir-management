@@ -21,7 +21,7 @@ public class MembershipModuleConfiguration
     public static void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IMemberRepository, MemberRepository>();
-        services.AddDbContext<MembershipContext>(c => c.UseSqlServer("Data Source=ext-sql-server;Initial Catalog=ChoirManagement.Memebership;Integrated Security=false;User ID=test;Password=test123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False", b => b.MigrationsAssembly("ChoirManagement.Membership.WebService")));
+        services.AddDbContext<MembershipContext>(c => c.UseSqlServer("Data Source=ext-sql-server;Initial Catalog=ChoirManagement.Memebership;Integrated Security=false;User ID=test;Password=test123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False", b => b.MigrationsAssembly("ChoirManagement.Membership.WebService")));
         //services.AddDbContext<Member>
     }
 
