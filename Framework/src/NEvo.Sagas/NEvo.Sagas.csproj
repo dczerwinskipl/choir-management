@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Statefull\**" />
+    <EmbeddedResource Remove="Statefull\**" />
+    <None Remove="Statefull\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
+    <ProjectReference Include="..\NEvo.CQRS\NEvo.CQRS.csproj" />
+  </ItemGroup>
+
+</Project>

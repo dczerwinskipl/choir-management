@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.WebService", "src\ChoirManagement.Membership.WebService\ChoirManagement.Membership.WebService.csproj", "{38A7C3AC-9F13-4954-80FC-A7965515D0B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.WebService", "Microservices\Membership\src\ChoirManagement.Membership.WebService\ChoirManagement.Membership.WebService.csproj", "{38A7C3AC-9F13-4954-80FC-A7965515D0B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{A2A56A7A-3248-44EF-8BBD-3608B8F9A171}"
 EndProject
@@ -11,17 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Membership", "Membership", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounting", "Accounting", "{57BC9D64-4484-4A20-B5E0-89B6224766C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Accounting.WebService", "src\ChoirManagement.Accounting.WebService\ChoirManagement.Accounting.WebService.csproj", "{F3E082D3-554B-437B-887A-E8E3C813DD11}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Accounting.WebService", "Microservices\Accounting\src\ChoirManagement.Accounting.WebService\ChoirManagement.Accounting.WebService.csproj", "{F3E082D3-554B-437B-887A-E8E3C813DD11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{C7E0D55E-84E1-4B89-B9C4-CA00741AFF2B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8AE43915-9F1D-474F-ADD0-2D30998053D8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{8AE43915-9F1D-474F-ADD0-2D30998053D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core", "src\NEvo.Core\NEvo.Core.csproj", "{12AA0807-19C7-4CA1-9300-056B693ECBFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core", "Framework\src\NEvo.Core\NEvo.Core.csproj", "{12AA0807-19C7-4CA1-9300-056B693ECBFB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core.Tests", "tests\NEvo.Core.Tests\NEvo.Core.Tests.csproj", "{9B3FD740-4096-497C-93FE-4FF130481FBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core.Tests", "Framework\tests\NEvo.Core.Tests\NEvo.Core.Tests.csproj", "{9B3FD740-4096-497C-93FE-4FF130481FBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{8BFF3319-E8D7-4095-A512-716D8F1C09D9}"
 	ProjectSection(SolutionItems) = preProject
@@ -36,19 +34,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzurePipelines", "AzurePipe
 		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Sagas", "src\NEvo.Sagas\NEvo.Sagas.csproj", "{10E16846-5568-4F4D-BD7F-8B5CDD5D2D0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Sagas", "Framework\src\NEvo.Sagas\NEvo.Sagas.csproj", "{10E16846-5568-4F4D-BD7F-8B5CDD5D2D0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Azure", "src\NEvo.Azure\NEvo.Azure.csproj", "{13434910-2F86-4D69-95B9-109C8098A801}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Azure", "Framework\src\NEvo.Azure\NEvo.Azure.csproj", "{13434910-2F86-4D69-95B9-109C8098A801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChoirManagement.Membership.Domain", "src\ChoirManagement.Membership.Domain\ChoirManagement.Membership.Domain.csproj", "{25A5CA6B-B5AE-487E-B3CD-560253C43DD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.Domain", "Microservices\Membership\src\ChoirManagement.Membership.Domain\ChoirManagement.Membership.Domain.csproj", "{25A5CA6B-B5AE-487E-B3CD-560253C43DD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChoirManagement.Membership.Public", "src\ChoirManagement.Membership.Public\ChoirManagement.Membership.Public.csproj", "{52A82995-FC5F-40CA-B050-29FB7CE3E0FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Membership.Public", "Microservices\Membership\src\ChoirManagement.Membership.Public\ChoirManagement.Membership.Public.csproj", "{52A82995-FC5F-40CA-B050-29FB7CE3E0FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.ValueObjects", "src\NEvo.ValueObjects\NEvo.ValueObjects.csproj", "{F51BC6E8-A1EF-4E6A-B052-6DFBE8F80AFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.ValueObjects", "Framework\src\NEvo.ValueObjects\NEvo.ValueObjects.csproj", "{F51BC6E8-A1EF-4E6A-B052-6DFBE8F80AFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.CQRS", "src\NEvo.CQRS\NEvo.CQRS.csproj", "{732FACA5-F4A3-47C3-A4D8-DC698A85FABE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.CQRS", "Framework\src\NEvo.CQRS\NEvo.CQRS.csproj", "{732FACA5-F4A3-47C3-A4D8-DC698A85FABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.DomainDrivenDesign", "src\NEvo.DomainDrivenDesign\NEvo.DomainDrivenDesign.csproj", "{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.DomainDrivenDesign", "Framework\src\NEvo.DomainDrivenDesign\NEvo.DomainDrivenDesign.csproj", "{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{4A5C2456-E4D7-4573-B0AD-CDA2E393BD09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Concepts", "Concepts", "{62EE7B2C-EE4C-48ED-B720-160143A9C67B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Concepts.Tests", "Framework\src\NEvo.Concepts.Tests\NEvo.Concepts.Tests.csproj", "{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +68,6 @@ Global
 		{F3E082D3-554B-437B-887A-E8E3C813DD11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3E082D3-554B-437B-887A-E8E3C813DD11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3E082D3-554B-437B-887A-E8E3C813DD11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76B6B9FE-DA01-4C5F-9CA9-1153D0229F73}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12AA0807-19C7-4CA1-9300-056B693ECBFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12AA0807-19C7-4CA1-9300-056B693ECBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AA0807-19C7-4CA1-9300-056B693ECBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -104,6 +104,10 @@ Global
 		{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +128,8 @@ Global
 		{F51BC6E8-A1EF-4E6A-B052-6DFBE8F80AFC} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 		{732FACA5-F4A3-47C3-A4D8-DC698A85FABE} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 		{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
+		{4A5C2456-E4D7-4573-B0AD-CDA2E393BD09} = {533C0B4B-D31E-42EE-B921-64511EA0FD50}
+		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0} = {62EE7B2C-EE4C-48ED-B720-160143A9C67B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}
