@@ -16,4 +16,7 @@ spec:
         - name: choirmanagement-membership 
           image: localhost:5000/choir.management.membership:latest
           ports:
-          - containerPort: 80
+          - containerPort: 8002                 # which port of the container is exposed to the Pod
+          env:
+          - name: ASPNETCORE_URLS
+            value: http://+:8002
