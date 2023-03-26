@@ -12,9 +12,9 @@ builder.Configuration.AddEnvironmentVariables()
                      .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
 builder.Services.AddNEvo(nEvo => nEvo
-                                    .AddCqrs<ExternalMessageBus>()
-                                    .AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
-                                    .AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
+                                    .AddCqrs<InternalMessageBus>()
+                                    //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                    //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
                         );
 
 //TODO: ³adniej

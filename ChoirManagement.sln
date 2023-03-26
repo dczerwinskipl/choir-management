@@ -54,6 +54,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Concepts", "Concepts", "{62
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Concepts.Tests", "Framework\src\NEvo.Concepts.Tests\NEvo.Concepts.Tests.csproj", "{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArgoCD", "ArgoCD", "{F349DBAE-38E1-4E44-B68F-5AA5E3BFA50D}"
+	ProjectSection(SolutionItems) = preProject
+		kubernetes\ArgoCD\accounting-deployment.yml = kubernetes\ArgoCD\accounting-deployment.yml
+		kubernetes\ArgoCD\accounting-service.yml = kubernetes\ArgoCD\accounting-service.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +136,7 @@ Global
 		{D34DDB1D-A5BC-4CE4-98F6-F082945FBCE6} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 		{4A5C2456-E4D7-4573-B0AD-CDA2E393BD09} = {533C0B4B-D31E-42EE-B921-64511EA0FD50}
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0} = {62EE7B2C-EE4C-48ED-B720-160143A9C67B}
+		{F349DBAE-38E1-4E44-B68F-5AA5E3BFA50D} = {8BFF3319-E8D7-4095-A512-716D8F1C09D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}

@@ -16,4 +16,4 @@ spec:
         - name: choirmanagement-accounting 
           image: localhost:5000/choir.management.accounting:latest
           ports:
-          - containerPort: 80
+          - containerPort: 8001
