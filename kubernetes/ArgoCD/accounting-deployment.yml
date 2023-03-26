@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: choirmanagement-accounting 
-          image: localhost:5000/choirmanagement.accounting:latest
+          image: localhost:5000/choir.management.accounting:latest
           ports:
           - containerPort: 80
