@@ -58,6 +58,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArgoCD", "ArgoCD", "{F349DB
 	ProjectSection(SolutionItems) = preProject
 		kubernetes\ArgoCD\accounting-deployment.yml = kubernetes\ArgoCD\accounting-deployment.yml
 		kubernetes\ArgoCD\accounting-service.yml = kubernetes\ArgoCD\accounting-service.yml
+		kubernetes\ArgoCD\membership-deployment.yml = kubernetes\ArgoCD\membership-deployment.yml
+		kubernetes\ArgoCD\membership-service.yml = kubernetes\ArgoCD\membership-service.yml
+		kubernetes\ArgoCD\sqlserver-service.yml = kubernetes\ArgoCD\sqlserver-service.yml
 	EndProjectSection
 EndProject
 Global
