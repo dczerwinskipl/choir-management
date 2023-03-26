@@ -16,4 +16,4 @@ spec:
         - name: choirmanagement-membership 
           image: localhost:5000/choir.management.membership:latest
           ports:
-          - containerPort: 8002
+          - containerPort: 80
