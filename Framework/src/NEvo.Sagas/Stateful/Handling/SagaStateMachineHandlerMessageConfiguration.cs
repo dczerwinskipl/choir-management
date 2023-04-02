@@ -1,4 +1,4 @@
-﻿using NEvo.Messaging;
+﻿using NEvo.CQRS.Messaging;
 using NEvo.Sagas.Stateful.Building;
 
 namespace NEvo.Sagas.Stateful.Handling;

@@ -1,5 +1,5 @@
 ﻿using NEvo.Core;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Processing.Registering;
 using System.Collections.Concurrent;
 
 namespace NEvo.Sagas.Stateful.Handling;

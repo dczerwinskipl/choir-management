@@ -1,4 +1,4 @@
-﻿using NEvo.Messaging.Events;
+﻿using NEvo.CQRS.Messaging.Events;
 using NEvo.Sagas.Stateful;
 using NEvo.Sagas.Stateful.Handling;
 using NEvo.ValueObjects;

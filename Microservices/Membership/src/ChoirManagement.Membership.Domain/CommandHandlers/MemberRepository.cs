@@ -3,6 +3,7 @@ using ChoirManagement.Membership.Domain.Database;
 using ChoirManagement.Membership.Domain.Repositories;
 using ChoirManagement.Membership.Public.ValueObjects;
 using NEvo.Core;
+using NEvo.CQRS.Messaging.Events;
 using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain.CommandHandlers;
@@ -13,10 +14,12 @@ namespace ChoirManagement.Membership.Domain.CommandHandlers;
 public class MemberRepository : IMemberRepository
 {
     private MembershipContext _context;
+    private IEventPublisher _eventPublisher;
 
-    public MemberRepository(MembershipContext context)
+    public MemberRepository(MembershipContext context, IEventPublisher eventPublisher)
     {
         _context = context;
+        _eventPublisher = eventPublisher;
     }
     public Maybe<Member> Get(MemberId memberId) => GetAsync(memberId).GetAwaiter().GetResult();
 
@@ -39,5 +42,11 @@ public class MemberRepository : IMemberRepository
             entry.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }
         await _context.SaveChangesAsync();
+
+        //todo: move to commit
+        foreach(var @event in member.FlushEvents())
+        {
+            await _eventPublisher.PublishAsync(@event);
+        }
     }
 }

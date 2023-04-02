@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace NEvo.Messaging
+namespace NEvo.CQRS.Messaging
 {
     public class MessageEnvelopeHeaders : ReadOnlyDictionary<string, string>
     {

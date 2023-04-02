@@ -1,4 +1,4 @@
-﻿using NEvo.Messaging.Events;
+﻿using NEvo.CQRS.Messaging.Events;
 using NEvo.ValueObjects;
 
 namespace ChoirManagement.Accounting.Messages;

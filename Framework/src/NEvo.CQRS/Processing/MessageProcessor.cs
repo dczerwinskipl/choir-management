@@ -1,10 +1,11 @@
 ﻿using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing.Registering;
 
-namespace NEvo.Processing;
+namespace NEvo.CQRS.Processing;
 
+//TODO: change to Try API
 public class MessageProcessor : IMessageProcessor
 {
     private IMessageHandlerRegistry _messageHandlerRegistry;
@@ -21,17 +22,15 @@ public class MessageProcessor : IMessageProcessor
 
         try
         {
-            return (await handlerWrapper.Handle(message))
-                            .Map(
-                                Either.Right<IMessageProcessingFailures, TResult>,
-                                error => Either.Left<IMessageProcessingFailures, TResult>(new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, error)))
+            return await handlerWrapper
+                                .Handle(message)
+                                .BindLeft(
+                                    error => new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, error)) as IMessageProcessingFailures
                                 );
         }
         catch (Exception exc)
         {
-            return Either.Left<IMessageProcessingFailures, TResult>(
-                new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, exc))
-            );
+            return new MessageProcessingFailures(new MessageProcessingFailure(handlerWrapper.Description.HandlerType, exc));
         }
     }
 

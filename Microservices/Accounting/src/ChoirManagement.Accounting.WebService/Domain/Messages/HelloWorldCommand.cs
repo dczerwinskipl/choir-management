@@ -1,4 +1,4 @@
-﻿using NEvo.Messaging.Commands;
+﻿using NEvo.CQRS.Messaging.Commands;
 
 namespace ChoirManagement.Accounting.Messages;
 

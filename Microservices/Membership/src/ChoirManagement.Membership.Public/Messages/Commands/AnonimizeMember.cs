@@ -1,6 +1,6 @@
 ﻿using ChoirManagement.Membership.Public.ValueObjects;
 using NEvo.Core;
-using NEvo.Messaging.Commands;
+using NEvo.CQRS.Messaging.Commands;
 using Newtonsoft.Json;
 
 namespace ChoirManagement.Membership.Public.Messages.Commands;

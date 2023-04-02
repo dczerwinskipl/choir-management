@@ -1,4 +1,4 @@
-﻿namespace NEvo.Messaging.Events;
+﻿namespace NEvo.CQRS.Messaging.Events;
 
 public interface IEventPublisher
 {

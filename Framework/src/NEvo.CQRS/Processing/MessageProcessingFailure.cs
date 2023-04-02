@@ -1,4 +1,4 @@
-﻿namespace NEvo.Processing;
+﻿namespace NEvo.CQRS.Processing;
 
 public record MessageProcessingFailure(Type HandlerType, Exception Exception);
 public record MessageProcessingSuccess(Type HandlerType);

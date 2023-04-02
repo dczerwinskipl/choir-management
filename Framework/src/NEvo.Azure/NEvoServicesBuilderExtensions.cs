@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Azure;
+using NEvo.Azure.Administrating;
 using NEvo.Azure.Polling;
 using NEvo.Azure.Publishing;
+using NEvo.Azure.Transporting;
+using NEvo.CQRS.Transporting;
 using NEvo.Polling;
 using NEvo.Publishing;
 
@@ -25,7 +28,16 @@ public class NEvoAzureMessageBusExtensionConfiguration : INEvoExtensionConfigura
     public void ConfigureServices(IServiceCollection services)
     {
         services.Configure(_configureClientData);
-        services.AddSingleton<IMessagePublisher, AzureServiceBusMessagePublisher>();
+        services.AddSingleton<IAzureServiceBusAdministrator, AzureServiceBusAdministrator>();
+        
+        //new idea of registering extensions, TODO: do same to poller?
+        services.Configure<TransportChannelFactoryOptions>(options =>
+        {
+            options.MessagePublisherTransportChannelFactories.Add(new AzureServiceBusTransportChannelFactory());
+        });
+        services.AddScoped<IAzureServiceBusMessagePublisher, AzureServiceBusMessagePublisher>();
+
+
         services.AddSingleton<IMessagePollerFactory<AzureServiceBusMessagePoller>, AzureServiceBusMessagePollerFactory>();
     }
 }

@@ -3,7 +3,7 @@ using ChoirManagement.Membership.Domain.Repositories;
 using ChoirManagement.Membership.Public.Messages.Commands;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Processing.Commands;
+using NEvo.CQRS.Processing.Commands;
 
 namespace ChoirManagement.Membership.Domain.CommandHandlers;
 

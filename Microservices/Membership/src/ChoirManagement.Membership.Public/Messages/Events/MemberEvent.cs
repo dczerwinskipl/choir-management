@@ -1,6 +1,6 @@
 ﻿using ChoirManagement.Membership.Public.ValueObjects;
 using NEvo.Core;
-using NEvo.Messaging.Events;
+using NEvo.CQRS.Messaging.Events;
 using NEvo.ValueObjects;
 
 namespace ChoirManagement.Membership.Public.Messages.Events;

@@ -11,18 +11,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing.Registering;
+using Microsoft.Extensions.Configuration;
 
 namespace ChoirManagement.Membership.Domain;
 
 public class MembershipModuleConfiguration
 {
-    public static void RegisterServices(IServiceCollection services)
+    public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IMemberRepository, MemberRepository>();
-        services.AddDbContext<MembershipContext>(c => c.UseSqlServer("Data Source=ext-sql-server;Initial Catalog=ChoirManagement.Memebership;Integrated Security=false;User ID=test;Password=test123;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False", b => b.MigrationsAssembly("ChoirManagement.Membership.WebService")));
-        //services.AddDbContext<Member>
+        services.AddDbContext<MembershipContext>(c => c.UseSqlServer(configuration.GetValue<string>("Database:ConnectionString")));
     }
 
     public static void Handlers(IMessageHandlerRegistry registry)

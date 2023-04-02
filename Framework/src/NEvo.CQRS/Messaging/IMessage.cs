@@ -1,4 +1,4 @@
-﻿namespace NEvo.Messaging;
+﻿namespace NEvo.CQRS.Messaging;
 
 public enum MessageType
 {

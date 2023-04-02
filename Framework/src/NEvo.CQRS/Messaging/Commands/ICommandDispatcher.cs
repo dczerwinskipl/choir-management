@@ -1,11 +1,12 @@
 ﻿using NEvo.Core;
+using NEvo.CQRS.Messaging.Commands;
 using NEvo.Monads;
 
-namespace NEvo.Messaging.Commands;
+namespace NEvo.CQRS.Messaging.Commands;
 
 public interface ICommandDispatcher
 {
-    void Dispatch(Command command) => DispatchAsync(command).ConfigureAwait(false).GetAwaiter().GetResult().OnFailure(exc => throw exc);
-    Task<Either<Exception, Unit>> DispatchAsync(Command command);
+    void Dispatch<TCommand>(TCommand command) where TCommand : Command => DispatchAsync(command).ConfigureAwait(false).GetAwaiter().GetResult().OnFailure(exc => throw exc);
+    Task<Either<Exception, Unit>> DispatchAsync<TCommand>(TCommand command) where TCommand : Command;
 }
 

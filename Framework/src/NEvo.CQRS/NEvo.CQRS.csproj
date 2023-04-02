@@ -1,18 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Processing\Pipelining\" />
-  </ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>NEvo.CQRS.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
-    <ProjectReference Include="..\NEvo.ValueObjects\NEvo.ValueObjects.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Processing\Pipelining\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NEvo.Core\NEvo.Core.csproj" />
+		<ProjectReference Include="..\NEvo.ValueObjects\NEvo.ValueObjects.csproj" />
+	</ItemGroup>
 
 </Project>

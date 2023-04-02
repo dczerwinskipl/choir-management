@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArgoCD", "ArgoCD", "{F349DB
 		kubernetes\ArgoCD\sqlserver-service.yml = kubernetes\ArgoCD\sqlserver-service.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.CQRS.Tests", "Framework\tests\NEvo.CQRS.Tests\NEvo.CQRS.Tests.csproj", "{02E17E0F-7458-4E36-A153-01970CB6F1D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{4A5C2456-E4D7-4573-B0AD-CDA2E393BD09} = {533C0B4B-D31E-42EE-B921-64511EA0FD50}
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0} = {62EE7B2C-EE4C-48ED-B720-160143A9C67B}
 		{F349DBAE-38E1-4E44-B68F-5AA5E3BFA50D} = {8BFF3319-E8D7-4095-A512-716D8F1C09D9}
+		{02E17E0F-7458-4E36-A153-01970CB6F1D5} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}

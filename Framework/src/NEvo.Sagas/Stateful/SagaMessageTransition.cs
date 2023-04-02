@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
 using NEvo.Core.StateManaging;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 
 namespace NEvo.Sagas.Stateful;
 
