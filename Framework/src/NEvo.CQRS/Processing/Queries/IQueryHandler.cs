@@ -1,6 +1,6 @@
-﻿using NEvo.Messaging.Queries;
+﻿using NEvo.CQRS.Messaging.Queries;
 
-namespace NEvo.Processing.Queries;
+namespace NEvo.CQRS.Processing.Queries;
 
 public interface IQueryHandler<TQuery, TResult> where TQuery : Query<TResult>
 {

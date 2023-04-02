@@ -1,7 +1,7 @@
 ﻿using NEvo.Core;
 using NEvo.ValueObjects;
 
-namespace NEvo.Messaging.Events;
+namespace NEvo.CQRS.Messaging.Events;
 
 public abstract record Event : IMessage<Unit>
 {

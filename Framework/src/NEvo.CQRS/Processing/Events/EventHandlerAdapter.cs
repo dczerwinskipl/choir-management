@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Messaging.Events;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Events;
+using NEvo.CQRS.Processing.Registering;
 
-namespace NEvo.Processing.Events;
+namespace NEvo.CQRS.Processing.Events;
 
 public class EventHandlerAdapter<THandler, TMessage> : IMessageHandlerAdapter
                                                             where THandler : IEventHandler<TMessage>

@@ -1,4 +1,4 @@
-﻿namespace NEvo.Messaging.Queries;
+﻿namespace NEvo.CQRS.Messaging.Queries;
 
 public abstract record Query<TResult> : IMessage<TResult>
 {

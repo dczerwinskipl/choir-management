@@ -1,7 +1,7 @@
 ﻿using NEvo.Core;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Processing.Registering;
 
-namespace NEvo.Processing.Events;
+namespace NEvo.CQRS.Processing.Events;
 
 public class EventHandlerAdapterFactory : IMessageHandlerAdapterFactory
 {

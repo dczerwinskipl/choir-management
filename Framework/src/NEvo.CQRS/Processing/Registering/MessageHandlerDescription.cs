@@ -1,10 +1,10 @@
-﻿using NEvo.Messaging;
-using NEvo.Messaging.Commands;
-using NEvo.Messaging.Events;
+﻿using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Commands;
+using NEvo.CQRS.Messaging.Events;
 using System.ComponentModel.Design;
 using System.Reflection;
 
-namespace NEvo.Processing.Registering;
+namespace NEvo.CQRS.Processing.Registering;
 
 public record MessageHandlerDescription(Type HandlerType, Type MessageType /* todo: Change to MessageType */, Type InterfaceType,MethodInfo Method)
 {

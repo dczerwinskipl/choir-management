@@ -1,5 +1,5 @@
 ﻿using NEvo.Core;
-using NEvo.Messaging.Events;
+using NEvo.CQRS.Messaging.Events;
 using NEvo.ValueObjects;
 
 namespace NEvo.DomainDrivenDesign;
@@ -31,7 +31,7 @@ public abstract class AggregateRoot<TAggregateRoot, TKey> where TAggregateRoot :
 
 public abstract class SnapshotAggregateRoot<TAggregateRoot, TKey> : AggregateRoot<TAggregateRoot, TKey> where TAggregateRoot : SnapshotAggregateRoot<TAggregateRoot, TKey>
 {
-    private readonly List<Event> _pendingEvents = new List<Event>();
+    private List<Event> _pendingEvents = new List<Event>();
     public void Publish<TEvent>(TEvent @event) where TEvent : Event
     {
         @event.Source = GetSource();
@@ -39,6 +39,13 @@ public abstract class SnapshotAggregateRoot<TAggregateRoot, TKey> : AggregateRoo
     }
 
     protected virtual ObjectId? GetSource() => ObjectId.New(GetType().Name, Id.ToString());
+
+    public IReadOnlyCollection<Event> FlushEvents()
+    {
+        var events = _pendingEvents.AsReadOnly();
+        _pendingEvents = new();
+        return events;
+    }
 
     protected SnapshotAggregateRoot() : base() { }
 

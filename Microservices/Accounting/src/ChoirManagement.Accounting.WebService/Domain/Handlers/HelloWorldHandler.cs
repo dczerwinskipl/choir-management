@@ -1,10 +1,10 @@
 ﻿using ChoirManagement.Accounting.Messages;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Processing.Commands;
-using NEvo.Processing.Events;
-using NEvo.Processing.Queries;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing.Commands;
+using NEvo.CQRS.Processing.Events;
+using NEvo.CQRS.Processing.Queries;
 using NEvo.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 

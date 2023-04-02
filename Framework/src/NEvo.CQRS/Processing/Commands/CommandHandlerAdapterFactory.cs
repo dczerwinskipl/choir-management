@@ -1,7 +1,7 @@
 ﻿using NEvo.Core;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Processing.Registering;
 
-namespace NEvo.Processing.Commands;
+namespace NEvo.CQRS.Processing.Commands;
 
 public class CommandHandlerAdapterFactory : IMessageHandlerAdapterFactory
 {

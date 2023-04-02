@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
 
-namespace NEvo.Messaging.Commands;
+namespace NEvo.CQRS.Messaging.Commands;
 
 public abstract record Command : IMessage<Unit>
 {

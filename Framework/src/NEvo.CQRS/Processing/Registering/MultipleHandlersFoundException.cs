@@ -1,4 +1,4 @@
-﻿namespace NEvo.Processing.Registering;
+﻿namespace NEvo.CQRS.Processing.Registering;
 
 public class MultipleHandlersFoundException : HandlerRegistryException
 {

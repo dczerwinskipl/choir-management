@@ -3,8 +3,8 @@ using ChoirManagement.Accounting.Messages;
 using Microsoft.AspNetCore.Mvc;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing.Registering;
 
 namespace ChoirManagement.Accounting.WebService;
 

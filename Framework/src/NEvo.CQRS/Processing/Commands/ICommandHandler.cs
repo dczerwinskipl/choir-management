@@ -1,8 +1,8 @@
 ﻿using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging.Commands;
+using NEvo.CQRS.Messaging.Commands;
 
-namespace NEvo.Processing.Commands;
+namespace NEvo.CQRS.Processing.Commands;
 
 public interface ICommandHandler<in TCommand> where TCommand : Command
 {

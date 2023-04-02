@@ -1,5 +1,5 @@
-﻿using NEvo.Messaging;
-using NEvo.Messaging.Events;
+﻿using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Events;
 
 namespace NEvo.Publishing.Outboxing;
 

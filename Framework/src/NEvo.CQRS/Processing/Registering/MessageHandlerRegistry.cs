@@ -1,8 +1,8 @@
 ﻿using NEvo.Core;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 using System.ComponentModel;
 
-namespace NEvo.Processing.Registering;
+namespace NEvo.CQRS.Processing.Registering;
 
 public class MessageHandlerRegistry : IMessageHandlerRegistry
 {

@@ -1,6 +1,6 @@
 using ChoirManagement.Accounting.WebService;
 using NEvo.Core;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,7 @@ builder.Configuration.AddEnvironmentVariables()
                      .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
 builder.Services.AddNEvo(nEvo => nEvo
-                                    .AddCqrs<InternalMessageBus>()
+                                    .AddCqrs<RouterBasedMessageBus>()
                                     //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
                                     //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options)
                                     //)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NEvo.Core.Reflection;
 
 namespace NEvo.Core;
 
@@ -10,10 +11,24 @@ public static class NEvoDependencyInjectionExtensions
         Check.Null(serviceCollection);
         Check.Null(extensions);
 
+        AddCoreServices(serviceCollection);
+        ApplyExtensions(serviceCollection, extensions);
+
+        return serviceCollection;
+    }
+
+    private static void ApplyExtensions(IServiceCollection serviceCollection, Action<NEvoServicesBuilder> extensions)
+    {
         var servicesBuilder = new NEvoServicesBuilder();
-        serviceCollection.AddSingleton<INEvoAppDetailsProvider, NEvoAppDetailsProvider>(_ => new NEvoAppDetailsProvider());
         extensions(servicesBuilder);
         servicesBuilder.ApplyExtensions(serviceCollection);
-        return serviceCollection;
+    }
+
+    private static void AddCoreServices(IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddSingleton<INEvoAppDetailsProvider, NEvoAppDetailsProvider>(_ => new NEvoAppDetailsProvider());
+
+        serviceCollection.Configure<TypeResolverOptions>(options => options.Assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name?.StartsWith(nameof(NEvo)) ?? false)));
+        serviceCollection.AddSingleton<ITypeResolver, TypeResolver>();
     }
 }

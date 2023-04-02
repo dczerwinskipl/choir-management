@@ -1,4 +1,4 @@
-﻿namespace NEvo.Processing;
+﻿namespace NEvo.CQRS.Processing;
 
 public interface IMessageProcessingResult
 {

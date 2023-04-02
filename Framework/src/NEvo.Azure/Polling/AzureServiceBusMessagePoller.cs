@@ -1,8 +1,8 @@
 ﻿using Azure.Messaging.ServiceBus;
-using NEvo.Processing;
-using NEvo.Messaging;
+using NEvo.CQRS.Processing;
+using NEvo.CQRS.Messaging;
 using Newtonsoft.Json;
-using NEvo.Messaging.Events;
+using NEvo.CQRS.Messaging.Events;
 using NEvo.Polling;
 
 namespace NEvo.Azure.Polling;

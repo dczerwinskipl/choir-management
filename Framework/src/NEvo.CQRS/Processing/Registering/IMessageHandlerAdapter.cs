@@ -1,7 +1,7 @@
 ﻿using NEvo.Monads;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 
-namespace NEvo.Processing.Registering;
+namespace NEvo.CQRS.Processing.Registering;
 
 /// <summary>
 /// Message handler wrapper interface to unify message handling with result and allow to add custom type of handlers as extension

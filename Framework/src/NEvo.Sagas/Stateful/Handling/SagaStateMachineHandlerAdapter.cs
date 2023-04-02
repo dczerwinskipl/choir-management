@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 using NEvo.Monads;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Processing.Registering;
 
 namespace NEvo.Sagas.Stateful.Handling;
 

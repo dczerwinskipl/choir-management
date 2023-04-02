@@ -1,57 +1,28 @@
-﻿using NEvo.Messaging;
-using NEvo.Processing.Commands;
-using NEvo.Processing.Events;
-using NEvo.Processing.Queries;
-using NEvo.Processing.Registering;
-using NEvo.Processing;
-using NEvo.Messaging.Commands;
-using NEvo.Messaging.Events;
-using NEvo.Messaging.Queries;
+﻿using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing.Commands;
+using NEvo.CQRS.Processing.Events;
+using NEvo.CQRS.Processing.Queries;
+using NEvo.CQRS.Processing.Registering;
+using NEvo.CQRS.Processing;
+using NEvo.CQRS.Messaging.Commands;
+using NEvo.CQRS.Messaging.Events;
+using NEvo.CQRS.Messaging.Queries;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
+using NEvo.CQRS.Channeling;
+using NEvo.CQRS.Routing;
+using NEvo.CQRS.Transporting;
+using static NEvo.CQRS.Transporting.TransportChannelDescription;
+using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 
 namespace NEvo.Core;
 
-public static class IntegrationExtensions
-{
-    public static WebApplication UseNEvoCqrs(this WebApplication application, params Action<IMessageHandlerRegistry>[] configureHandlers)
-    {
-        var registry = application.Services.GetRequiredService<IMessageHandlerRegistry>();
-        foreach (var configure in configureHandlers)
-        {
-            configure(registry);
-        }
-        return application;
-    }
-}
-
-/// <summary>
-/// Public interface to configure additional options of CQRS
-/// </summary>
-public interface INEvoCqrsExtensionBuilder
-{
-    INEvoCqrsExtensionBuilder UseCustomMessageHandlers(params MessageHandlerOptions[] messageHandlerOptions);
-}
-
-public static class NEvoServicesBuilderExtensions
-{
-    public static NEvoServicesBuilder AddCqrs<TMessageBus>(this NEvoServicesBuilder builder, params MessageHandlerOptions[] messageHandlerOptions) where TMessageBus : class, IMessageBus
-    {
-        builder.UseExtension(new NEvoCqrsExtensionBuilder<TMessageBus>(messageHandlerOptions));
-        return builder;
-    }
-    public static NEvoServicesBuilder AddCqrs<TMessageBus>(this NEvoServicesBuilder builder, Action<INEvoCqrsExtensionBuilder>? configureCqrs = null) where TMessageBus : class, IMessageBus
-    {
-        var cqrsBuilder = new NEvoCqrsExtensionBuilder<TMessageBus>();
-        configureCqrs?.Invoke(cqrsBuilder);
-        builder.UseExtension(cqrsBuilder);        
-        return builder;
-    }
-}
-
-public class NEvoCqrsExtensionBuilder<TMessageBus> : INEvoExtensionConfiguration, INEvoCqrsExtensionBuilder where TMessageBus : class, IMessageBus
+public class NEvoCqrsExtensionBuilder : INEvoExtensionConfiguration, INEvoCqrsExtensionBuilder
 {
     private Dictionary<Type, MessageHandlerOptions> _messageHandlerOptions;
+    private List<Action<RoutingTopologyDescription>> _routingTopologyDescriptionConfigurations = new();
+    private List<Action<RoutingPolicyDescription>> _routingPolicyDescriptionConfigurations = new();
 
     public NEvoCqrsExtensionBuilder() : this(
         CommandHandlerAdapterFactory.MessageHandlerOptions, 
@@ -75,6 +46,17 @@ public class NEvoCqrsExtensionBuilder<TMessageBus> : INEvoExtensionConfiguration
         }
         return this;
     }
+    public INEvoCqrsExtensionBuilder ConfigureRoutingTopology(Action<RoutingTopologyDescription> topologyConfiguration)
+    {
+        _routingTopologyDescriptionConfigurations.Add(topologyConfiguration);
+        return this;
+    }
+
+    public INEvoCqrsExtensionBuilder ConfigureRoutingPolicy(Action<RoutingPolicyDescription> policyConfiguration)
+    {
+        _routingPolicyDescriptionConfigurations.Add(policyConfiguration);
+        return this;
+    }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -85,10 +67,99 @@ public class NEvoCqrsExtensionBuilder<TMessageBus> : INEvoExtensionConfiguration
         });
 
         services.AddSingleton<IMessageProcessor, MessageProcessor>();
-        services.AddSingleton<ITopicProvider, NEvoNamespaceTopicProvider>();
-        services.AddSingleton<IMessageBus, TMessageBus>();
-        services.AddSingleton<ICommandDispatcher>(sp => sp.GetRequiredService<IMessageBus>());
-        services.AddSingleton<IEventPublisher>(sp => sp.GetRequiredService<IMessageBus>());
-        services.AddSingleton<IQueryDispatcher>(sp => sp.GetRequiredService<IMessageBus>());
-    }    
+        services.AddScoped<IMessageBus, MessageBus>();
+        services.AddScoped<IMessageRouter, MessageRouter>();
+        services.Configure<TransportChannelFactoryOptions>(options =>
+        {
+           options.InternalTransportChannelFactory = new InternalTransportChannelFactory();
+        });
+        services.AddSingleton<ITransportChannelFactory, TransportChannelFactory>();
+
+        foreach (var configuration in _routingTopologyDescriptionConfigurations)
+        {
+            services.Configure(configuration);
+        }
+        services.AddSingleton<IRoutingTopologyProvider, RoutingTopologyProvider>();
+
+        foreach (var configuration in _routingPolicyDescriptionConfigurations)
+        {
+            services.Configure(configuration);
+        }
+        services.AddSingleton<IRoutingPolicyFactory, RoutingPolicyFactory>();
+
+        services.AddScoped<IMessageBus, MessageBus>();
+        services.AddScoped<ICommandDispatcher>(sp => sp.GetRequiredService<IMessageBus>());
+        services.AddScoped<IEventPublisher>(sp => sp.GetRequiredService<IMessageBus>());
+        services.AddScoped<IQueryDispatcher>(sp => sp.GetRequiredService<IMessageBus>());
+    }
+}
+
+
+public class RoutingPolicyFactory : IRoutingPolicyFactory
+{
+    private ConcurrentDictionary<Type, IRoutingPolicy> _policies = new();
+    private List<RoutingPolicyRule> _rules;
+
+    public RoutingPolicyFactory(IOptions<RoutingPolicyDescription> options)
+    {
+        _rules = Check.Null(options.Value.Rules);
+    }
+
+    public IRoutingPolicy CreatePolicyFor<TMessage>(TMessage message) where TMessage : IMessage
+    {
+        return _policies.GetOrAdd(message.GetType(), CreatePolicyForInternal<TMessage>);
+    }
+
+    private IRoutingPolicy CreatePolicyForInternal<TMessage>(Type message) where TMessage : IMessage
+    {
+        if(TMessage.MessageType == MessageType.Event)
+        {
+            return new RoutingPolicy(TMessage.MessageType, GetChannel(message));
+        }
+        return new RoutingPolicy(TMessage.MessageType);
+    }
+
+    private string? GetChannel(Type message)
+    {
+        var @namespace = message.Namespace;
+        foreach(var rule in _rules)
+        {
+            if (Regex.IsMatch(@namespace, rule.NamespacePattern))
+                return rule.ChannelName;
+        }
+        return null;
+    }
+}
+public class RoutingPolicy : IRoutingPolicy
+{
+    public readonly MessageType _messageType;
+    private readonly string? _channelName;
+
+    public RoutingPolicy(MessageType messageType, string? channelName = null)
+    {
+        _messageType = messageType;
+        _channelName = channelName;
+    }   
+
+    public TransportChannelDescription GetChannelDescription()
+    {
+        return _messageType switch
+        {
+            MessageType.Command => new InternalTransportChannelDescription(false),
+            MessageType.Query => new InternalTransportChannelDescription(false),
+            MessageType.Event => _channelName is null ? new InternalTransportChannelDescription(false) : new MessagePublisherTransportChannelDescription(_channelName)
+        };
+    }
+}
+
+
+public class RoutingPolicyDescription
+{
+    public List<RoutingPolicyRule> Rules { get; set; } = new();
+}
+
+public class RoutingPolicyRule
+{
+    public string NamespacePattern { get; set; }
+    public string ChannelName { get; set; }
 }

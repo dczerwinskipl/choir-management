@@ -1,8 +1,8 @@
 ﻿using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 
-namespace NEvo.Processing;
+namespace NEvo.CQRS.Processing;
 
 public interface IMessageProcessor
 {

@@ -1,6 +1,6 @@
-﻿using NEvo.Messaging;
+﻿using NEvo.CQRS.Messaging;
 
-namespace NEvo.Processing.Registering;
+namespace NEvo.CQRS.Processing.Registering;
 
 public record MessageHandlingOptions(bool AllowMultipleHandlers, bool RequireHandler, bool ReturnsValue)
 {

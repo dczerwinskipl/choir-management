@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
 using NEvo.Core.StateManaging;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 using NEvo.Monads;
 using NEvo.Sagas.Stateful.Building;
 using System.Collections.Concurrent;

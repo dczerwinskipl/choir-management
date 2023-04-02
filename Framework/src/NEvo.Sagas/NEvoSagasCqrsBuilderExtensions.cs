@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Messaging.Events;
-using NEvo.Processing.Commands;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Events;
+using NEvo.CQRS.Processing.Commands;
+using NEvo.CQRS.Processing.Registering;
 using System.Linq.Expressions;
 
 namespace NEvo.Sagas;

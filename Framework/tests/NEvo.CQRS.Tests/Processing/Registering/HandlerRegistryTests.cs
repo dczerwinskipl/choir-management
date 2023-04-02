@@ -1,13 +1,12 @@
-using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using NEvo.Processing.Commands;
-using NEvo.Messaging.Commands;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Processing.Commands;
+using NEvo.CQRS.Messaging.Commands;
+using NEvo.CQRS.Processing.Registering;
 using NEvo.Core;
 using NEvo.Monads;
 
-namespace NEvo.Tests.Processing.Registering;
+namespace NEvo.CQRS.Tests.Processing.Registering;
 
 public class HandlerRegistryTests
 {

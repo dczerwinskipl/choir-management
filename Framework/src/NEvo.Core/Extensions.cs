@@ -52,7 +52,7 @@ public class TryEndpointFilter : IEndpointFilter
                 {
                     exception.Message, // todo: can add translation here or sth
                                        // todo: validations, etc.? need some mapper for exception to do that
-                    Exception = exception
+                    Exception = exception.ToString()
                 };
             });
 

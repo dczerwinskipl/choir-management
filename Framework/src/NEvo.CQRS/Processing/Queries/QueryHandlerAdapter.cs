@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
 using NEvo.Monads;
-using NEvo.Messaging;
-using NEvo.Messaging.Queries;
-using NEvo.Processing.Registering;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Queries;
+using NEvo.CQRS.Processing.Registering;
 
-namespace NEvo.Processing.Queries;
+namespace NEvo.CQRS.Processing.Queries;
 
 public class QueryHandlerAdapter<THandler, TMessage, TResult> : IMessageHandlerAdapter
                                                             where THandler : IQueryHandler<TMessage, TResult>

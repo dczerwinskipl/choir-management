@@ -1,24 +1,31 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Azure.Identity;
-using NEvo.Messaging;
+using NEvo.CQRS.Messaging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NEvo.Publishing;
-using Azure.Messaging.ServiceBus.Administration;
+using NEvo.Azure.Administrating;
+using NEvo.CQRS.Channeling;
 
 namespace NEvo.Azure.Publishing;
-public class AzureServiceBusMessagePublisher : IMessagePublisher, IAsyncDisposable
+
+public interface IAzureServiceBusMessagePublisher
+{
+    void Publish<TMessage>(MessageEnvelope<TMessage> message, string topicName) where TMessage : IMessage => PublishAsync(message, topicName).ConfigureAwait(false).GetAwaiter().GetResult();
+    Task PublishAsync<TMessage>(MessageEnvelope<TMessage> messsageEnvelope, string topicName) where TMessage : IMessage;
+
+}
+
+public class AzureServiceBusMessagePublisher : IAzureServiceBusMessagePublisher, IAsyncDisposable
 {
     private readonly IOptions<AzureServiceBusClientData> _options;
-    private readonly ITopicProvider _topicProvider;
+    private readonly IAzureServiceBusAdministrator _azureServiceBusAdministrator;
     private readonly ServiceBusClient _client;
-    private readonly ServiceBusAdministrationClient _administrationClient;
-    private readonly HashSet<string> _topics = new HashSet<string>();
-    static SemaphoreSlim _topicsSemaphoreSlim = new SemaphoreSlim(1, 1);
-    public AzureServiceBusMessagePublisher(IOptions<AzureServiceBusClientData> options, ITopicProvider topicProvider)
+
+    public AzureServiceBusMessagePublisher(IOptions<AzureServiceBusClientData> options, IAzureServiceBusAdministrator azureServiceBusAdministrator)
     {
         _options = options;
-        _topicProvider = topicProvider;
+        _azureServiceBusAdministrator = azureServiceBusAdministrator;
 
         var clientOptions = new ServiceBusClientOptions
         {
@@ -28,10 +35,6 @@ public class AzureServiceBusMessagePublisher : IMessagePublisher, IAsyncDisposab
            _options.Value.FullyQualifiedNamespace,
            new ClientSecretCredential(_options.Value.TenantId, _options.Value.ClientId, _options.Value.ClientSecret),
            clientOptions);
-
-        _administrationClient = new ServiceBusAdministrationClient(_options.Value.FullyQualifiedNamespace,
-           new ClientSecretCredential(_options.Value.TenantId, _options.Value.ClientId, _options.Value.ClientSecret),
-           new ServiceBusAdministrationClientOptions { });
     }
 
     public async ValueTask DisposeAsync()
@@ -39,47 +42,19 @@ public class AzureServiceBusMessagePublisher : IMessagePublisher, IAsyncDisposab
         await _client.DisposeAsync();
     }
 
-    public async Task PublishAsync<TMessage>(MessageEnvelope<TMessage> messageEnvelope, string partitionKey /* todo: on message Envelope */) where TMessage : IMessage
+    public async Task PublishAsync<TMessage>(MessageEnvelope<TMessage> messageEnvelope, string topicName) where TMessage : IMessage
     {
         var serializedMessage = JsonConvert.SerializeObject(messageEnvelope.ToRawMessageEnvelope()); // TODO: Without ToRaw?
-        var topic = _topicProvider.TopicFor(messageEnvelope); // i guess, this should be already in envelope or some other DTO object 
-
-        await EnsureTopicExists(topic);
-        await using var sender = _client.CreateSender(topic);
+   
+        await _azureServiceBusAdministrator.EnsureTopicExistsAsync(topicName);
+        await using var sender = _client.CreateSender(topicName);
 
         var message = new ServiceBusMessage(serializedMessage)
         {
-            PartitionKey = partitionKey,
-            SessionId = partitionKey
+            PartitionKey = messageEnvelope.Partition,
+            SessionId = messageEnvelope.Partition
         };
 
         await sender.SendMessageAsync(message);
-    }
-
-    private async Task EnsureTopicExists(string topic)
-    {
-        if (!_topics.Contains(topic))
-        {
-            await _topicsSemaphoreSlim.WaitAsync();
-            if (!_topics.Contains(topic))
-            {
-                //TODO: policy, create or throw
-                if (!await _administrationClient.TopicExistsAsync(topic))
-                {
-                    await _administrationClient.CreateTopicAsync(new CreateTopicOptions(topic)
-                    {
-                        EnablePartitioning = true,
-                        RequiresDuplicateDetection = true
-                    });
-                    await _administrationClient.CreateSubscriptionAsync(new CreateSubscriptionOptions(topic, "Preview")
-                    {
-                        RequiresSession = false
-                    });
-                    //throw new InvalidOperationException($"Cannot create poller if topic doesn't exists. Trying to create poller for: {topic}");
-                }
-                _topics.Add(topic);
-            }
-            _topicsSemaphoreSlim.Release();
-        }
     }
 }

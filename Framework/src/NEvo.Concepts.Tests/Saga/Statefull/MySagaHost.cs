@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NEvo.Core;
-using NEvo.Messaging;
-using NEvo.Messaging.Events;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Events;
 using NEvo.Monads;
 using NEvo.Sagas.Stateful;
 using NEvo.Sagas.Stateful.Handling;
@@ -40,7 +41,7 @@ public static class MySagaHost
                              .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
         builder.Services.AddNEvo(nEvo => nEvo
-                                            .AddCqrs<InternalMessageBus>(c => c.UseCustomMessageHandlers(SagaStateMachineHandlerAdapterFactory.MessageHandlerOptions))
+                                            .AddCqrs(c => c.UseCustomMessageHandlers(SagaStateMachineHandlerAdapterFactory.MessageHandlerOptions))
                                             //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
                                             //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options)
                                             //)
