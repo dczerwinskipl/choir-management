@@ -36,35 +36,35 @@ local appImage = "localhost:5000/choir.management.membership:latest";
                 "value": "http://+:8002",
               },
               {
-                  "name": "NEvo.CQRS:Topology:Endpoints:Accounting:ChannelType",
+                  "name": "NEvo.CQRS_Topology_Endpoints_Accounting_ChannelType",
                   "value": "NEvo.CQRS.Transporting.RestTransportChannel"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Endpoints:Accounting:Endpoint",
-                  "value": "http://accounting:5000/api"
+                  "name": "NEvo.CQRS_Topology_Endpoints_Accounting_Endpoint",
+                  "value": "http_//accounting_5000/api"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Endpoints:Membership:ChannelType",
+                  "name": "NEvo.CQRS_Topology_Endpoints_Membership_ChannelType",
                   "value": "NEvo.CQRS.Transporting.RestTransportChannel"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Endpoints:Membership:Endpoint",
-                  "value": "http://membership:5000/api"
+                  "name": "NEvo.CQRS_Topology_Endpoints_Membership_Endpoint",
+                  "value": "http_//membership_5000/api"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Topics:Accounting:ChannelType",
+                  "name": "NEvo.CQRS_Topology_Topics_Accounting_ChannelType",
                   "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Topics:Accounting:TopicName",
+                  "name": "NEvo.CQRS_Topology_Topics_Accounting_TopicName",
                   "value": "choirmanagement.accounting"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Topics:Membership:ChannelType",
+                  "name": "NEvo.CQRS_Topology_Topics_Membership_ChannelType",
                   "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
               },
               {
-                  "name": "NEvo.CQRS:Topology:Topics:Membership:TopicName",
+                  "name": "NEvo.CQRS_Topology_Topics_Membership_TopicName",
                   "value": "choirmanagement.membership"
               },
             ],
