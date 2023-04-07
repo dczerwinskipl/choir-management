@@ -57,7 +57,7 @@ public static class Try
             return Either.Failure(exc);
         }
     }
-    
+
     public static async Task<Either<Exception, TResult>> OfAsync<TResult>(Func<Task<Either<Exception, TResult>>> action)
     {
         try

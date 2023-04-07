@@ -4,7 +4,7 @@ namespace NEvo.Sagas.Stateful.Handling;
 
 public class SagaStateMachineHandlerTimeoutConfiguration<TSaga> : SagaStateMachineHandlerTransitionConfiguration<TSaga> where TSaga : ISaga
 {
-    private TimeSpan _timeout;
+    private readonly TimeSpan _timeout;
 
     public SagaStateMachineHandlerTimeoutConfiguration(TimeSpan timeout)
     {

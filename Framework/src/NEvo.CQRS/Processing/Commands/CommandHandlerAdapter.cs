@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Messaging.Commands;
 using NEvo.CQRS.Processing.Registering;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Processing.Commands;
 
 public class CommandHandlerAdapter<THandler, TMessage> : IMessageHandlerAdapter
-                                                            where THandler : ICommandHandler<TMessage> 
+                                                            where THandler : ICommandHandler<TMessage>
                                                             where TMessage : Command
 {
     public MessageHandlerDescription Description { get; }
@@ -31,6 +31,6 @@ public class CommandHandlerAdapter<THandler, TMessage> : IMessageHandlerAdapter
 
             return result.Cast<object?>();
         });
-        
+
     }
 }

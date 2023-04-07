@@ -20,25 +20,29 @@ public class RuleBuilder
 
     public Either<Exception, TResult> OnSuccess<TResult>(Func<TResult> func)
     {
-        var rules = _rules.Select(kv => {
-                try {
-                    return kv.Value.Predicate() ? null : kv.Value.ExceptionFactory(kv.Key);
-                }
-                catch (Exception exc) {
-                    return exc;
-                } 
-            })
+        var rules = _rules.Select(kv =>
+        {
+            try
+            {
+                return kv.Value.Predicate() ? null : kv.Value.ExceptionFactory(kv.Key);
+            }
+            catch (Exception exc)
+            {
+                return exc;
+            }
+        })
             .OfType<Exception>()
             .ToList();
 
         return rules.Any() ?
-            Either.Failure<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) : 
+            Either.Failure<TResult>(rules.Count > 1 ? new AggregateException(rules) : rules.First()) :
             Try.Of(func);
     }
 
     public Either<Exception, Unit> OnSuccess(Action action)
     {
-        var rules = _rules.Select(kv => {
+        var rules = _rules.Select(kv =>
+        {
             try
             {
                 return kv.Value.Predicate() ? null : kv.Value.ExceptionFactory(kv.Key);

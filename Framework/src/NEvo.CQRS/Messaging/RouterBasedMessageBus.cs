@@ -1,11 +1,10 @@
 ﻿using NEvo.Core;
-using NEvo.Monads;
+using NEvo.Core.Reflection;
 using NEvo.CQRS.Messaging.Commands;
 using NEvo.CQRS.Messaging.Events;
 using NEvo.CQRS.Messaging.Queries;
 using NEvo.CQRS.Routing;
-using NEvo.Core.Reflection;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Messaging;
 
@@ -23,7 +22,7 @@ public class MessageBus : IMessageBus
         _typeResolver = Check.Null(typeResolver);
     }
 
-    public Task<Either<Exception, Unit>> DispatchAsync<TCommand>(TCommand command) where TCommand : Command 
+    public Task<Either<Exception, Unit>> DispatchAsync<TCommand>(TCommand command) where TCommand : Command
         => _router.ForMessage(command).DispatchMessageAsync<TCommand, Unit>(
             new MessageEnvelope<TCommand>(Guid.NewGuid(), command, _typeResolver.GetName(typeof(TCommand)))
         );

@@ -1,12 +1,10 @@
-﻿using NEvo.Core;
+﻿using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using NEvo.Core;
 using NEvo.Core.StateManaging;
 using NEvo.CQRS.Messaging;
 using NEvo.Monads;
 using NEvo.Sagas.Stateful.Building;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace NEvo.Sagas.Stateful.Handling;
 
@@ -52,8 +50,8 @@ public record NoTransitionForMessage(IMessage Message, string Reason) : Refused(
 public abstract class SagaStateMachineHandler<TSaga, TState> : ISagaStateMachineHandler<TSaga, TState> where TSaga : IStatefulSaga<TState>
 {
     private SagaStateMachineDefinition<TSaga, TState>? _definition;
-    private SagaStateMachineBuilder<TSaga, TState> _builder;
-    private ConcurrentDictionary<Type, ISagaFinder<TSaga>?> _messageListeners = new ConcurrentDictionary<Type, ISagaFinder<TSaga>?>();
+    private readonly SagaStateMachineBuilder<TSaga, TState> _builder;
+    private readonly ConcurrentDictionary<Type, ISagaFinder<TSaga>?> _messageListeners = new ConcurrentDictionary<Type, ISagaFinder<TSaga>?>();
     public static readonly string InitStateName = "InitState";
 
     public bool IgnoreNotDefinedTransitions = false;

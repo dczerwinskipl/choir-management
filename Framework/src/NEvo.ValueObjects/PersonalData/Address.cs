@@ -1,5 +1,5 @@
-﻿using NEvo.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using NEvo.Core;
 
 namespace NEvo.ValueObjects.PersonalData;
 

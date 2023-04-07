@@ -1,5 +1,5 @@
-﻿using NEvo.CQRS.Processing.Registering;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NEvo.CQRS.Processing.Registering;
 
 namespace Microsoft.Extensions.Hosting;
 

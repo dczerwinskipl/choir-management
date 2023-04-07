@@ -1,10 +1,9 @@
+using System.Reflection;
 using ChoirManagement.Membership.Domain;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using NEvo.Core;
 using NEvo.CQRS.Routing;
-using System.Reflection;
-
+using NEvo.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,19 +12,20 @@ builder.Configuration.AddEnvironmentVariables()
                      .AddJsonFile("appsettings.json")
                      .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
-var root = (IConfigurationRoot)builder.Configuration;
-var debugView = root.GetDebugView();
+var cqrsConfiguration = builder.Configuration.GetRequiredSection("NEvo.CQRS");
+
+
 builder.Services.AddNEvo(nEvo => nEvo
-                                    .AddCqrs(cqrs => cqrs
-                                                        .ConfigureRoutingPolicy(options => builder.Configuration.GetRequiredSection("NEvo.CQRS").GetRequiredSection("Endpoint:RoutingPolicy").Bind(options))
-                                                        .ConfigureRoutingTopology(options => builder.Configuration.GetRequiredSection("NEvo.CQRS").GetRequiredSection("Topology").Bind(options))
+                                    .AddCqrs(/*cqrs => cqrs*/
+                                                        //.ConfigureRoutingPolicy(options => cqrsConfiguration.GetRequiredSection("Endpoint:RoutingPolicy").Bind(options))
+                                                        //.ConfigureRoutingTopology(options => cqrsConfiguration.GetRequiredSection("Topology").Bind(options))
                                     )
-                                    .AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
-                                    .AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
+                                    //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                    //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
                         );
 
 //TODO: ³adniej
-MembershipModuleConfiguration.RegisterServices(builder.Services, builder.Configuration.GetRequiredSection("Membership"));
+//MembershipModuleConfiguration.RegisterServices(builder.Services, builder.Configuration.GetRequiredSection("Membership"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,6 +39,7 @@ app.UseNEvoRoute(
 //("/api/payments", AccountingModuleConfiguration.PaymentsRoutes)
 );
 
+app.UseDebugConfigurationMiddleware();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

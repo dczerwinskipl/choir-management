@@ -1,6 +1,5 @@
 ﻿using NEvo.Core;
 using NEvo.CQRS.Messaging;
-using System.ComponentModel;
 
 namespace NEvo.CQRS.Processing.Registering;
 
@@ -12,7 +11,7 @@ public class MessageHandlerRegistry : IMessageHandlerRegistry
     private readonly IDictionary<Type, MessageHandlerOptions> _messageHandlerOptions;
     private readonly IDictionary<MessageType, MessageHandlingOptions> _messagesOptions;
 
-    public MessageHandlerRegistry(IServiceProvider serviceProvider, IEnumerable<MessageHandlerOptions> handlerOptions, IDictionary<MessageType, MessageHandlingOptions> messagesOptions /* add as IOptions with validation */) 
+    public MessageHandlerRegistry(IServiceProvider serviceProvider, IEnumerable<MessageHandlerOptions> handlerOptions, IDictionary<MessageType, MessageHandlingOptions> messagesOptions /* add as IOptions with validation */)
     {
         _serviceProvider = Check.Null(serviceProvider);
         _messageHandlerOptions = Check.Null(handlerOptions).ToDictionary(k => k.HandlerInterface, k => k);
@@ -24,16 +23,16 @@ public class MessageHandlerRegistry : IMessageHandlerRegistry
     }
 
     public MessageHandlerRegistry(IServiceProvider serviceProvider) : this(serviceProvider, Enumerable.Empty<MessageHandlerOptions>(), MessageHandlingOptions.DefaultMessageHandlingOptions)
-    { 
+    {
     }
 
-    public IEnumerable<IMessageHandlerWrapper<TResult>> GetHandlers<TMessage, TResult>(TMessage message) where TMessage: IMessage<TResult>
+    public IEnumerable<IMessageHandlerWrapper<TResult>> GetHandlers<TMessage, TResult>(TMessage message) where TMessage : IMessage<TResult>
     {
         var messageOptions = _messagesOptions[TMessage.MessageType];
-        var allHandlers = _handlers.TryGetValue(message.GetType(), out var handlers) ? 
-            handlers.Select(h => h.ToGeneric<TResult>()) : 
+        var allHandlers = _handlers.TryGetValue(message.GetType(), out var handlers) ?
+            handlers.Select(h => h.ToGeneric<TResult>()) :
             Enumerable.Empty<IMessageHandlerWrapper<TResult>>();
-        
+
         if (!messageOptions.AllowMultipleHandlers && allHandlers.Count() > 1)
             throw new MultipleHandlersFoundException(message.GetType());
 

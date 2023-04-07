@@ -17,5 +17,5 @@ public abstract class StaticTransition<TContext, TTransitionData> : ITransition<
 
     protected abstract IState<TContext> GetDestinationState();
 
-    protected async virtual Task<Either<Refused.TransactionValidationFailure, Unit>> ValidateTransitionAsync(TContext context, TTransitionData data) => await Unit.Task;
+    protected virtual async Task<Either<Refused.TransactionValidationFailure, Unit>> ValidateTransitionAsync(TContext context, TTransitionData data) => await Unit.Task;
 }

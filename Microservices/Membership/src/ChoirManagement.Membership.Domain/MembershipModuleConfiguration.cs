@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Processing.Registering;
-using Microsoft.Extensions.Configuration;
+using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain;
 
@@ -32,17 +32,17 @@ public class MembershipModuleConfiguration
 
     public static void MemberRoutes(RouteGroupBuilder builder)
     {
-        builder.MapPost("/", async ([FromServices] IMessageBus messageBus, [FromBody]MemberRegistrationForm form) =>
+        builder.MapPost("/", async ([FromServices] IMessageBus messageBus, [FromBody] MemberRegistrationForm form) =>
                     await Try
                             .OfAsync(async () => await messageBus.DispatchAsync(new RegisterMember(MemberId.New(), form))))
                .Produces(200, typeof(Unit))
                .Produces(400, typeof(Unit))
                .Produces(500, typeof(Unit));
 
-        builder.MapPost("/{memberId}/", async ([FromServices] IMessageBus messageBus, [FromRoute] Guid memberId) => 
+        builder.MapPost("/{memberId}/", async ([FromServices] IMessageBus messageBus, [FromRoute] Guid memberId) =>
                     await Try
                             .OfAsync(async () => await messageBus.DispatchAsync(new AnonimizeMember(MemberId.New(memberId)))))
-                        //.ThenAsync(async (_) => await messageBus.DispatchAsync(new GetMember())))
+               //.ThenAsync(async (_) => await messageBus.DispatchAsync(new GetMember())))
                /* todo: should be handled by middleware when using Try return type*/
                .Produces(200, typeof(Unit))
                .Produces(400, typeof(Unit) /* Validation result output */)

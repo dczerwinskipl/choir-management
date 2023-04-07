@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Messaging.Events;
 using NEvo.CQRS.Processing.Commands;
 using NEvo.CQRS.Processing.Registering;
-using System.Linq.Expressions;
+using NEvo.Monads;
 
 namespace NEvo.Sagas;
 
@@ -20,7 +20,7 @@ public static class NEvoSagasCqrsBuilderExtensions
 
 public class SagaHandlerWrapperFactory : IMessageHandlerAdapterFactory
 {
-    public static MessageHandlerOptions[] MessageHandlerOptions = new[] { 
+    public static MessageHandlerOptions[] MessageHandlerOptions = new[] {
         new MessageHandlerOptions(typeof(ISagaEventHandler<,>), new SagaHandlerWrapperFactory())
     };
 
@@ -73,7 +73,7 @@ public abstract class SagaHandler<TSagaData> : ISagaManager, ISagaHandler<TSagaD
     private readonly ISagaRepository<TSagaData> _sagaRepository;
     public TSagaData? Saga { get; set; }
 
-    public SagaHandler(ISagaRepository<TSagaData> sagaRepository) 
+    public SagaHandler(ISagaRepository<TSagaData> sagaRepository)
     {
         _sagaRepository = sagaRepository;
     }
@@ -104,7 +104,7 @@ public abstract class SagaHandler<TSagaData> : ISagaManager, ISagaHandler<TSagaD
     }
 }
 
-public interface ISagaEventHandler<in TEvent, TSagaData> : ISagaHandler<TSagaData> 
+public interface ISagaEventHandler<in TEvent, TSagaData> : ISagaHandler<TSagaData>
                                                             where TSagaData : ISaga, new()
                                                             where TEvent : Event
 {

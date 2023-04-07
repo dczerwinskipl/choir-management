@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
-using NEvo.CQRS.Transporting;
 using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Transporting;
 
 namespace NEvo.CQRS.Routing;
 

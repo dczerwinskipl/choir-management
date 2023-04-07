@@ -2,8 +2,8 @@
 using ChoirManagement.Membership.Domain.Repositories;
 using ChoirManagement.Membership.Public.Messages.Commands;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Processing.Commands;
+using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain.CommandHandlers;
 
@@ -19,7 +19,7 @@ public class MemberCommandHandlers :
     }
 
 
-    public async Task<Either<Exception, Unit>> HandleAsync(RegisterMember command) 
+    public async Task<Either<Exception, Unit>> HandleAsync(RegisterMember command)
         => await _repository
                     .GetAsync(command.MemberId)
                     .MatchAsync(

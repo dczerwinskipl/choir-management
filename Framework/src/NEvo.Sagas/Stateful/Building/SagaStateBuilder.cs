@@ -5,8 +5,8 @@ namespace NEvo.Sagas.Stateful.Building;
 
 public class SagaStateBuilder<TSaga, TState> : IInternalSagaStateBuilder<TSaga> where TSaga : ISaga
 {
-    private string name;
-    Dictionary<Type, IInternalSagaTransitionBuilder<TSaga>> _transitionBuilders = new Dictionary<Type, IInternalSagaTransitionBuilder<TSaga>>();
+    private readonly string name;
+    readonly Dictionary<Type, IInternalSagaTransitionBuilder<TSaga>> _transitionBuilders = new Dictionary<Type, IInternalSagaTransitionBuilder<TSaga>>();
 
     public SagaStateBuilder(string name)
     {

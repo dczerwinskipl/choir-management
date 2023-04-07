@@ -12,9 +12,9 @@ namespace NEvo.Sagas.Stateful
 
     public class StringStateMapper<TSaga> : IStateMapper<string, IState<TSaga>>
     {
-        private Dictionary<string, IState<TSaga>> _states;
+        private readonly Dictionary<string, IState<TSaga>> _states;
 
-        public StringStateMapper(IEnumerable<IState<TSaga>> states) 
+        public StringStateMapper(IEnumerable<IState<TSaga>> states)
         {
             _states = Check.Null(states).ToDictionary(k => k.Name);
         }

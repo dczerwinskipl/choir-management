@@ -1,6 +1,6 @@
-﻿using NEvo.Core;
+﻿using System.ComponentModel.DataAnnotations;
+using NEvo.Core;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace NEvo.ValueObjects.PersonalData;
 

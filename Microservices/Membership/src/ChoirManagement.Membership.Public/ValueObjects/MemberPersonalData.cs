@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using NEvo.Core;
+﻿using NEvo.Core;
 using NEvo.ValueObjects.PersonalData;
 using Newtonsoft.Json;
 

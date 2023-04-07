@@ -1,11 +1,9 @@
-﻿using Azure.Messaging.ServiceBus;
-using Azure.Identity;
-using NEvo.CQRS.Messaging;
+﻿using Azure.Identity;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using NEvo.Publishing;
 using NEvo.Azure.Administrating;
-using NEvo.CQRS.Channeling;
+using NEvo.CQRS.Messaging;
+using Newtonsoft.Json;
 
 namespace NEvo.Azure.Publishing;
 
@@ -45,7 +43,7 @@ public class AzureServiceBusMessagePublisher : IAzureServiceBusMessagePublisher,
     public async Task PublishAsync<TMessage>(MessageEnvelope<TMessage> messageEnvelope, string topicName) where TMessage : IMessage
     {
         var serializedMessage = JsonConvert.SerializeObject(messageEnvelope.ToRawMessageEnvelope()); // TODO: Without ToRaw?
-   
+
         await _azureServiceBusAdministrator.EnsureTopicExistsAsync(topicName);
         await using var sender = _client.CreateSender(topicName);
 

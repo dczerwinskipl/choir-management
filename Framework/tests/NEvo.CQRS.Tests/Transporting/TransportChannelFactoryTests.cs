@@ -150,7 +150,7 @@ public class TransportChannelFactoryTests
 
 
 #region Mock types
-public class MockChannelFactory : 
+public class MockChannelFactory :
     ITransportChannelFactory<InternalTransportChannel, InternalTransportChannelDescription, InternalChannelTopologyDescription>,
     ITransportChannelFactory<EndpointChannelA, EndpointTransportChannelDescription, EndpointTopologyDescription>,
     ITransportChannelFactory<EndpointChannelB, EndpointTransportChannelDescription, EndpointTopologyDescription>,

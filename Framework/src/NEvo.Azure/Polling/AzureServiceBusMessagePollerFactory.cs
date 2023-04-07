@@ -1,11 +1,10 @@
-﻿using Azure.Messaging.ServiceBus;
-using Azure.Identity;
-using NEvo.CQRS.Processing;
+﻿using Azure.Identity;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Options;
-using NEvo.Core;
-using Azure.Messaging.ServiceBus.Administration;
-using NEvo.Polling;
 using NEvo.Azure.Administrating;
+using NEvo.Core;
+using NEvo.CQRS.Processing;
+using NEvo.Polling;
 
 namespace NEvo.Azure.Polling;
 

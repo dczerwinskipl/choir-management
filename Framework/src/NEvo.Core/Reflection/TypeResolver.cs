@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Options;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace NEvo.Core.Reflection;
 
 public class TypeResolver : ITypeResolver
 {
-    private ConcurrentDictionary<string, Type?> _resolvedTypes = new ConcurrentDictionary<string, Type?>();
+    private readonly ConcurrentDictionary<string, Type?> _resolvedTypes = new ConcurrentDictionary<string, Type?>();
     private readonly IEnumerable<Assembly> _assemblies;
 
     public TypeResolver(IOptions<TypeResolverOptions> options)
@@ -19,7 +19,7 @@ public class TypeResolver : ITypeResolver
         _assemblies = Check.Null(assemblies);
     }
 
-    public string GetName(Type type, TypeResolvingOptions options = TypeResolvingOptions.Assembly) => 
+    public string GetName(Type type, TypeResolvingOptions options = TypeResolvingOptions.Assembly) =>
         options switch
         {
             TypeResolvingOptions.Name => type.Name,

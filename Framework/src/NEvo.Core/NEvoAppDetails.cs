@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace NEvo.Core;
 

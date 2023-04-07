@@ -25,9 +25,9 @@ public class TransportChannelFactory : ITransportChannelFactory
 
     private void AddToDictionary(List<ITransportChannelFactory<ITransportChannel, EndpointTransportChannelDescription, EndpointTopologyDescription>> factories)
     {
-        foreach(var factory in factories)
+        foreach (var factory in factories)
         {
-            foreach(var type in GetTransportChannelType<EndpointTransportChannelDescription>(factory))
+            foreach (var type in GetTransportChannelType<EndpointTransportChannelDescription>(factory))
             {
                 _endpointTransportChannelFactories.Add(type, factory);
             }
@@ -52,7 +52,7 @@ public class TransportChannelFactory : ITransportChannelFactory
             .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ITransportChannelFactory<,,>) && i.GetGenericArguments()[1].IsAssignableFrom(typeof(TDescription)))
             .Select(i => i.GetGenericArguments()[0]);
 
-    public ITransportChannel CreateChannel(IServiceProvider serviceProvider, TransportChannelDescription channelDescription) => 
+    public ITransportChannel CreateChannel(IServiceProvider serviceProvider, TransportChannelDescription channelDescription) =>
         channelDescription switch
         {
             InternalTransportChannelDescription internalChannelDescription => CreateTransportChannel(serviceProvider, internalChannelDescription),

@@ -58,12 +58,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArgoCD", "ArgoCD", "{F349DB
 	ProjectSection(SolutionItems) = preProject
 		kubernetes\ArgoCD\accounting-deployment.yml = kubernetes\ArgoCD\accounting-deployment.yml
 		kubernetes\ArgoCD\accounting-service.yml = kubernetes\ArgoCD\accounting-service.yml
-		kubernetes\ArgoCD\membership-deployment.yml = kubernetes\ArgoCD\membership-deployment.yml
 		kubernetes\ArgoCD\membership-service.yml = kubernetes\ArgoCD\membership-service.yml
+		kubernetes\ArgoCD\membership-deployment.jsonnet = kubernetes\ArgoCD\membership-deployment.jsonnet
 		kubernetes\ArgoCD\sqlserver-service.yml = kubernetes\ArgoCD\sqlserver-service.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.CQRS.Tests", "Framework\tests\NEvo.CQRS.Tests\NEvo.CQRS.Tests.csproj", "{02E17E0F-7458-4E36-A153-01970CB6F1D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.CQRS.Tests", "Framework\tests\NEvo.CQRS.Tests\NEvo.CQRS.Tests.csproj", "{02E17E0F-7458-4E36-A153-01970CB6F1D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

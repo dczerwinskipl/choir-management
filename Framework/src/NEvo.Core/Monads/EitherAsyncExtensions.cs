@@ -1,6 +1,4 @@
 ﻿using NEvo.Core;
-using static System.Net.Mime.MediaTypeNames;
-using System;
 
 namespace NEvo.Monads;
 
@@ -20,7 +18,7 @@ public static class EitherAsyncExtensions
     public static async Task<Either<TNewLeft, TRight>> BindLeftAsync<TLeft, TRight, TNewLeft>(this Task<Either<TLeft, TRight>> either, Func<TLeft, Task<TNewLeft>> onFailure) => await (await either).BindLeftAsync(onFailure);
 
     public static async Task<Either<TNewLeft, TNewRight>> BindBi<TLeft, TRight, TNewLeft, TNewRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, TNewRight> onSuccess, Func<TLeft, TNewLeft> onFailure) => (await either).BindBi(onSuccess, onFailure);
-    public static async Task<Either<TNewLeft, TNewRight>> BindBiAsync<TLeft, TRight, TNewLeft, TNewRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task<TNewRight>> onSuccess, Func<TLeft, TNewLeft> onFailure) => await  (await either).BindBiAsync(onSuccess, onFailure);
+    public static async Task<Either<TNewLeft, TNewRight>> BindBiAsync<TLeft, TRight, TNewLeft, TNewRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task<TNewRight>> onSuccess, Func<TLeft, TNewLeft> onFailure) => await (await either).BindBiAsync(onSuccess, onFailure);
     public static async Task<Either<TNewLeft, TNewRight>> BindBiAsync<TLeft, TRight, TNewLeft, TNewRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, TNewRight> onSuccess, Func<TLeft, Task<TNewLeft>> onFailure) => await (await either).BindBiAsync(onSuccess, onFailure);
     public static async Task<Either<TNewLeft, TNewRight>> BindBiAsync<TLeft, TRight, TNewLeft, TNewRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task<TNewRight>> onSuccess, Func<TLeft, Task<TNewLeft>> onFailure) => await (await either).BindBiAsync(onSuccess, onFailure);
 
@@ -36,7 +34,7 @@ public static class EitherAsyncExtensions
     public static async Task<Either<TLeft, TRight>> Then<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Action<TRight> onSuccess, Action<TLeft> onFailure) => (await either).Then(onSuccess, onFailure);
 
     public static async Task<Either<Exception, TRight>> Then<TRight>(this Task<Either<Exception, TRight>> either, Action<TRight> action) => (await either).Then(action);
-   
+
     public static async Task<Either<Exception, Unit>> Then(this Task<Either<Exception, Unit>> either, Action action) => (await either).Then(action);
 
 
