@@ -1,5 +1,7 @@
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
+local utils = import "./Shared/utils.jsonnet";
+local sharedNEvoCQRS = import "./Shared/NEvo.CQRS.global.libsonnet";
 
 {
   "apiVersion": "apps/v1",
@@ -35,6 +37,7 @@ local appImage = "localhost:5000/choir.management.membership:latest";
                 "name": "ASPNETCORE_URLS",
                 "value": "http://+:8002",
               },
+              + toEnv(sharedNEvoCQRS)
             ],
           },
         ],
