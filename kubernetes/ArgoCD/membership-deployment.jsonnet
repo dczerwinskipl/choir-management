@@ -37,7 +37,7 @@ local sharedNEvoCQRS = import "./Shared/NEvo.CQRS.global.libsonnet";
                 "name": "ASPNETCORE_URLS",
                 "value": "http://+:8002",
               },
-              toEnv(sharedNEvoCQRS)
+              utils.toEnv(sharedNEvoCQRS)
             ],
           },
         ],
