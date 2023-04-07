@@ -1,7 +1,5 @@
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
-local utils = import "./Shared/utils.jsonnet";
-local sharedNEvoCQRS = import "./Shared/NEvo.CQRS.global.libsonnet";
 
 {
   "apiVersion": "apps/v1",
@@ -37,7 +35,38 @@ local sharedNEvoCQRS = import "./Shared/NEvo.CQRS.global.libsonnet";
                 "name": "ASPNETCORE_URLS",
                 "value": "http://+:8002",
               },
-              utils.toEnv(sharedNEvoCQRS)
+              {
+                  "name": "NEvo.CQRS:Topology:Endpoints:Accounting:ChannelType",
+                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Endpoints:Accounting:Endpoint",
+                  "value": "http://accounting:5000/api"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Endpoints:Membership:ChannelType",
+                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Endpoints:Membership:Endpoint",
+                  "value": "http://membership:5000/api"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Topics:Accounting:ChannelType",
+                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Topics:Accounting:TopicName",
+                  "value": "choirmanagement.accounting"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Topics:Membership:ChannelType",
+                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS:Topology:Topics:Membership:TopicName",
+                  "value": "choirmanagement.membership"
+              },
             ],
           },
         ],
