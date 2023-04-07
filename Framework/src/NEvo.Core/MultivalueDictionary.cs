@@ -49,7 +49,7 @@ public class MultivalueDictionary<TKey, TValue> : Dictionary<TKey, ICollection<T
     public void Add(TKey key, IEnumerable<TValue> value)
     {
         var collection = GetOrAdd(key, new HashSet<TValue>());
-        foreach(var item in value)
+        foreach (var item in value)
             collection.Add(item);
     }
 

@@ -14,7 +14,7 @@ public static class Discriminator
             .AddScoped<Modern>()
             .AddScoped<ModernDependency>()
             .Configure<EnvironmentOptions>(o => o.Name = "Prod")
-            .UseDiscriminator<IMyInterface, IOptions<EnvironmentOptions>>(options => 
+            .UseDiscriminator<IMyInterface, IOptions<EnvironmentOptions>>(options =>
                     options.Value.Name switch
                     {
                         "Dev" => typeof(Modern),
@@ -58,9 +58,9 @@ public class DiscriminatorOptions<TImpl, TDep>
 }
 public class DiscriminatedImplementationFactory<TImpl, TDep> : IDiscriminatedImplementationFactory<TImpl> where TDep : class
 {
-    private IServiceProvider _serviceProvider;
-    private TDep _dependency;
-    private DiscriminatorOptions<TImpl, TDep> _disOptions;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly TDep _dependency;
+    private readonly DiscriminatorOptions<TImpl, TDep> _disOptions;
 
     public DiscriminatedImplementationFactory(IServiceProvider serviceProvider, TDep options, IOptions<DiscriminatorOptions<TImpl, TDep>> discriminatorOptions)
     {
@@ -78,7 +78,7 @@ public class DiscriminatedImplementationFactory<TImpl, TDep> : IDiscriminatedImp
 public class ModernDependency { public String Name = "Modern"; }
 public class Modern : IMyInterface
 {
-    private ModernDependency _dependency;
+    private readonly ModernDependency _dependency;
 
     public Modern(ModernDependency dependency)
     {
@@ -93,7 +93,7 @@ public class Modern : IMyInterface
 public class LegacyDependency { public String Name => "Legacy"; }
 public class Legacy : IMyInterface
 {
-    private LegacyDependency _dependency;
+    private readonly LegacyDependency _dependency;
 
     public Legacy(LegacyDependency dependency)
     {

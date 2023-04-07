@@ -16,14 +16,14 @@ namespace NEvo.Azure.Administrating
 
     public class AzureServiceBusAdministrator : IAzureServiceBusAdministrator
     {
-        private AzureServiceBusClientData _options;
-        private ServiceBusAdministrationClient _administrationClient;
+        private readonly AzureServiceBusClientData _options;
+        private readonly ServiceBusAdministrationClient _administrationClient;
 
-        private SemaphoreSlim _topicsSemaphoreSlim = new SemaphoreSlim(1, 1);
-        private HashSet<string> _verifiedTopics = new HashSet<string>();
+        private readonly SemaphoreSlim _topicsSemaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly HashSet<string> _verifiedTopics = new HashSet<string>();
 
-        private SemaphoreSlim _subscriptionsSemaphoreSlim = new SemaphoreSlim(1, 1);
-        private HashSet<string> _verifiedSubscriptions = new HashSet<string>();
+        private readonly SemaphoreSlim _subscriptionsSemaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly HashSet<string> _verifiedSubscriptions = new HashSet<string>();
 
         public AzureServiceBusAdministrator(IOptions<AzureServiceBusClientData> options)
         {
@@ -33,7 +33,7 @@ namespace NEvo.Azure.Administrating
                new ServiceBusAdministrationClientOptions { });
         }
 
-        public async Task EnsureTopicExistsAsync(string topicName) => 
+        public async Task EnsureTopicExistsAsync(string topicName) =>
             await EnsureTopicExistsAsync(new CreateTopicOptions(topicName)
             {
                 EnablePartitioning = true,
@@ -62,7 +62,7 @@ namespace NEvo.Azure.Administrating
                     });
                 }
                 _verifiedTopics.Add(createTopicOptions.Name);
-            } 
+            }
             finally
             {
                 _topicsSemaphoreSlim.Release();

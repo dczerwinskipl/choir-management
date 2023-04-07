@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace NEvo.Monads;
+﻿namespace NEvo.Monads;
 
 public static class MaybeAsyncExtensions
 {

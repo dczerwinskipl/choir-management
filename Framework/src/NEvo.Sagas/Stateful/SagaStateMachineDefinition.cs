@@ -29,7 +29,7 @@ public class SagaStateMachineDefinition<TSaga, TState> : IStateMachineDefinition
             .Bind(transitions => transitions.MaybeFirst(t => t == transition))
             .Bind(success => Maybe.Some(Unit.Value));
 
-    public async Task<Either<Exception, StateMachine<TSaga>>> NewSagaStateMachineAsync() => 
+    public async Task<Either<Exception, StateMachine<TSaga>>> NewSagaStateMachineAsync() =>
         await Try.OfAsync(async () =>
         {
             var stateMachine = new StateMachine<TSaga>(GetInitState(), _emptySaga, this);
@@ -38,7 +38,7 @@ public class SagaStateMachineDefinition<TSaga, TState> : IStateMachineDefinition
             return stateMachine;
         });
 
-    public void SaveStateOnContext(StateMachine<TSaga> stateMachine) 
+    public void SaveStateOnContext(StateMachine<TSaga> stateMachine)
         => stateMachine.Context.State = _stateMapper.MapFromState(stateMachine.CurrentState);
 
     public async Task<Either<Exception, StateMachine<TSaga>>> LoadSagaStateMachineAsync(TSaga fromContext) =>
@@ -47,7 +47,7 @@ public class SagaStateMachineDefinition<TSaga, TState> : IStateMachineDefinition
             .Match(some => some, () => new InvalidOperationException("Current state not found"))
             .Bind(state => new StateMachine<TSaga>(state, fromContext, this));
 
-    public Maybe<ITransition<TSaga, TTransitionData>> GetMessageTransition<TTransitionData>(IState<TSaga> currentState) => 
+    public Maybe<ITransition<TSaga, TTransitionData>> GetMessageTransition<TTransitionData>(IState<TSaga> currentState) =>
         _transitions
             .MaybeGetValue(currentState)
             .Bind(transitions => transitions.MaybeFirst(t => t.MessageType == typeof(TTransitionData)))

@@ -10,7 +10,7 @@ public class SagaCoordinator : ISagaCoordinator
 {
     public void Rollback<TKey>(ISaga<TKey> saga)
     {
-        foreach(var log in saga.Log.OrderByDescending(l => l.Order))
+        foreach (var log in saga.Log.OrderByDescending(l => l.Order))
         {
             switch (log.State)
             {
@@ -46,10 +46,10 @@ public class SagaCoordinator : ISagaCoordinator
 
     private void CommitLog(ISagaLogEntry log)
     {
-        if(log.TwoPhaseCommitHandler != null)
+        if (log.TwoPhaseCommitHandler != null)
         {
             //execute two pahse commit
-            
+
         }
         log.Commited();
     }
@@ -84,7 +84,7 @@ public interface ISaga<TKey>
 public interface ISagaLogEntry
 {
     public int Order { get; }
-    public SagaLogEntryState State {get;}
+    public SagaLogEntryState State { get; }
 
     public object RollbackHandler { get; }
     public object TwoPhaseCommitHandler { get; }

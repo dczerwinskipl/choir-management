@@ -1,6 +1,6 @@
-﻿using NEvo.Core;
+﻿using System.Collections.Concurrent;
+using NEvo.Core;
 using NEvo.CQRS.Processing.Registering;
-using System.Collections.Concurrent;
 
 namespace NEvo.Sagas.Stateful.Handling;
 
@@ -8,13 +8,13 @@ public class SagaStateMachineHandlerAdapterFactory : IMessageHandlerAdapterFacto
 {
     public static MessageHandlerOptions MessageHandlerOptions = new MessageHandlerOptions(typeof(ISagaStateMachineHandler<,>), new SagaStateMachineHandlerAdapterFactory());
 
-    private ConcurrentDictionary<Type, ISagaStateMachineHandler> _sagaHandlers = new ConcurrentDictionary<Type, ISagaStateMachineHandler>();
+    private readonly ConcurrentDictionary<Type, ISagaStateMachineHandler> _sagaHandlers = new ConcurrentDictionary<Type, ISagaStateMachineHandler>();
 
     public IMessageHandlerAdapter Create(MessageHandlerDescription messageHandlerDescription, IServiceProvider provider)
     {
         var interfaceGenericTypes = messageHandlerDescription.InterfaceType.GetGenericArguments();
         var type = typeof(SagaStateMachineHandlerAdapter<,,,>).MakeGenericType(
-            messageHandlerDescription.HandlerType, 
+            messageHandlerDescription.HandlerType,
             messageHandlerDescription.MessageType,
             interfaceGenericTypes[0],
             interfaceGenericTypes[1]

@@ -1,14 +1,14 @@
 ﻿using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Processing.Registering;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Processing;
 
 //TODO: change to Try API
 public class MessageProcessor : IMessageProcessor
 {
-    private IMessageHandlerRegistry _messageHandlerRegistry;
+    private readonly IMessageHandlerRegistry _messageHandlerRegistry;
     public MessageProcessor(IMessageHandlerRegistry messageHandlerRegistry)
     {
         _messageHandlerRegistry = Check.Null(messageHandlerRegistry);

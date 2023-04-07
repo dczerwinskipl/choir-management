@@ -6,7 +6,6 @@ using NEvo.Azure.Publishing;
 using NEvo.Azure.Transporting;
 using NEvo.CQRS.Transporting;
 using NEvo.Polling;
-using NEvo.Publishing;
 
 namespace NEvo.Core;
 
@@ -29,7 +28,7 @@ public class NEvoAzureMessageBusExtensionConfiguration : INEvoExtensionConfigura
     {
         services.Configure(_configureClientData);
         services.AddSingleton<IAzureServiceBusAdministrator, AzureServiceBusAdministrator>();
-        
+
         //new idea of registering extensions, TODO: do same to poller?
         services.Configure<TransportChannelFactoryOptions>(options =>
         {

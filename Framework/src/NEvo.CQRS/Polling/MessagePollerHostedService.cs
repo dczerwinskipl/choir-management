@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NEvo.Core;
 using static System.Linq.Enumerable;
 
@@ -8,9 +8,9 @@ namespace NEvo.Polling;
 
 public class MessagePollerHostedService : IHostedService
 {
-    private IServiceProvider _serviceProvider;
-    private IOptions<MessagePollerOptions> _options;
-    private ConcurrentMultivalueDictionary<string, IMessagePoller> _topicPollers = new ConcurrentMultivalueDictionary<string, IMessagePoller>();
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IOptions<MessagePollerOptions> _options;
+    private readonly ConcurrentMultivalueDictionary<string, IMessagePoller> _topicPollers = new ConcurrentMultivalueDictionary<string, IMessagePoller>();
 
     public MessagePollerHostedService(IServiceProvider serviceProvider, IOptions<MessagePollerOptions> options)
     {

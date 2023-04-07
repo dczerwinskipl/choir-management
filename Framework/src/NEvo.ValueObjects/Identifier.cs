@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 
 namespace NEvo.ValueObjects;
 
-public abstract class Identifier<TSelf, TKey> : ValueObject 
-                                                        where TSelf : Identifier<TSelf, TKey> 
+public abstract class Identifier<TSelf, TKey> : ValueObject
+                                                        where TSelf : Identifier<TSelf, TKey>
                                                         where TKey : notnull
 {
     public TKey Id { get; }

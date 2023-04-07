@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace NEvo.Core.StateManaging;
+﻿namespace NEvo.Core.StateManaging;
 
 public record Refused(string Reason)
 {

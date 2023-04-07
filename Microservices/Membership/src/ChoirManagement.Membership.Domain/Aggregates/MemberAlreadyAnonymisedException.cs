@@ -1,5 +1,5 @@
-﻿using NEvo.DomainDrivenDesign;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using NEvo.DomainDrivenDesign;
 
 namespace ChoirManagement.Membership.Domain.Aggregates
 {

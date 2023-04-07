@@ -1,7 +1,6 @@
+using System.Reflection;
 using ChoirManagement.Accounting.WebService;
 using NEvo.Core;
-using NEvo.CQRS.Messaging;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables()
@@ -9,12 +8,18 @@ builder.Configuration.AddEnvironmentVariables()
                      .AddJsonFile("appsettings.json")
                      .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
+var cqrsConfiguration = builder.Configuration.GetRequiredSection("NEvo.CQRS");
+
+
 builder.Services.AddNEvo(nEvo => nEvo
-                                    .AddCqrs<RouterBasedMessageBus>()
-                                    //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
-                                    //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options)
-                                    //)
+                                    .AddCqrs(cqrs => cqrs
+                                                        .ConfigureRoutingPolicy(options => cqrsConfiguration.GetRequiredSection("Endpoint:RoutingPolicy").Bind(options))
+                                                        .ConfigureRoutingTopology(options => cqrsConfiguration.GetRequiredSection("Topology").Bind(options))
+                                    )
+                                    .AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                    .AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
                         );
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -25,7 +30,7 @@ app.UseNEvoCqrs(
 
 app.UseNEvoRoute(
     ("/api/settlements", AccountingModuleConfiguration.SettlementsRoutes)
-    //("/api/payments", AccountingModuleConfiguration.PaymentsRoutes)
+//("/api/payments", AccountingModuleConfiguration.PaymentsRoutes)
 );
 
 app.UseSwagger();

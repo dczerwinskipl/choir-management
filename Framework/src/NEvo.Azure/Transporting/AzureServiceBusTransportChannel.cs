@@ -11,8 +11,8 @@ namespace NEvo.Azure.Transporting;
 /// </summary>
 public class AzureServiceBusTransportChannel : ITransportChannel
 {
-    private string _topicName;
-    private IAzureServiceBusMessagePublisher _azureServiceBusMessagePublisher;
+    private readonly string _topicName;
+    private readonly IAzureServiceBusMessagePublisher _azureServiceBusMessagePublisher;
 
     public AzureServiceBusTransportChannel(IAzureServiceBusMessagePublisher azureServiceBusMessagePublisher, string topicName)
     {
@@ -26,5 +26,5 @@ public class AzureServiceBusTransportChannel : ITransportChannel
     }
 
     public async Task<Either<Exception, Unit>> PublishMessageAsync<TMessage>(MessageEnvelope<TMessage> messageEnvelope) where TMessage : IMessage<Unit>
-        => await Try.OfAsync(async() => await _azureServiceBusMessagePublisher.PublishAsync(messageEnvelope, _topicName));
+        => await Try.OfAsync(async () => await _azureServiceBusMessagePublisher.PublishAsync(messageEnvelope, _topicName));
 }

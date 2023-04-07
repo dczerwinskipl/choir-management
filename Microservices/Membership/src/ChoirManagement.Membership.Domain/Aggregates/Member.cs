@@ -1,9 +1,9 @@
-﻿using NEvo.DomainDrivenDesign;
-using NEvo.ValueObjects;
-using NEvo.Core;
+﻿using ChoirManagement.Membership.Public.Messages.Events;
 using ChoirManagement.Membership.Public.ValueObjects;
-using ChoirManagement.Membership.Public.Messages.Events;
+using NEvo.Core;
+using NEvo.DomainDrivenDesign;
 using NEvo.Monads;
+using NEvo.ValueObjects;
 
 namespace ChoirManagement.Membership.Domain.Aggregates;
 
@@ -30,7 +30,7 @@ public class Member : SnapshotAggregateRoot<Member, MemberId>
     /// Anonimize personal data of member
     /// </summary>
     /// <returns></returns>
-    public Either<Exception, Unit> Anonimize() 
+    public Either<Exception, Unit> Anonimize()
             => Rule("The member cannot be already anonymised", () => !IsAnonymised, () => new MemberAlreadyAnonymisedException())
                 //not implemented yet .Rule("The member must not have an active membership", () => !HasActiveMembership())
                 .OnSuccess(() =>
@@ -46,7 +46,7 @@ public class Member : SnapshotAggregateRoot<Member, MemberId>
     /// <param name="registrationForm"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public static Either<Exception, Member> NewMember(MemberRegistrationForm registrationForm, MemberId? id = null) 
+    public static Either<Exception, Member> NewMember(MemberRegistrationForm registrationForm, MemberId? id = null)
         => Rule("Date of birth must be consistent with PESEL", () => registrationForm.PESEL.GetBirthDate() == registrationForm.BirthDate)
             .Rule("Date of birth must be after 1900", () => registrationForm.BirthDate > new DateOnly(1990, 1, 1))
             .OnSuccess(() => new Member(id ?? MemberId.New(), registrationForm));

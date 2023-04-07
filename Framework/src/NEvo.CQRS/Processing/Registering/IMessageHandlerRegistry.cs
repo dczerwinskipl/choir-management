@@ -1,5 +1,4 @@
 ﻿using NEvo.CQRS.Messaging;
-using System.ComponentModel;
 
 namespace NEvo.CQRS.Processing.Registering;
 

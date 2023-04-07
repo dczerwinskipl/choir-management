@@ -254,8 +254,9 @@ namespace NEvo.Core.Tests.Reflection
     }
 }
 
-namespace NEvo.Core {
-   
+namespace NEvo.Core
+{
+
     // warning: this is class to simulate conflict in names between assemblies
     //          tests can fail when name or namespace of that class in NEvo.Core would change
     public class Check { }

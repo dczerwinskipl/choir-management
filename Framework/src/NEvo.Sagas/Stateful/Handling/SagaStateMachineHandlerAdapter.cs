@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
 using NEvo.CQRS.Messaging;
-using NEvo.Monads;
 using NEvo.CQRS.Processing.Registering;
+using NEvo.Monads;
 
 namespace NEvo.Sagas.Stateful.Handling;
 
@@ -12,8 +12,8 @@ public class SagaStateMachineHandlerAdapter<TSagaHandler, TMessage, TSaga, TStat
                                                                                         where TSaga : IStatefulSaga<TState>
 {
     public MessageHandlerDescription Description { get; init; }
-    private ISagaStateMachineHandler<TSaga, TState> _sagaHandler;
-    private IServiceProvider _serviceProvider;
+    private readonly ISagaStateMachineHandler<TSaga, TState> _sagaHandler;
+    private readonly IServiceProvider _serviceProvider;
 
     public SagaStateMachineHandlerAdapter(MessageHandlerDescription description, ISagaStateMachineHandler<TSaga, TState> sagaHandler, IServiceProvider serviceProvider)
     {
@@ -32,7 +32,7 @@ public class SagaStateMachineHandlerAdapter<TSagaHandler, TMessage, TSaga, TStat
             var sagaRepository = scope.ServiceProvider.GetRequiredService<ISagaRrepository<TSaga, TState>>();
             var predicate = _sagaHandler.FindSagaPredicate(message);
             var sagaContext = await sagaRepository.GetAsync(predicate);
-            var newSagaContext = 
+            var newSagaContext =
                     await _sagaHandler
                             .HandleAsync((TMessage)message, sagaContext)
                             .ThenAsync(

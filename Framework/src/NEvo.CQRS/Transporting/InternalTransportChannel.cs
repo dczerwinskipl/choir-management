@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
-using NEvo.CQRS.Processing;
 using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Processing;
 using NEvo.Monads;
 
 namespace NEvo.CQRS.Transporting;
@@ -34,5 +34,5 @@ public class InternalTransportChannel : ITransportChannel
 
     private static Exception ToException(IMessageProcessingFailures failures)
         => failures.Count() > 1 ? new AggregateException(failures.Select(f => f.Exception)) : failures.Single().Exception;
-    
+
 }

@@ -4,7 +4,7 @@ namespace NEvo.Sagas.Stateful.Handling;
 
 public abstract class SagaStateMachineHandlerTransitionConfiguration<TSaga> where TSaga : ISaga
 {
-    private List<Action<ISagaTransitionBuilder<TSaga>>> _actions = new List<Action<ISagaTransitionBuilder<TSaga>>>();
+    private readonly List<Action<ISagaTransitionBuilder<TSaga>>> _actions = new List<Action<ISagaTransitionBuilder<TSaga>>>();
 
     public SagaStateMachineHandlerTransitionConfiguration<TSaga> TransitionTo(string stateName)
     {

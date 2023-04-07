@@ -1,5 +1,5 @@
-﻿using NEvo.DomainDrivenDesign;
-using ChoirManagement.Membership.Public.ValueObjects;
+﻿using ChoirManagement.Membership.Public.ValueObjects;
+using NEvo.DomainDrivenDesign;
 
 namespace ChoirManagement.Membership.Domain.Aggregates;
 

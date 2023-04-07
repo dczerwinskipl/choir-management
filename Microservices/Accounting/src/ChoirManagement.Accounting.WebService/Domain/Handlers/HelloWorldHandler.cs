@@ -1,12 +1,12 @@
-﻿using ChoirManagement.Accounting.Messages;
+﻿using System.ComponentModel.DataAnnotations;
+using ChoirManagement.Accounting.Messages;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Processing.Commands;
 using NEvo.CQRS.Processing.Events;
 using NEvo.CQRS.Processing.Queries;
+using NEvo.Monads;
 using NEvo.ValueObjects;
-using System.ComponentModel.DataAnnotations;
 
 namespace ChoirManagement.Accounting.Domain.Handlers;
 public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandler<HelloWorldEvent>, IQueryHandler<HelloWorldQuery, string>
@@ -21,7 +21,7 @@ public class HelloWorldHandler : ICommandHandler<HelloWorldCommand>, IEventHandl
     public async Task<Either<Exception, Unit>> HandleAsync(HelloWorldCommand command)
     {
         await _messageBus.PublishAsync(new HelloWorldEvent(command.Message, ObjectId.New(nameof(HelloWorldCommand), command.Message)));
-        
+
         if (command.Message.Equals("Hi", StringComparison.InvariantCultureIgnoreCase))
             return Either.Failure(new ValidationException("Don't say hi!"));
 

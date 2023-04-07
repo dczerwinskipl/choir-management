@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Messaging.Queries;
 using NEvo.CQRS.Processing.Registering;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Processing.Queries;
 

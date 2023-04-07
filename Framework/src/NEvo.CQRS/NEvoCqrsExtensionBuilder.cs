@@ -1,37 +1,37 @@
-﻿using NEvo.CQRS.Messaging;
+﻿using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using NEvo.CQRS.Messaging;
+using NEvo.CQRS.Messaging.Commands;
+using NEvo.CQRS.Messaging.Events;
+using NEvo.CQRS.Messaging.Queries;
+using NEvo.CQRS.Processing;
 using NEvo.CQRS.Processing.Commands;
 using NEvo.CQRS.Processing.Events;
 using NEvo.CQRS.Processing.Queries;
 using NEvo.CQRS.Processing.Registering;
-using NEvo.CQRS.Processing;
-using NEvo.CQRS.Messaging.Commands;
-using NEvo.CQRS.Messaging.Events;
-using NEvo.CQRS.Messaging.Queries;
-using Microsoft.Extensions.DependencyInjection;
-using NEvo.CQRS.Channeling;
 using NEvo.CQRS.Routing;
 using NEvo.CQRS.Transporting;
 using static NEvo.CQRS.Transporting.TransportChannelDescription;
-using Microsoft.Extensions.Options;
-using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
 
 namespace NEvo.Core;
 
 public class NEvoCqrsExtensionBuilder : INEvoExtensionConfiguration, INEvoCqrsExtensionBuilder
 {
-    private Dictionary<Type, MessageHandlerOptions> _messageHandlerOptions;
-    private List<Action<RoutingTopologyDescription>> _routingTopologyDescriptionConfigurations = new();
-    private List<Action<RoutingPolicyDescription>> _routingPolicyDescriptionConfigurations = new();
+    private readonly Dictionary<Type, MessageHandlerOptions> _messageHandlerOptions;
+    private readonly List<Action<RoutingTopologyDescription>> _routingTopologyDescriptionConfigurations = new();
+    private readonly List<Action<RoutingPolicyDescription>> _routingPolicyDescriptionConfigurations = new();
 
     public NEvoCqrsExtensionBuilder() : this(
-        CommandHandlerAdapterFactory.MessageHandlerOptions, 
-        EventHandlerAdapterFactory.MessageHandlerOptions, 
-        QueryHandlerAdapterFactory.MessageHandlerOptions) 
-    { 
+        CommandHandlerAdapterFactory.MessageHandlerOptions,
+        EventHandlerAdapterFactory.MessageHandlerOptions,
+        QueryHandlerAdapterFactory.MessageHandlerOptions)
+    {
     }
 
-    public NEvoCqrsExtensionBuilder(params MessageHandlerOptions[] messageHandlerOptions) 
+    public NEvoCqrsExtensionBuilder(params MessageHandlerOptions[] messageHandlerOptions)
     {
         Check.Null(messageHandlerOptions);
         _messageHandlerOptions = messageHandlerOptions.ToDictionary(mho => mho.HandlerInterface);
@@ -71,7 +71,7 @@ public class NEvoCqrsExtensionBuilder : INEvoExtensionConfiguration, INEvoCqrsEx
         services.AddScoped<IMessageRouter, MessageRouter>();
         services.Configure<TransportChannelFactoryOptions>(options =>
         {
-           options.InternalTransportChannelFactory = new InternalTransportChannelFactory();
+            options.InternalTransportChannelFactory = new InternalTransportChannelFactory();
         });
         services.AddSingleton<ITransportChannelFactory, TransportChannelFactory>();
 
@@ -92,13 +92,18 @@ public class NEvoCqrsExtensionBuilder : INEvoExtensionConfiguration, INEvoCqrsEx
         services.AddScoped<IEventPublisher>(sp => sp.GetRequiredService<IMessageBus>());
         services.AddScoped<IQueryDispatcher>(sp => sp.GetRequiredService<IMessageBus>());
     }
+
+    public INEvoCqrsExtensionBuilder UseConfiguration(IConfiguration configuration)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 
 public class RoutingPolicyFactory : IRoutingPolicyFactory
 {
-    private ConcurrentDictionary<Type, IRoutingPolicy> _policies = new();
-    private List<RoutingPolicyRule> _rules;
+    private readonly ConcurrentDictionary<Type, IRoutingPolicy> _policies = new();
+    private readonly List<RoutingPolicyRule> _rules;
 
     public RoutingPolicyFactory(IOptions<RoutingPolicyDescription> options)
     {
@@ -112,7 +117,7 @@ public class RoutingPolicyFactory : IRoutingPolicyFactory
 
     private IRoutingPolicy CreatePolicyForInternal<TMessage>(Type message) where TMessage : IMessage
     {
-        if(TMessage.MessageType == MessageType.Event)
+        if (TMessage.MessageType == MessageType.Event)
         {
             return new RoutingPolicy(TMessage.MessageType, GetChannel(message));
         }
@@ -122,7 +127,7 @@ public class RoutingPolicyFactory : IRoutingPolicyFactory
     private string? GetChannel(Type message)
     {
         var @namespace = message.Namespace;
-        foreach(var rule in _rules)
+        foreach (var rule in _rules)
         {
             if (Regex.IsMatch(@namespace, rule.NamespacePattern))
                 return rule.ChannelName;
@@ -139,7 +144,7 @@ public class RoutingPolicy : IRoutingPolicy
     {
         _messageType = messageType;
         _channelName = channelName;
-    }   
+    }
 
     public TransportChannelDescription GetChannelDescription()
     {

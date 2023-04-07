@@ -7,7 +7,7 @@ public record MessageHandlingOptions(bool AllowMultipleHandlers, bool RequireHan
     public static MessageHandlingOptions DefaultCommand = new(false, true, false);
     public static MessageHandlingOptions DefaultEvent = new(true, false, false);
     public static MessageHandlingOptions DefaultQuery = new(false, true, true);
-    public static IDictionary<MessageType, MessageHandlingOptions> DefaultMessageHandlingOptions 
+    public static IDictionary<MessageType, MessageHandlingOptions> DefaultMessageHandlingOptions
         = new Dictionary<MessageType, MessageHandlingOptions>() {
             { MessageType.Command, DefaultCommand },
             { MessageType.Event, DefaultEvent },

@@ -1,5 +1,5 @@
-﻿using NEvo.Monads;
-using NEvo.CQRS.Messaging;
+﻿using NEvo.CQRS.Messaging;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Processing.Registering;
 
@@ -24,7 +24,7 @@ public class GenericMessageHandlerWrapper<TResult> : IMessageHandlerWrapper<TRes
     public MessageHandlerDescription Description => _originalWrapper.Description;
 
     internal GenericMessageHandlerWrapper(IMessageHandlerAdapter originalWrapper) => _originalWrapper = originalWrapper;
-    public async Task<Either<Exception, TResult?>> Handle(IMessage<TResult> message) => 
+    public async Task<Either<Exception, TResult?>> Handle(IMessage<TResult> message) =>
         await _originalWrapper.HandleAsync(message).Map(
             success => Either.Success((TResult?)success),
             Either.Failure<TResult?>

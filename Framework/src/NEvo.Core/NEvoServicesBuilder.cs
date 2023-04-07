@@ -13,7 +13,7 @@ public interface INEvoExtensionConfiguration
 
 public class NEvoServicesBuilder
 {
-    private HashSet<INEvoExtensionConfiguration> _extensions = new HashSet<INEvoExtensionConfiguration>();
+    private readonly HashSet<INEvoExtensionConfiguration> _extensions = new HashSet<INEvoExtensionConfiguration>();
 
     public NEvoServicesBuilder() { }
     public NEvoServicesBuilder UseExtension<TExtension>() where TExtension : INEvoExtensionConfiguration, new() => UseExtension(new TExtension());
@@ -26,7 +26,7 @@ public class NEvoServicesBuilder
 
     public void ApplyExtensions(IServiceCollection services)
     {
-        foreach(var extension in _extensions)
+        foreach (var extension in _extensions)
         {
             extension.ConfigureServices(services);
         }

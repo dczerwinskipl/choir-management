@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using NEvo.Core;
-using NEvo.Monads;
+﻿using NEvo.Monads;
 
 namespace NEvo.Core.StateManaging;
 
@@ -33,10 +31,10 @@ public class StateMachine<TContext>
     public async Task<Either<Exception, Unit>> InitAsync() =>
         await _currentState.MatchAsync(
                 none: async () => await ApplyState(_stateMachineDefinition.GetInitState()),
-                some: (_) => Unit.Value                
+                some: (_) => Unit.Value
             );
 
-    public async Task<Either<Refused, Unit>> ApplyTransitionAsync<TData>(ITransition<TContext, TData> transition, TData data) => 
+    public async Task<Either<Refused, Unit>> ApplyTransitionAsync<TData>(ITransition<TContext, TData> transition, TData data) =>
         await _stateMachineDefinition
                 .IsDefined(transition, _currentState)
                 .MatchAsync(
@@ -53,8 +51,9 @@ public class StateMachine<TContext>
                         () => Context
                     )
                     .ThenAsync(newState.OnEnterAsync)
-                    .Then((context) => {
+                    .Then((context) =>
+                    {
                         Context = context;
                         CurrentState = newState;
-                    });                     
+                    });
 }

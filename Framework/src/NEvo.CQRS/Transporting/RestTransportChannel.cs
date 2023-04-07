@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using NEvo.Core;
+﻿using NEvo.Core;
 using NEvo.CQRS.Messaging;
 using NEvo.Monads;
 

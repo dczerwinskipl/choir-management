@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
-using NEvo.Monads;
 using NEvo.CQRS.Messaging.Commands;
+using NEvo.Monads;
 
 namespace NEvo.CQRS.Processing.Commands;
 

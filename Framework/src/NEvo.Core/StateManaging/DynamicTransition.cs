@@ -22,5 +22,5 @@ public abstract class DynamicTransition<TContext, TTransitionData> : ITransition
                     );
 
     protected abstract Task<IState<TContext>> GetNextStateAsync();
-    protected async virtual Task<Either<Refused.TransactionValidationFailure, Unit>> ValidateTransitionAsync(TContext context, TTransitionData data) => await Unit.Task;
+    protected virtual async Task<Either<Refused.TransactionValidationFailure, Unit>> ValidateTransitionAsync(TContext context, TTransitionData data) => await Unit.Task;
 }

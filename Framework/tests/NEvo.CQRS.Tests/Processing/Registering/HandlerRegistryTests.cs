@@ -1,16 +1,16 @@
 using FluentAssertions.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using NEvo.CQRS.Processing.Commands;
-using NEvo.CQRS.Messaging.Commands;
-using NEvo.CQRS.Processing.Registering;
 using NEvo.Core;
+using NEvo.CQRS.Messaging.Commands;
+using NEvo.CQRS.Processing.Commands;
+using NEvo.CQRS.Processing.Registering;
 using NEvo.Monads;
 
 namespace NEvo.CQRS.Tests.Processing.Registering;
 
 public class HandlerRegistryTests
 {
-    public MessageHandlerRegistry CreateHandlerRegistry() 
+    public MessageHandlerRegistry CreateHandlerRegistry()
     {
         var serviceProvider = Substitute.For<IServiceProvider>();
         return new MessageHandlerRegistry(serviceProvider, CommandHandlerAdapterFactory.MessageHandlerOptions);

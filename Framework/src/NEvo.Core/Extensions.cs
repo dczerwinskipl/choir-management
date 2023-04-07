@@ -13,7 +13,7 @@ public static class IntegrationExtensions
 {
     public static WebApplication UseNEvoRoute(this WebApplication application, params (string Prefix, Action<RouteGroupBuilder> ConfigureRouteGroup)[] routeGroups)
     {
-        foreach(var (prefix, configureRouteGroup) in routeGroups)
+        foreach (var (prefix, configureRouteGroup) in routeGroups)
         {
             var group = application.MapGroup(prefix);
             group.AddEndpointFilter<TryEndpointFilter>();

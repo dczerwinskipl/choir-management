@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Linq.Expressions;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NEvo.Core;
-using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Messaging.Events;
 using NEvo.Monads;
 using NEvo.Sagas.Stateful;
 using NEvo.Sagas.Stateful.Handling;
 using NEvo.ValueObjects;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace NEvo.Concepts.Tests.Saga.Statefull;
 
@@ -42,9 +41,9 @@ public static class MySagaHost
 
         builder.Services.AddNEvo(nEvo => nEvo
                                             .AddCqrs(c => c.UseCustomMessageHandlers(SagaStateMachineHandlerAdapterFactory.MessageHandlerOptions))
-                                            //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
-                                            //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options)
-                                            //)
+                                //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options)
+                                //)
                                 );
         builder.Services.AddEndpointsApiExplorer();
 
@@ -62,7 +61,7 @@ public static class MySagaHost
 
 public class InMemorySagaRrepository<TSaga, TState> : ISagaRrepository<TSaga, TState> where TSaga : IStatefulSaga<TState>
 {
-    private Dictionary<Guid, TSaga> _sagas = new Dictionary<Guid, TSaga>();
+    private readonly Dictionary<Guid, TSaga> _sagas = new Dictionary<Guid, TSaga>();
     public Task<Maybe<TSaga>> GetAsync(Expression<Func<TSaga, bool>> predicate) => Task.FromResult(_sagas.Values.Where(predicate.Compile()).MaybeSingle());
 
     public Task SaveAsync(TSaga newSagaContext)

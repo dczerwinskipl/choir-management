@@ -9,7 +9,7 @@ public class SagaTransitionBuilder<TSaga, TMessage> : ISagaTransitionBuilder<TSa
                                                                                                                 where TSaga : ISaga
                                                                                                                 where TMessage : IMessage
 {
-    private string _name;
+    private readonly string _name;
     private Maybe<string> _destinationState = Maybe.None;
 
     public SagaTransitionBuilder(string name)

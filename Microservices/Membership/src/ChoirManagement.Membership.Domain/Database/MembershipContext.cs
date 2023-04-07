@@ -1,7 +1,6 @@
 ﻿using ChoirManagement.Membership.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using NEvo.ValueObjects;
-using System.Reflection.PortableExecutable;
 
 namespace ChoirManagement.Membership.Domain.Database;
 
