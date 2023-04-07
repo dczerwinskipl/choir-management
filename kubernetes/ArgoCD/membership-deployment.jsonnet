@@ -68,7 +68,7 @@ local buildArray(prefix, value) =
                 "name": "ASPNETCORE_URLS",
                 "value": "http://+:8002",
               }
-            ] + buildArray(testObject)
+            ] + buildArray("", testObject)
           },
         ],
       },
