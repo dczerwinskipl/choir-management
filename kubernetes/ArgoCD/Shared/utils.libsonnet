@@ -1,4 +1,4 @@
 {
   toEnv(obj, prefix="")::
-    [{ "name": prefix, "value": obj },],
+    { "name": prefix, "value": obj },
 }
