@@ -69,7 +69,7 @@ local httpPort = 9001;
             "volumeMounts": [
               { 
                 "name": "azure-service-bus-credential-secrets",
-                "mountPath": "/app/secrets",
+                "mountPath": "/secrets",
                 "readonly": true
               }
             ],
