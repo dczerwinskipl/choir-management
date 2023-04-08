@@ -1,5 +1,5 @@
-local utils = import 'lib/utils.libsonnet';
-local nEvoCQRSGlobal = import 'shared/nevo.cqrs.global.libsonnet';
+local utils = import './lib/utils.libsonnet';
+local nEvoCQRSGlobal = import './shared/nevo.cqrs.libsonnet';
 
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
