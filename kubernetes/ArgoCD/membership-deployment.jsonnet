@@ -66,6 +66,21 @@ local httpPort = 9001;
               }
             ] 
             + utils.toEnv(nEvoCQRSGlobal),
+            "volumeMounts": [
+              { 
+                "name": "azure-service-bus-credential-secrets",
+                "mountPath": "/app/secrets",
+                "readonly": true
+              }
+            ],
+          },
+        ],
+        "volumes": [
+          { 
+            "name": "azure-service-bus-credential-secrets",
+            "secret": {
+              "secretName": "azure-service-bus-credential-secrets",
+            },
           },
         ],
       },
