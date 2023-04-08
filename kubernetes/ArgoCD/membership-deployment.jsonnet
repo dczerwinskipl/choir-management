@@ -1,5 +1,9 @@
+local utils = import 'lib/utils.libsonnet';
+local nEvoCQRSGlobal = import 'Shared/NEvo.Cqrs.global.libsonnet';
+
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
+local httpPort = 80;
 
 {
   "apiVersion": "apps/v1",
@@ -27,47 +31,16 @@ local appImage = "localhost:5000/choir.management.membership:latest";
             "image": appImage,
             "ports": [
               {
-                "containerPort": 8002,
+                "containerPort": httpPort,
               },
             ],
             "env": [
               {
                 "name": "ASPNETCORE_URLS",
-                "value": "http://+:8002",
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Endpoints__Accounting__ChannelType",
-                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Endpoints__Accounting__Endpoint",
-                  "value": "http__//accounting__5000/api"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Endpoints__Membership__ChannelType",
-                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Endpoints__Membership__Endpoint",
-                  "value": "http__//membership__5000/api"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Topics__Accounting__ChannelType",
-                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Topics__Accounting__TopicName",
-                  "value": "choirmanagement.accounting"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Topics__Membership__ChannelType",
-                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
-              },
-              {
-                  "name": "NEvo.CQRS__Topology__Topics__Membership__TopicName",
-                  "value": "choirmanagement.membership"
-              },
-            ],
+                "value": "http://+:" + httpPort,
+              }
+            ] 
+            + utils.toEnv(nEvoCQRSGlobal),
           },
         ],
       },
