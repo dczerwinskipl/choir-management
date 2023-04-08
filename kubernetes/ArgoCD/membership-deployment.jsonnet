@@ -9,6 +9,7 @@ manifests.deployment(
     nEvoCQRS,
   ],
   [
+    'membership-secrets',
     'azure-service-bus-credential-secrets',
   ]
 )

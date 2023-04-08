@@ -17,16 +17,16 @@ var cqrsConfiguration = builder.Configuration.GetRequiredSection("NEvo.CQRS");
 
 
 builder.Services.AddNEvo(nEvo => nEvo
-                                    .AddCqrs(/*cqrs => cqrs*/
-                                                        //.ConfigureRoutingPolicy(options => cqrsConfiguration.GetRequiredSection("Endpoint:RoutingPolicy").Bind(options))
-                                                        //.ConfigureRoutingTopology(options => cqrsConfiguration.GetRequiredSection("Topology").Bind(options))
+                                    .AddCqrs(cqrs => cqrs
+                                                        .ConfigureRoutingPolicy(options => cqrsConfiguration.GetRequiredSection("Endpoint:RoutingPolicy").Bind(options))
+                                                        .ConfigureRoutingTopology(options => cqrsConfiguration.GetRequiredSection("Topology").Bind(options))
                                     )
-                                    //.AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
-                                    //.AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
+                                    .AddMessagePoller(options => builder.Configuration.GetRequiredSection("MessagePoller").Bind(options))
+                                    .AddAzureServiceBus(options => builder.Configuration.GetRequiredSection("AzureServiceBus:ClientData").Bind(options))
                         );
 
 //TODO: ³adniej
-//MembershipModuleConfiguration.RegisterServices(builder.Services, builder.Configuration.GetRequiredSection("Membership"));
+MembershipModuleConfiguration.RegisterServices(builder.Services, builder.Configuration.GetRequiredSection("Membership"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
