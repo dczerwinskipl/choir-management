@@ -28,7 +28,7 @@ local nEvoCQRSGlobal = {
 
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
-local httpPort = 80;
+local httpPort = 9001;
 
 {
   "apiVersion": "apps/v1",
