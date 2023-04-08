@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables()
                      .SetBasePath(Directory.GetCurrentDirectory())
                      .AddJsonFile("appsettings.json")
+                     .AddJsonFiles("secrets/*.secrets.json", true)
                      .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
 var cqrsConfiguration = builder.Configuration.GetRequiredSection("NEvo.CQRS");

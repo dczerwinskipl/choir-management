@@ -10,6 +10,7 @@ local utils = import './utils.libsonnet';
       },
       spec: {
         replicas: 3,
+        revisionHistoryLimit: 1,
         selector: {
           matchLabels: {
             app: service.name,
