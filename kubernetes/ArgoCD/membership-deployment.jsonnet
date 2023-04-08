@@ -1,38 +1,5 @@
 local appName = "choirmanagement-membership";
 local appImage = "localhost:5000/choir.management.membership:latest";
-local testObject = {
-  "NEvo.CQRS": {
-    "Topology": {
-      "Endpoints": {
-        "Membership": {
-          "ChannelType": "NEvo.CQRS.Transporting.RestTransportChannel",
-          "Endpoint": "http://membership:5000/api"
-        },
-        "Accounting": {
-          "ChannelType": "NEvo.CQRS.Transporting.RestTransportChannel",
-          "Endpoint": "http://accounting:5000/api"
-        }
-      },
-      "Topics": {
-        "Membership": {
-          "ChannelType": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel",
-          "TopicName": "choirmanagement.membership"
-        },
-        "Accounting": {
-          "ChannelType": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel",
-          "TopicName": "choirmanagement.accounting"
-        }
-      }
-    }
-  }
-};
-
-local buildArray(prefix, value) = 
-  if std.isObject(value) then 
-    std.flatten([ buildArray(prefix + "__" + key, value[key]) for key in value]) 
-  else 
-    [{ name: prefix, value: value }];
-
 
 {
   "apiVersion": "apps/v1",
@@ -67,8 +34,40 @@ local buildArray(prefix, value) =
               {
                 "name": "ASPNETCORE_URLS",
                 "value": "http://+:8002",
-              }
-            ] + buildArray("", testObject)
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Endpoints__Accounting__ChannelType",
+                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Endpoints__Accounting__Endpoint",
+                  "value": "http__//accounting__5000/api"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Endpoints__Membership__ChannelType",
+                  "value": "NEvo.CQRS.Transporting.RestTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Endpoints__Membership__Endpoint",
+                  "value": "http__//membership__5000/api"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Topics__Accounting__ChannelType",
+                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Topics__Accounting__TopicName",
+                  "value": "choirmanagement.accounting"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Topics__Membership__ChannelType",
+                  "value": "NEvo.Azure.Transporting.AzureServiceBusTransportChannel"
+              },
+              {
+                  "name": "NEvo.CQRS__Topology__Topics__Membership__TopicName",
+                  "value": "choirmanagement.membership"
+              },
+            ],
           },
         ],
       },
