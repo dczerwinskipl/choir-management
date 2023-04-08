@@ -9,9 +9,11 @@ public static class ConfigurationBuilderExtensions
 
         if (Directory.Exists(secretsDir))
         {
+            Console.WriteLine("Exists");
             foreach (string filePath in Directory.GetFiles(secretsDir, fileNamePattern))
             {
-                builder.AddJsonFile(filePath, optional: false, reloadOnChange: reloadOnChange);
+                Console.WriteLine(filePath);
+                builder.AddJsonFile(secretsDir + "/" + filePath, optional: false, reloadOnChange: reloadOnChange);
             }
         }
 
