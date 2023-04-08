@@ -1,14 +1,16 @@
+local services = import '../services.libsonnet';
+
 {
   "NEvo.CQRS": {
     "Topology": {
       "Endpoints": {
         "Membership": {
           "ChannelType": "NEvo.CQRS.Transporting.RestTransportChannel",
-          "Endpoint": "http://membership:5000/api"
+          "Endpoint": "http://" + services.membership.name + ":" + services.membership.port + "/api"
         },
         "Accounting": {
           "ChannelType": "NEvo.CQRS.Transporting.RestTransportChannel",
-          "Endpoint": "http://accounting:5000/api"
+          "Endpoint": "http://" + services.accounting.name + ":" + services.accounting.port + "/api"
         }
       },
       "Topics": {
