@@ -13,6 +13,6 @@ metadata:
   name: ext-sql-server
 subsets:
   - addresses:
-        - ip: 127.0.0.1 # should be read from some kind of config?
+        - ip: 172.20.21.252 # should be read from some kind of config?
     ports:
       - port: 1433
