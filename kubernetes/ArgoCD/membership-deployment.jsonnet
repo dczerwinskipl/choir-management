@@ -1,4 +1,4 @@
-local nEvoCQRS = import './shared/nevo-cqrs.libsonnet';
+local nEvoCQRS = import './env/nevo-cqrs.libsonnet';
 local utils = import './lib/utils.libsonnet';
 
 local appName = "choirmanagement-membership";
