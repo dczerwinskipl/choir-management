@@ -36,24 +36,26 @@ local utils = import './utils.libsonnet';
                     value: 'http://+:' + service.port,
                   },
                 ] + std.flattenArrays([utils.toEnv(envJson) for envJson in envJsons]),
-                volumeMounts: [] + [
-                  {
-                    name: name,
-                    mountPath: '/app/secrets',
-                    readonly: true,
-                  }
-                  for name in secrets
+                volumeMounts: [
+                    {
+                        name: 'secrets',
+                        mountPath: '/app/secrets',
+                        readOnly: true,
+                    },
                 ],
               },
             ],
-            volumes: []
-                     + [{
-                       name: name,
+            volumes: [{
+                name: 'secrets',
+                projected: {
+                     sources: [{
                        secret:
                          {
-                           secretName: name,
+                           name: name,
                          },
                      } for name in secrets],
+                },
+            }],
           },
         },
       },
