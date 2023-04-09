@@ -1,4 +1,4 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
@@ -6,35 +6,19 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /build
-
-# NEvo Framework, TODO: create nuget packages
-COPY ["Framework/src/NEvo.Core/NEvo.Core.csproj", "Framework/src/NEvo.Core/NEvo.Core.csproj"]
-COPY ["Framework/src/NEvo.Azure/NEvo.Azure.csproj", "Framework/src/NEvo.Azure/NEvo.Azure.csproj"]
-COPY ["Framework/src/NEvo.CQRS/NEvo.CQRS.csproj", "Framework/src/NEvo.CQRS/NEvo.CQRS.csproj"]
-COPY ["Framework/src/NEvo.DomainDrivenDesign/NEvo.DomainDrivenDesign.csproj", "Framework/src/NEvo.DomainDrivenDesign/NEvo.DomainDrivenDesign.csproj"]
-COPY ["Framework/src/NEvo.Sagas/NEvo.Sagas.csproj", "Framework/src/NEvo.Sagas/NEvo.Sagas.csproj"]
-COPY ["Framework/src/NEvo.ValueObjects/NEvo.ValueObjects.csproj", "Framework/src/NEvo.ValueObjects/NEvo.ValueObjects.csproj"]
-
-RUN dotnet restore "Framework/src/NEvo.Core/NEvo.Core.csproj"
-RUN dotnet restore "Framework/src/NEvo.Azure/NEvo.Azure.csproj"
-RUN dotnet restore "Framework/src/NEvo.CQRS/NEvo.CQRS.csproj"
-RUN dotnet restore "Framework/src/NEvo.DomainDrivenDesign/NEvo.DomainDrivenDesign.csproj"
-RUN dotnet restore "Framework/src/NEvo.Sagas/NEvo.Sagas.csproj"
-RUN dotnet restore "Framework/src/NEvo.ValueObjects/NEvo.ValueObjects.csproj"
-
-# Membership Microservices
+WORKDIR /src
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj", "Microservices/Membership/src/ChoirManagement.Membership.WebService/"]
+COPY ["ChoirManagement.Bootstraping/ChoirManagement.Bootstraping.csproj", "ChoirManagement.Bootstraping/"]
+COPY ["Framework/src/NEvo.Azure/NEvo.Azure.csproj", "Framework/src/NEvo.Azure/"]
+COPY ["Framework/src/NEvo.Core/NEvo.Core.csproj", "Framework/src/NEvo.Core/"]
+COPY ["Framework/src/NEvo.CQRS/NEvo.CQRS.csproj", "Framework/src/NEvo.CQRS/"]
+COPY ["Framework/src/NEvo.ValueObjects/NEvo.ValueObjects.csproj", "Framework/src/NEvo.ValueObjects/"]
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.Domain/ChoirManagement.Membership.Domain.csproj", "Microservices/Membership/src/ChoirManagement.Membership.Domain/"]
+COPY ["Framework/src/NEvo.DomainDrivenDesign/NEvo.DomainDrivenDesign.csproj", "Framework/src/NEvo.DomainDrivenDesign/"]
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.Public/ChoirManagement.Membership.Public.csproj", "Microservices/Membership/src/ChoirManagement.Membership.Public/"]
-
 RUN dotnet restore "Microservices/Membership/src/ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj"
-RUN dotnet restore "Microservices/Membership/src/ChoirManagement.Membership.Domain/ChoirManagement.Membership.Domain.csproj"
-RUN dotnet restore "Microservices/Membership/src/ChoirManagement.Membership.Public/ChoirManagement.Membership.Public.csproj"
-
 COPY . .
-
-WORKDIR "/build/Microservices/Membership/src/ChoirManagement.Membership.WebService"
+WORKDIR "/src/Microservices/Membership/src/ChoirManagement.Membership.WebService"
 RUN dotnet build "ChoirManagement.Membership.WebService.csproj" -c Release -o /app/build
 
 FROM build AS publish

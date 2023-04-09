@@ -130,7 +130,7 @@ public class SagaHandlerWrapper<THandler, TEvent, TSagaData> : IMessageHandlerAd
     {
         return (await Try.OfAsync(async () =>
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
             var handler = ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
             await handler.HandleAsync(Check.Null(message as TEvent));
         })).Cast<object?>();

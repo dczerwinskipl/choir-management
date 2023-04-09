@@ -24,7 +24,8 @@ public class EventHandlerAdapter<THandler, TMessage> : IMessageHandlerAdapter
     {
         return (await Try.OfAsync(async () =>
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
+
             var handler = ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
             await handler.HandleAsync(Check.Null(message as TMessage));
         })).Cast<object?>();

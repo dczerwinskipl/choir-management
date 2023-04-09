@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NEvo.Core;
 using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Processing.Registering;
@@ -17,17 +18,28 @@ using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain;
 
-public class MembershipModuleConfiguration
+public static class MembershipModuleConfiguration
 {
-    public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
+    public static void RegisterMembershipServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IMemberRepository, MemberRepository>();
         services.AddDbContext<MembershipContext>(c => c.UseSqlServer(configuration.GetValue<string>("Database:ConnectionString")));
     }
 
-    public static void Handlers(IMessageHandlerRegistry registry)
+    public static WebApplication RegisterMembershipHandlers(this WebApplication application)
     {
-        registry.Register<MemberCommandHandlers>();
+        application.UseNEvoCqrs(registry => registry.Register<MemberCommandHandlers>());
+        return application;
+    }
+
+    public static WebApplication RegisterMembershipApi(this WebApplication application, string prefix = "/api")
+    {
+        application.UseNEvoRoute(
+            ($"{prefix}/members", MemberRoutes),
+            ($"{prefix}/memberships", MemberRoutes)
+        );
+
+        return application;
     }
 
     public static void MemberRoutes(RouteGroupBuilder builder)

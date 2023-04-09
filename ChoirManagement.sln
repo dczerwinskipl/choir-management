@@ -22,10 +22,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Core.Tests", "Framework\tests\NEvo.Core.Tests\NEvo.Core.Tests.csproj", "{9B3FD740-4096-497C-93FE-4FF130481FBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{8BFF3319-E8D7-4095-A512-716D8F1C09D9}"
-	ProjectSection(SolutionItems) = preProject
-		kubernetes\deployment.yml = kubernetes\deployment.yml
-		kubernetes\service.yml = kubernetes\service.yml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{533C0B4B-D31E-42EE-B921-64511EA0FD50}"
 EndProject
@@ -58,12 +54,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArgoCD", "ArgoCD", "{F349DB
 	ProjectSection(SolutionItems) = preProject
 		kubernetes\ArgoCD\accounting-deployment.yml = kubernetes\ArgoCD\accounting-deployment.yml
 		kubernetes\ArgoCD\accounting-service.yml = kubernetes\ArgoCD\accounting-service.yml
-		kubernetes\ArgoCD\membership-service.yml = kubernetes\ArgoCD\membership-service.yml
 		kubernetes\ArgoCD\membership-deployment.jsonnet = kubernetes\ArgoCD\membership-deployment.jsonnet
+		kubernetes\ArgoCD\membership-service.yml = kubernetes\ArgoCD\membership-service.yml
 		kubernetes\ArgoCD\sqlserver-service.yml = kubernetes\ArgoCD\sqlserver-service.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.CQRS.Tests", "Framework\tests\NEvo.CQRS.Tests\NEvo.CQRS.Tests.csproj", "{02E17E0F-7458-4E36-A153-01970CB6F1D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{455F2A32-B719-41BE-B025-7FAB3EA0B309}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Bootstraping", "ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj", "{8485EB14-7167-4DA4-9B24-6A1576244659}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GDPR", "GDPR", "{6FE3409E-15E0-4673-99AA-C232E5879B66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.GDPR.WebService", "Microservices\GPDR\src\ChoirManagement.GDPR.WebService\ChoirManagement.GDPR.WebService.csproj", "{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +127,14 @@ Global
 		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02E17E0F-7458-4E36-A153-01970CB6F1D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8485EB14-7167-4DA4-9B24-6A1576244659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8485EB14-7167-4DA4-9B24-6A1576244659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8485EB14-7167-4DA4-9B24-6A1576244659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8485EB14-7167-4DA4-9B24-6A1576244659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +159,10 @@ Global
 		{BEDEBBDD-67FE-41CE-829D-48F4BE86C5A0} = {62EE7B2C-EE4C-48ED-B720-160143A9C67B}
 		{F349DBAE-38E1-4E44-B68F-5AA5E3BFA50D} = {8BFF3319-E8D7-4095-A512-716D8F1C09D9}
 		{02E17E0F-7458-4E36-A153-01970CB6F1D5} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
+		{455F2A32-B719-41BE-B025-7FAB3EA0B309} = {A2A56A7A-3248-44EF-8BBD-3608B8F9A171}
+		{8485EB14-7167-4DA4-9B24-6A1576244659} = {455F2A32-B719-41BE-B025-7FAB3EA0B309}
+		{6FE3409E-15E0-4673-99AA-C232E5879B66} = {A2A56A7A-3248-44EF-8BBD-3608B8F9A171}
+		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694} = {6FE3409E-15E0-4673-99AA-C232E5879B66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}

@@ -26,7 +26,7 @@ public class SagaStateMachineHandlerAdapter<TSagaHandler, TMessage, TSaga, TStat
     {
         return await Try.OfAsync(async () =>
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
 
             /* maybe that logic should go to other class and keep wrapper only as wrapper */
             var sagaRepository = scope.ServiceProvider.GetRequiredService<ISagaRrepository<TSaga, TState>>();

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>d204d144-5c5b-4aa2-b41b-2390d25377c7</UserSecretsId>
-	  <DockerfileTag>choir.management.accounting</DockerfileTag>
+	<DockerfileTag>choir.management.accounting</DockerfileTag>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>

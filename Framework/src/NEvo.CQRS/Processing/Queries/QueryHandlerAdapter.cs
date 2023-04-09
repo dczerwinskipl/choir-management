@@ -24,7 +24,7 @@ public class QueryHandlerAdapter<THandler, TMessage, TResult> : IMessageHandlerA
     {
         return await Try.OfAsync(async () =>
         {
-            using var scope = _serviceProvider.CreateScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
 
             var handler = ActivatorUtilities.CreateInstance<THandler>(scope.ServiceProvider);
             var result = await handler.HandleAsync(Check.Null(message as TMessage));
