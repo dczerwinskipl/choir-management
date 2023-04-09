@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
+    <ProjectReference Include="..\..\..\Shared\src\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
   </ItemGroup>
 
 </Project>

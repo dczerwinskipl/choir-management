@@ -33,9 +33,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\..\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
 		<ProjectReference Include="..\..\..\..\Framework\src\NEvo.Azure\NEvo.Azure.csproj" />
 		<ProjectReference Include="..\..\..\..\Framework\src\NEvo.Core\NEvo.Core.csproj" />
+		<ProjectReference Include="..\..\..\Shared\src\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
 		<ProjectReference Include="..\ChoirManagement.Membership.Domain\ChoirManagement.Membership.Domain.csproj" />
 	</ItemGroup>
 

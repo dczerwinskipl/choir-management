@@ -8,11 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.WebService/ChoirManagement.Membership.WebService.csproj", "Microservices/Membership/src/ChoirManagement.Membership.WebService/"]
-COPY ["ChoirManagement.Bootstraping/ChoirManagement.Bootstraping.csproj", "ChoirManagement.Bootstraping/"]
 COPY ["Framework/src/NEvo.Azure/NEvo.Azure.csproj", "Framework/src/NEvo.Azure/"]
 COPY ["Framework/src/NEvo.Core/NEvo.Core.csproj", "Framework/src/NEvo.Core/"]
 COPY ["Framework/src/NEvo.CQRS/NEvo.CQRS.csproj", "Framework/src/NEvo.CQRS/"]
 COPY ["Framework/src/NEvo.ValueObjects/NEvo.ValueObjects.csproj", "Framework/src/NEvo.ValueObjects/"]
+COPY ["Microservices/Shared/src/ChoirManagement.Bootstraping/ChoirManagement.Bootstraping.csproj", "Microservices/Shared/src/ChoirManagement.Bootstraping/"]
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.Domain/ChoirManagement.Membership.Domain.csproj", "Microservices/Membership/src/ChoirManagement.Membership.Domain/"]
 COPY ["Framework/src/NEvo.DomainDrivenDesign/NEvo.DomainDrivenDesign.csproj", "Framework/src/NEvo.DomainDrivenDesign/"]
 COPY ["Microservices/Membership/src/ChoirManagement.Membership.Public/ChoirManagement.Membership.Public.csproj", "Microservices/Membership/src/ChoirManagement.Membership.Public/"]

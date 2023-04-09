@@ -12,5 +12,3 @@ var app =  builder.BuildMicroservice()
     .RegisterMembershipApi("/api");
 
 app.Run();
-
-
