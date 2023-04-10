@@ -9,7 +9,8 @@ namespace ChoirManagement.Membership.Domain.CommandHandlers;
 
 public class MemberCommandHandlers :
         ICommandHandler<RegisterMember>,
-        ICommandHandler<AnonimizeMember>
+        ICommandHandler<AnonimizeMember>,
+        ICommandHandler<DeleteMember>
 {
     private readonly IMemberRepository _repository;
 
@@ -24,9 +25,18 @@ public class MemberCommandHandlers :
                     .GetAsync(command.MemberId)
                     .MatchAsync(
                         none: () => Member
-                                        .NewMember(command.MemberRegistrationForm, command.MemberId)
+                                        .NewMember(command.PersonalData, command.MemberId)
                                         .ThenAsync(_repository.SaveAsync),
                         some: Either.TaskSuccess
+                    );
+
+    public async Task<Either<Exception, Unit>> HandleAsync(DeleteMember command)
+       => await _repository
+                    .GetAsync(command.MemberId)
+                    .MatchAsync(
+                        // TODO: allow to ommit Try, its ugly
+                        some: async member => await Try.OfAsync(async () => await _repository.DeleteAsync(member)),
+                        none: Either.TaskSuccess
                     );
 
     public async Task<Either<Exception, Unit>> HandleAsync(AnonimizeMember command)

@@ -3,7 +3,7 @@ using NEvo.CQRS.Messaging;
 using NEvo.CQRS.Messaging.Events;
 using NEvo.CQRS.Processing;
 using NEvo.Polling;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace NEvo.Azure.Polling;
 
@@ -15,7 +15,7 @@ public class AzureServiceBusMessagePoller : IMessagePoller, IAsyncDisposable
     private readonly ServiceBusClient _client;
 
     public Guid Id { get; } = Guid.NewGuid();
-    private ServiceBusSessionProcessor _processor;
+    private ServiceBusSessionProcessor? _processor;
 
     public AzureServiceBusMessagePoller(ServiceBusClient client, IMessageProcessor messageProcessor, string topicName, string subscriptionName)
     {
@@ -50,8 +50,8 @@ public class AzureServiceBusMessagePoller : IMessagePoller, IAsyncDisposable
         Event message;
         try
         {
-            var envelope = JsonConvert.DeserializeObject<MessageEnvelope>(serviceBusMessage.Body.ToString());
-            message = (Event)JsonConvert.DeserializeObject(envelope.Payload, Type.GetType(envelope.MessageType));
+            var envelope = JsonSerializer.Deserialize<MessageEnvelope>(serviceBusMessage.Body.ToString());
+            message = (Event)JsonSerializer.Deserialize(envelope.Payload, Type.GetType(envelope.MessageType));
         }
         catch (Exception)
         {

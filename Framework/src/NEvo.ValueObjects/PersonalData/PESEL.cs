@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NEvo.ValueObjects.PersonalData;
 
+[JsonConverter(typeof(PESELConventer))]
+[ValueObject(isSingleValue: true, defaultValue: "54081091572", format: "PESEL")]
 public record PESEL : IPersonalData<PESEL>
 {
     [MinLength(11), MaxLength(11), Required]
@@ -19,10 +22,7 @@ public record PESEL : IPersonalData<PESEL>
 
     private string Validate(string peselNumber)
     {
-        if (!IsValidChecksum(peselNumber))
-            throw new InvalidPESELChecksumException();
-
-        return peselNumber;
+        return !IsValidChecksum(peselNumber) ? throw new InvalidPESELChecksumException() : peselNumber;
     }
 
     public bool IsValidChecksum(string peselNumber)
@@ -32,10 +32,10 @@ public record PESEL : IPersonalData<PESEL>
             return false;
         }
 
-        var sum = 0;
-        for (var i = 0; i < 10; i++)
+        int sum = 0;
+        for (int i = 0; i < 10; i++)
         {
-            var c = peselNumber[i];
+            char c = peselNumber[i];
             if (c < '0' || c > '9')
             {
                 return false;
@@ -57,9 +57,9 @@ public record PESEL : IPersonalData<PESEL>
 
     public DateOnly GetBirthDate()
     {
-        var year = (Number[0] - '0') * 10 + (Number[1] - '0');
-        var month = (Number[2] - '0') * 10 + (Number[3] - '0');
-        var day = (Number[4] - '0') * 10 + (Number[5] - '0');
+        int year = ((Number[0] - '0') * 10) + (Number[1] - '0');
+        int month = ((Number[2] - '0') * 10) + (Number[3] - '0');
+        int day = ((Number[4] - '0') * 10) + (Number[5] - '0');
 
         switch (Number[2])
         {
@@ -92,7 +92,7 @@ public record PESEL : IPersonalData<PESEL>
         return new DateOnly(year, month, day);
     }
 
-    public PESEL Anonimize() => new PESEL(RandomPESEL()); //TODO: generate random
+    public PESEL Anonimize() => new(RandomPESEL()); //TODO: generate random
 
     private static string RandomPESEL()
     {
@@ -119,7 +119,7 @@ public record PESEL : IPersonalData<PESEL>
         pesel[8] = (byte)Random.Shared.Next(0, 10);
         pesel[9] = (byte)Random.Shared.Next(0, 10);
 
-        int sum = 1 * pesel[0] + 3 * pesel[1] + 7 * pesel[2] + 9 * pesel[3] + 1 * pesel[4] + 3 * pesel[5] + 7 * pesel[6] + 9 * pesel[7] + 1 * pesel[8] + 3 * pesel[9] + 1 * pesel[10];
+        int sum = (1 * pesel[0]) + (3 * pesel[1]) + (7 * pesel[2]) + (9 * pesel[3]) + (1 * pesel[4]) + (3 * pesel[5]) + (7 * pesel[6]) + (9 * pesel[7]) + (1 * pesel[8]) + (3 * pesel[9]) + (1 * pesel[10]);
         pesel[10] = (byte)((10 - (sum % 10)) % 10);
 
         for (int i = 0; i < 11; i++)
@@ -132,4 +132,27 @@ public record PESEL : IPersonalData<PESEL>
 public class InvalidPESELChecksumException : ArgumentException
 {
     public InvalidPESELChecksumException() : base("Invalid PESEL number checksum") { }
+}
+
+
+public class PESELConventer : JsonConverter<PESEL?>
+{
+    public override PESEL? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        string value;
+        try
+        {
+            value = reader.GetString() ?? string.Empty;
+        }
+        catch (Exception exc)
+        {
+            throw new ArgumentException($"Cannot parse {nameof(PESEL)}. Invalid token on position ({reader.TokenStartIndex}): {exc.Message}", exc);
+        }
+        return !string.IsNullOrEmpty(value) ? new PESEL(value) : null;
+    }
+
+    public override void Write(Utf8JsonWriter writer, PESEL? value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value?.Number.ToString());
+    }
 }

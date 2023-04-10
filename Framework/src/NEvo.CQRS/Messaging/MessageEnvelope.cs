@@ -1,5 +1,6 @@
 ﻿using NEvo.Core;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NEvo.CQRS.Messaging;
 
@@ -44,5 +45,5 @@ public class MessageEnvelope<TMessage> where TMessage : IMessage
         Partition = partition;
     }
 
-    public MessageEnvelope ToRawMessageEnvelope() => new MessageEnvelope(Id, JsonConvert.SerializeObject(Payload), MessageType, Headers); //TODO: remove dep to Newtonsoft
+    public MessageEnvelope ToRawMessageEnvelope() => new(Id, JsonSerializer.Serialize(Payload), MessageType, Headers); //TODO: remove dep to Newtonsoft
 }

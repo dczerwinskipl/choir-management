@@ -13,17 +13,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NEvo.Core;
 using NEvo.CQRS.Messaging;
-using NEvo.CQRS.Processing.Registering;
 using NEvo.Monads;
 
 namespace ChoirManagement.Membership.Domain;
 
 public static class MembershipModuleConfiguration
 {
-    public static void RegisterMembershipServices(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterMembershipServices(this IServiceCollection services, IConfiguration configuration, string assemblyName)
     {
         services.AddScoped<IMemberRepository, MemberRepository>();
-        services.AddDbContext<MembershipContext>(c => c.UseSqlServer(configuration.GetValue<string>("Database:ConnectionString")));
+        services.AddDbContext<MembershipContext>(c => c
+            .UseSqlServer(
+                configuration.GetValue<string>("Database:ConnectionString"),
+                b => b.MigrationsAssembly(assemblyName)
+            )
+        );
     }
 
     public static WebApplication RegisterMembershipHandlers(this WebApplication application)
@@ -44,7 +48,7 @@ public static class MembershipModuleConfiguration
 
     public static void MemberRoutes(RouteGroupBuilder builder)
     {
-        builder.MapPost("/", async ([FromServices] IMessageBus messageBus, [FromBody] MemberRegistrationForm form) =>
+        builder.MapPost("/", async ([FromServices] IMessageBus messageBus, [FromBody] MemberPersonalData form) =>
                     await Try
                             .OfAsync(async () => await messageBus.DispatchAsync(new RegisterMember(MemberId.New(), form))))
                .Produces(200, typeof(Unit))

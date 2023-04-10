@@ -1,13 +1,12 @@
 {
   "profiles": {
-    "ChoirManagement.Membership.WebService": {
+    "ChoirManagement.MembersRegistration.WebService": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:19002"
+      "applicationUrl": "http://localhost:19101"
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿using ChoirManagement.Membership.Public.ValueObjects;
 using NEvo.Core;
 using NEvo.CQRS.Messaging.Commands;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ChoirManagement.Membership.Public.Messages.Commands;
 
@@ -20,12 +20,24 @@ public record AnonimizeMember : Command
 public record RegisterMember : Command
 {
     public MemberId MemberId { get; }
-    public MemberRegistrationForm MemberRegistrationForm { get; }
+    public MemberPersonalData PersonalData { get; }
 
     [JsonConstructor]
-    public RegisterMember(MemberId memberId, MemberRegistrationForm memberRegistrationForm)
+    public RegisterMember(MemberId memberId, MemberPersonalData personalData)
     {
         MemberId = Check.Null(memberId);
-        MemberRegistrationForm = Check.Null(memberRegistrationForm);
+        PersonalData = Check.Null(personalData);
+    }
+}
+
+
+public record DeleteMember : Command
+{
+    public MemberId MemberId { get; set; }
+
+    [JsonConstructor]
+    public DeleteMember(MemberId memberId)
+    {
+        MemberId = Check.Null(memberId);
     }
 }

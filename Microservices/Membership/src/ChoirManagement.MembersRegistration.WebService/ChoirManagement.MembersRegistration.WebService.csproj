@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Shared\src\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
+		<ProjectReference Include="..\ChoirManagement.Membership.Public\ChoirManagement.Membership.Public.csproj" />
 	</ItemGroup>
 
 </Project>

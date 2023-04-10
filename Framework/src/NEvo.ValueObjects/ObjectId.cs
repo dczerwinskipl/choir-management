@@ -1,5 +1,5 @@
 ﻿using NEvo.Core;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace NEvo.ValueObjects;
 

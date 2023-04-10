@@ -39,7 +39,7 @@ public class DebugConfigurationMiddleware
         }
     }
 
-    private static IDictionary<string, object?> CreateConfigurationObject(IConfiguration configuration) 
+    private static IDictionary<string, object?> CreateConfigurationObject(IConfiguration configuration)
         => configuration.GetChildren().ToDictionary(
             section => section.Key,
             section =>
@@ -51,7 +51,7 @@ public class DebugConfigurationMiddleware
 
 public static class ConfigurationMiddlewareExtensions
 {
-    public static IApplicationBuilder UseDebugConfigurationMiddleware(this IApplicationBuilder app)
+    public static TApplicationBuilder UseDebugConfigurationMiddleware<TApplicationBuilder>(this TApplicationBuilder app) where TApplicationBuilder : IApplicationBuilder
     {
         app.UseMiddleware<DebugConfigurationMiddleware>();
         return app;

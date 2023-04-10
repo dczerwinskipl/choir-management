@@ -21,11 +21,11 @@ public class MessageBus : IMessageBus
         _router = Check.Null(router);
         _typeResolver = Check.Null(typeResolver);
     }
-
-    public Task<Either<Exception, Unit>> DispatchAsync<TCommand>(TCommand command) where TCommand : Command
-        => _router.ForMessage(command).DispatchMessageAsync<TCommand, Unit>(
+    //TODO: ZABEZPIECZYĆ PRZED EXCEPTIONAMI! ŁADNIEJ!
+    public async Task<Either<Exception, Unit>> DispatchAsync<TCommand>(TCommand command) where TCommand : Command
+        => await Try.OfAsync(async () => await _router.ForMessage(command).DispatchMessageAsync<TCommand, Unit>(
             new MessageEnvelope<TCommand>(Guid.NewGuid(), command, _typeResolver.GetName(typeof(TCommand)))
-        );
+        ));
 
     public Task<Either<Exception, TResult>> DispatchAsync<TQuery, TResult>(TQuery query) where TQuery : Query<TResult>
         => _router.ForMessage(query).DispatchMessageAsync<TQuery, TResult>(

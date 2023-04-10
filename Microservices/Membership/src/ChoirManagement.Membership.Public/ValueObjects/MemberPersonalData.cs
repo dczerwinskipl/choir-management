@@ -1,6 +1,6 @@
 ﻿using NEvo.Core;
 using NEvo.ValueObjects.PersonalData;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ChoirManagement.Membership.Public.ValueObjects;
 

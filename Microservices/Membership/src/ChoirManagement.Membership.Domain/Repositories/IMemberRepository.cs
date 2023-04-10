@@ -6,6 +6,7 @@ namespace ChoirManagement.Membership.Domain.Repositories
 {
     public interface IMemberRepository
     {
+        Task DeleteAsync(Member member);
         Maybe<Member> Get(MemberId memberId);
         Task<Maybe<Member>> GetAsync(MemberId memberId);
         void Save(Member member);

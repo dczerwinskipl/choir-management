@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NEvo.CQRS.Messaging;
@@ -14,6 +12,8 @@ using NEvo.CQRS.Processing.Queries;
 using NEvo.CQRS.Processing.Registering;
 using NEvo.CQRS.Routing;
 using NEvo.CQRS.Transporting;
+using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using static NEvo.CQRS.Transporting.TransportChannelDescription;
 
 namespace NEvo.Core;
@@ -72,7 +72,10 @@ public class NEvoCqrsExtensionBuilder : INEvoExtensionConfiguration, INEvoCqrsEx
         services.Configure<TransportChannelFactoryOptions>(options =>
         {
             options.InternalTransportChannelFactory = new InternalTransportChannelFactory();
+            options.EndpointTransportChannelFactories.Add(new RestTransportChannelFactory());
+            options.EndpointTransportChannelFactories.Add(new GrpcTransportChannelFactory());
         });
+        services.AddHttpClient();
         services.AddSingleton<ITransportChannelFactory, TransportChannelFactory>();
 
         foreach (var configuration in _routingTopologyDescriptionConfigurations)
@@ -116,17 +119,14 @@ public class RoutingPolicyFactory : IRoutingPolicyFactory
     }
 
     private IRoutingPolicy CreatePolicyForInternal<TMessage>(Type message) where TMessage : IMessage
-    {
-        if (TMessage.MessageType == MessageType.Event)
-        {
-            return new RoutingPolicy(TMessage.MessageType, GetChannel(message));
-        }
-        return new RoutingPolicy(TMessage.MessageType);
-    }
+        => new RoutingPolicy(TMessage.MessageType, GetChannel(message));
 
     private string? GetChannel(Type message)
     {
         var @namespace = message.Namespace;
+        if (string.IsNullOrEmpty(@namespace))
+            return null;
+
         foreach (var rule in _rules)
         {
             if (Regex.IsMatch(@namespace, rule.NamespacePattern))
@@ -150,8 +150,8 @@ public class RoutingPolicy : IRoutingPolicy
     {
         return _messageType switch
         {
-            MessageType.Command => new InternalTransportChannelDescription(false),
-            MessageType.Query => new InternalTransportChannelDescription(false),
+            MessageType.Command => _channelName is null ? new InternalTransportChannelDescription(false) : new EndpointTransportChannelDescription(_channelName),
+            MessageType.Query => _channelName is null ? new InternalTransportChannelDescription(false) : new EndpointTransportChannelDescription(_channelName),
             MessageType.Event => _channelName is null ? new InternalTransportChannelDescription(false) : new MessagePublisherTransportChannelDescription(_channelName)
         };
     }
@@ -165,6 +165,6 @@ public class RoutingPolicyDescription
 
 public class RoutingPolicyRule
 {
-    public string NamespacePattern { get; set; }
-    public string ChannelName { get; set; }
+    public string? NamespacePattern { get; set; }
+    public string? ChannelName { get; set; }
 }

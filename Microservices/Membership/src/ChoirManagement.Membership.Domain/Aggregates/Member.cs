@@ -43,12 +43,12 @@ public class Member : SnapshotAggregateRoot<Member, MemberId>
     /// <summary>
     /// Add new member
     /// </summary>
-    /// <param name="registrationForm"></param>
+    /// <param name="personalData"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public static Either<Exception, Member> NewMember(MemberRegistrationForm registrationForm, MemberId? id = null)
-        => Rule("Date of birth must be consistent with PESEL", () => registrationForm.PESEL.GetBirthDate() == registrationForm.BirthDate)
-            .Rule("Date of birth must be after 1900", () => registrationForm.BirthDate > new DateOnly(1990, 1, 1))
-            .OnSuccess(() => new Member(id ?? MemberId.New(), registrationForm));
+    public static Either<Exception, Member> NewMember(MemberPersonalData personalData, MemberId? id = null)
+        => Rule("Date of birth must be consistent with PESEL", () => personalData.PESEL.GetBirthDate() == personalData.BirthDate)
+            .Rule("Date of birth must be after 1900", () => personalData.BirthDate > new DateOnly(1900, 1, 1))
+            .OnSuccess(() => new Member(id ?? MemberId.New(), personalData));
 
 }

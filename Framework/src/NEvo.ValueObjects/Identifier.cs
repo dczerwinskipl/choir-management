@@ -1,5 +1,5 @@
 ﻿using NEvo.Core;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace NEvo.ValueObjects;
 
@@ -15,7 +15,9 @@ public abstract class Identifier<TSelf, TKey> : ValueObject
         Id = Check.Null(id);
     }
 
+#pragma warning disable CS8618 // Empty constructor for ORM
     protected Identifier() { }
+#pragma warning restore CS8618 
 
     public abstract TSelf Copy();
     public virtual ObjectId ToObjectId() => ObjectId.New(GetType().Name, Id.ToString() ?? string.Empty);

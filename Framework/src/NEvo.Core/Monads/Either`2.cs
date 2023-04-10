@@ -139,6 +139,15 @@ public readonly struct Either<TLeft, TRight>
         return this;
     }
 
+    public async Task<Either<TLeft, TRight>> OnFailureAsync(Func<TLeft, Task> onFailure)
+    {
+        if (IsLeft)
+        {
+            await onFailure(Left);
+        }
+        return this;
+    }
+
     /// <summary>
     /// Execute action when success
     /// </summary>

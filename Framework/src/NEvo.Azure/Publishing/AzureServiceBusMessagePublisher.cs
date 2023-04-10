@@ -3,7 +3,7 @@ using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Options;
 using NEvo.Azure.Administrating;
 using NEvo.CQRS.Messaging;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace NEvo.Azure.Publishing;
 
@@ -42,7 +42,7 @@ public class AzureServiceBusMessagePublisher : IAzureServiceBusMessagePublisher,
 
     public async Task PublishAsync<TMessage>(MessageEnvelope<TMessage> messageEnvelope, string topicName) where TMessage : IMessage
     {
-        var serializedMessage = JsonConvert.SerializeObject(messageEnvelope.ToRawMessageEnvelope()); // TODO: Without ToRaw?
+        var serializedMessage = JsonSerializer.Serialize(messageEnvelope.ToRawMessageEnvelope()); // TODO: Without ToRaw?
 
         await _azureServiceBusAdministrator.EnsureTopicExistsAsync(topicName);
         await using var sender = _client.CreateSender(topicName);

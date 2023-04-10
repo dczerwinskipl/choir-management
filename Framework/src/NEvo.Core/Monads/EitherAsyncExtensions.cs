@@ -42,4 +42,10 @@ public static class EitherAsyncExtensions
     public static async Task<Either<TLeft, TRight>> ThenAsync<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TRight, Task<Either<Exception, Unit>>> action, Func<Exception, TLeft> errorHandler) => await (await either).ThenAsync(action, errorHandler);
     public static async Task<Either<Exception, TRight>> ThenAsync<TRight>(this Task<Either<Exception, TRight>> either, Func<TRight, Task> action) => await (await either).ThenAsync(action);
     public static async Task<Either<Exception, Unit>> ThenAsync(this Task<Either<Exception, Unit>> either, Func<Task> action) => await (await either).ThenAsync(action);
+
+
+    public static async Task<Either<TLeft, TRight>> OnFailure<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Action<TLeft> action)
+        => (await either).OnFailure(action);
+    public static async Task<Either<TLeft, TRight>> OnFailureAsync<TLeft, TRight>(this Task<Either<TLeft, TRight>> either, Func<TLeft, Task> action)
+        => await (await either).OnFailureAsync(action);
 }

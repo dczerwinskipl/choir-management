@@ -20,6 +20,13 @@ public class MemberRepository : IMemberRepository
         _context = context;
         _eventPublisher = eventPublisher;
     }
+
+    public async Task DeleteAsync(Member member)
+    {
+        _context.Remove(member);
+        await _context.SaveChangesAsync();
+    }
+
     public Maybe<Member> Get(MemberId memberId) => GetAsync(memberId).GetAwaiter().GetResult();
 
     public async Task<Maybe<Member>> GetAsync(MemberId memberId) => await _context.Members.FindAsync(memberId);
