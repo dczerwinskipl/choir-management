@@ -1,6 +1,6 @@
+using System.Reflection;
 using ChoirManagement.Bootstraping;
 using ChoirManagement.Membership.Domain;
-using System.Reflection;
 
 var builder = ChoirManagementMicroserviceBootstrap
                 .CreateBuilder(args);

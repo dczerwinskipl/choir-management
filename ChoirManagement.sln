@@ -69,7 +69,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GDPR", "GDPR", "{6FE3409E-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.GDPR.WebService", "Microservices\GPDR\src\ChoirManagement.GDPR.WebService\ChoirManagement.GDPR.WebService.csproj", "{6C7C6746-51B5-4BEB-9556-0C70C2E9E694}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChoirManagement.MembersRegistration.WebService", "Microservices\Membership\src\ChoirManagement.MembersRegistration.WebService\ChoirManagement.MembersRegistration.WebService.csproj", "{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.MembersRegistration.WebService", "Microservices\Membership\src\ChoirManagement.MembersRegistration.WebService\ChoirManagement.MembersRegistration.WebService.csproj", "{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{5531682B-AD14-4DA9-89DF-5297591C8CA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoirManagement.Identity.WebService", "Microservices\Identity\src\ChoirManagement.Identity.WebService\ChoirManagement.Identity.WebService.csproj", "{0701EA9B-66D1-4748-B327-2500C5194DE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEvo.Benchmarks", "Framework\src\NEvo.Benchmarks\NEvo.Benchmarks.csproj", "{976088CA-72E6-4B86-9004-3AF0206D634E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEvo.CodeAnalysis", "Framework\src\NEvo.CodeAnalysis\NEvo.CodeAnalysis.csproj", "{8DED85FA-E3CB-48B4-8D7A-AC46B9514767}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +149,18 @@ Global
 		{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0701EA9B-66D1-4748-B327-2500C5194DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0701EA9B-66D1-4748-B327-2500C5194DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0701EA9B-66D1-4748-B327-2500C5194DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0701EA9B-66D1-4748-B327-2500C5194DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976088CA-72E6-4B86-9004-3AF0206D634E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976088CA-72E6-4B86-9004-3AF0206D634E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976088CA-72E6-4B86-9004-3AF0206D634E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976088CA-72E6-4B86-9004-3AF0206D634E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DED85FA-E3CB-48B4-8D7A-AC46B9514767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DED85FA-E3CB-48B4-8D7A-AC46B9514767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DED85FA-E3CB-48B4-8D7A-AC46B9514767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DED85FA-E3CB-48B4-8D7A-AC46B9514767}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,6 +190,10 @@ Global
 		{6FE3409E-15E0-4673-99AA-C232E5879B66} = {A2A56A7A-3248-44EF-8BBD-3608B8F9A171}
 		{6C7C6746-51B5-4BEB-9556-0C70C2E9E694} = {6FE3409E-15E0-4673-99AA-C232E5879B66}
 		{8D2A1C75-89D4-43F6-8A4B-EB5BADE6ACD4} = {AD881C4A-5014-41D5-AC45-5C25D8AB81AF}
+		{5531682B-AD14-4DA9-89DF-5297591C8CA7} = {A2A56A7A-3248-44EF-8BBD-3608B8F9A171}
+		{0701EA9B-66D1-4748-B327-2500C5194DE6} = {5531682B-AD14-4DA9-89DF-5297591C8CA7}
+		{976088CA-72E6-4B86-9004-3AF0206D634E} = {62EE7B2C-EE4C-48ED-B720-160143A9C67B}
+		{8DED85FA-E3CB-48B4-8D7A-AC46B9514767} = {8AE43915-9F1D-474F-ADD0-2D30998053D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EB35CA4-0587-41E3-A5E0-3620B22F2138}

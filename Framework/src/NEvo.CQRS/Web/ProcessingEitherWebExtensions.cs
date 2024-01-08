@@ -13,8 +13,8 @@ public static class ProcessingEitherWebExtensions
     public static async Task<IResult> ToResults<TResult>(this Task<Either<IMessageProcessingFailures, TResult>> either) =>
         await either.Map(EitherWebExtensions.OnSuccess, OnFailure);
 
-    public static IResult OnFailure(IMessageProcessingFailures failures) =>
-        EitherWebExtensions.OnFailure(failures.Count() == 1
+    private static IResult OnFailure(IMessageProcessingFailures failures) =>
+        (failures.Count() == 1
             ? failures.Single().Exception
-            : new AggregateException(failures.Select(f => f.Exception)));
+            : new AggregateException(failures.Select(f => f.Exception))).ToResult();
 }

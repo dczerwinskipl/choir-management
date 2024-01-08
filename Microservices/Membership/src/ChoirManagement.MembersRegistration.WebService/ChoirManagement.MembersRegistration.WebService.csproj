@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Framework\src\NEvo.CodeAnalysis\NEvo.CodeAnalysis.csproj" />
 		<ProjectReference Include="..\..\..\Shared\src\ChoirManagement.Bootstraping\ChoirManagement.Bootstraping.csproj" />
 		<ProjectReference Include="..\ChoirManagement.Membership.Public\ChoirManagement.Membership.Public.csproj" />
 	</ItemGroup>

@@ -3,14 +3,14 @@
 /// <summary>
 /// Represents a void type
 /// </summary>
-public struct Unit
+public readonly struct Unit
 {
     private static readonly Unit _value = new();
     public static ref readonly Unit Value => ref _value;
     public static Task<Unit> Task => System.Threading.Tasks.Task.FromResult(_value);
 }
 
-public struct Null
+public readonly struct Null
 {
     private static readonly Null _value = new();
     public static ref readonly Null Value => ref _value;
@@ -19,5 +19,7 @@ public struct Null
 
 public class NotFoundException : Exception
 {
-    public NotFoundException(object id) { }
+    public object Id { get; }
+    public NotFoundException(object id) { Id = id; }
+
 }
