@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@nevo/design-system/*": ["nevo-design-system/*"],
+      "@nevo/app/*": ["nevo-app/*"]
+    }
+  }
+}
